@@ -29,7 +29,8 @@ public class Order {
 
     @Column(nullable = false)
     private Integer totalItem;
-
+    @Column(nullable = false)
+    private String pay_method;
     @Column(nullable = false)
     private Integer totalDiscountedPrice;
 
@@ -124,7 +125,13 @@ public class Order {
     public void setUpdateBy(final Integer updateBy) {
         this.updateBy = updateBy;
     }
+    public String getPayMethod() {
+        return pay_method;
+    }
 
+    public void setPaymethod(final String payMethod) {
+        this.pay_method = payMethod;
+    }
     public OffsetDateTime getUpdateAt() {
         return updateAt;
     }
