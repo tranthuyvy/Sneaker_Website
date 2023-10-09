@@ -1,31 +1,76 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Snackbar, Typography } from "@mui/material";
 import React from "react";
-import OrderTraker from "./OrderTraker";
+import OrderTraker from "../../../customer/Components/orders/OrderTraker";
 import StarIcon from "@mui/icons-material/Star";
 import { useNavigate, useParams } from "react-router-dom";
-import AddressCard from "../adreess/AdreessCard";
+import AddressCard from "../../../customer/Components/adreess/AdreessCard";
 import { deepPurple } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getOrderById } from "../../../Redux/Customers/Order/Action";
+import {
+  confirmOrder,
+  deleteOrder,
+  deliveredOrder,
+  shipOrder,
+} from "../../../Redux/Admin/Orders/Action";
+import { useState } from "react";
+import MuiAlert from "@mui/material/Alert";
 
 const OrderDetails = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
+  const [orderStatus, setOrderStatus] = useState("");
   const { orderId } = useParams();
   const { order } = useSelector((store) => store);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   console.log("order", order.order);
 
   useEffect(() => {
     dispatch(getOrderById(orderId));
   }, []);
+  // console.log("order", order)
+
+  const openSnackbar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
   const navigate = useNavigate();
 
+  const handleConfirmedOrder = (orderId, index) => {
+    dispatch(confirmOrder(orderId));
+    setOrderStatus("CONFIRMED");
+    openSnackbar("Update Success");
+    window.location.reload();
+  };
+
+  const handleShippedOrder = (orderId, index) => {
+    dispatch(shipOrder(orderId));
+    setOrderStatus("SHIPPED");
+    openSnackbar("Update Success");
+    window.location.reload();
+  };
+
+  const handleDeliveredOrder = (orderId, index) => {
+    dispatch(deliveredOrder(orderId));
+    setOrderStatus("DELIVERED");
+    openSnackbar("Update Success");
+    window.location.reload();
+  };
+
+  const handleDeleteOrder = (orderId) => {
+    dispatch(deleteOrder(orderId));
+    openSnackbar("Update Success");
+    window.location.reload();
+  };
+  
+
   return (
     <div className=" px-2 lg:px-36 space-y-7 ">
-      <Box className="p-5 shadow-lg border rounded-md">
+      <Box className="p-5 shadow-lg rounded-md">
         <Grid
           container
           sx={{ justifyContent: "space-between", alignItems: "center" }}
@@ -43,23 +88,14 @@ const OrderDetails = () => {
               }
             />
           </Grid>
-          {/* <Grid item justifyContent="center">
-            {order.order?.orderStatus === "DELIVERED" && (
-              <Button sx={{ color: "" }} color="error" variant="text"></Button>
-            )}
-
-            {order.order?.orderStatus !== "DELIVERED" && (
-              <Button sx={{ color: deepPurple[500] }} variant="text"></Button>
-            )}
-          </Grid> */}
         </Grid>
       </Box>
 
       <Grid container className="p-5 shadow-lg">
-        <Grid xs={12} style={{marginLeft: "10px"}}>
-          <p className="font-bold text-lg py-2">Delivery Address</p>
+        <Grid xs={12} style={{ marginLeft: "10px", fontSize:"20px" }}>
+          <p className="font-bold py-2">Delivery Address</p>
         </Grid>
-        <Grid item xs={6} style={{marginLeft: "10px"}}>
+        <Grid item xs={6} style={{ marginLeft: "10px", fontSize:"18px" }}>
           <AddressCard address={order.order?.shippingAddress} />
         </Grid>
       </Grid>
@@ -69,7 +105,7 @@ const OrderDetails = () => {
           <Grid
             container
             item
-            className="shadow-xl rounded-md p-5 border"
+            className="shadow-xl rounded-md p-5"
             sx={{ alignItems: "center", justifyContent: "space-between" }}
           >
             <Grid item xs={6}>
@@ -110,33 +146,17 @@ const OrderDetails = () => {
                 </div>
               </div>
             </Grid>
-            <Grid item>
-              {order.order?.orderStatus === "SUCCESS" && (
-                <Box
-                  sx={{ color: deepPurple[500] }}
-                  onClick={() => navigate(`/account/rate/${item.product.id}`)}
-                  className="flex items-center cursor-pointer"
-                >
-                  <StarIcon
-                    sx={{ fontSize: "2rem" }}
-                    className="px-2 text-5xl"
-                  />
-                  <span>Rate & Review Product</span>
-                </Box>
-              )}
-            </Grid>
           </Grid>
         ))}
       </Grid>
 
       <div>
         <Grid container justifyContent="flex-end" className="font-semibold">
-          <Grid container>
+          <Grid container style={{fontSize:"18px"}}>
             <Grid
               item
               xs={8}
               style={{
-                border: "1px solid #f2f2f2",
                 borderRadius: "1px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -151,7 +171,6 @@ const OrderDetails = () => {
               item
               xs={4}
               style={{
-                border: "1px solid #f2f2f2",
                 display: "flex",
                 justifyContent: "flex-end",
                 padding: "10px",
@@ -166,7 +185,6 @@ const OrderDetails = () => {
               item
               xs={8}
               style={{
-                border: "1px solid #f2f2f2",
                 borderRadius: "1px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -181,14 +199,13 @@ const OrderDetails = () => {
               item
               xs={4}
               style={{
-                border: "1px solid #f2f2f2",
                 display: "flex",
                 justifyContent: "flex-end",
                 padding: "10px",
               }}
             >
               <div>
-                <span className="text-indigo-600">Free</span>
+                <span style={{color:"cyan"}}>Free</span>
               </div>
             </Grid>
 
@@ -196,7 +213,6 @@ const OrderDetails = () => {
               item
               xs={8}
               style={{
-                border: "1px solid #f2f2f2",
                 borderRadius: "1px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -211,7 +227,6 @@ const OrderDetails = () => {
               item
               xs={4}
               style={{
-                border: "1px solid #f2f2f2",
                 display: "flex",
                 justifyContent: "flex-end",
                 padding: "10px",
@@ -226,7 +241,6 @@ const OrderDetails = () => {
               item
               xs={8}
               style={{
-                border: "1px solid #f2f2f2",
                 borderRadius: "1px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -241,7 +255,6 @@ const OrderDetails = () => {
               item
               xs={4}
               style={{
-                border: "1px solid #f2f2f2",
                 display: "flex",
                 justifyContent: "flex-end",
                 padding: "10px",
@@ -256,7 +269,42 @@ const OrderDetails = () => {
               item
               xs={8}
               style={{
-                border: "1px solid #f2f2f2",
+                borderRadius: "1px",
+                display: "flex",
+                justifyContent: "flex-end",
+                padding: "10px",
+              }}
+            >
+              <div>
+                <span className="opacity-50">Payment</span>
+              </div>
+            </Grid>
+            <Grid
+              item
+              xs={4}
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                padding: "10px",
+              }}
+            >
+              <div>
+                <span className="font-semibold text-md" style={{color:"cyan"}}>
+                  {order.order?.paymentStatus === 0
+                    ? "Cash On Delivery"
+                    : order.order?.paymentStatus === 1
+                    ? "Payment via Paypal"
+                    : "Unknown Payment Method"}
+                </span>
+              </div>
+            </Grid>
+
+            <Grid
+              item
+              xs={8}
+              style={{
+                marginTop: "30px",
+                borderTop: "1px solid #f2f2f2",
                 borderRadius: "1px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -273,7 +321,8 @@ const OrderDetails = () => {
               item
               xs={4}
               style={{
-                border: "1px solid #f2f2f2",
+                marginTop: "30px",
+                borderTop: "1px solid #f2f2f2",
                 display: "flex",
                 justifyContent: "flex-end",
                 padding: "10px",
@@ -285,45 +334,78 @@ const OrderDetails = () => {
                 </span>
               </div>
             </Grid>
+            {order.order?.orderStatus === "PLACED" && (
+              <Grid container justifyContent="flex-end" className="mt-5">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    onClick={() => handleConfirmedOrder(order.order?.id)}
+                    style={{color:"white", fontWeight:"bold", fontSize:"18px"}}
+                  >
+                    CONFIRM ORDER
+                  </Button>
+                </Grid>
 
-            <Grid
-              item
-              xs={8}
-              style={{
-                border: "1px solid #f2f2f2",
-                borderRadius: "1px",
-                display: "flex",
-                justifyContent: "flex-end",
-                padding: "10px",
-              }}
-            >
-              <div>
-                <span className="opacity-50">Payment</span>
-              </div>
-            </Grid>
-            <Grid
-              item
-              xs={4}
-              style={{
-                border: "1px solid #f2f2f2",
-                display: "flex",
-                justifyContent: "flex-end",
-                padding: "10px",
-              }}
-            >
-              <div>
-                <span className="text-green-600 font-semibold text-md">
-                  {order.order?.paymentStatus === 0
-                    ? "Cash On Delivery"
-                    : order.order?.paymentStatus === 1
-                    ? "Payment via Paypal"
-                    : "Unknown Payment Method"}
-                </span>
-              </div>
-            </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDeleteOrder(order.order?.id)}
+                    style={{color:"white", fontWeight:"bold", fontSize:"18px", marginLeft:"30px"}}
+                  >
+                    CANCELLED ORDER
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
+
+            {order.order?.orderStatus === "CONFIRMED" && (
+              <Grid container justifyContent="flex-end" className="mt-5">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleShippedOrder(order.order?.id)}
+                    style={{color:"white", fontWeight:"bold", fontSize:"18px"}}
+                  >
+                    SHIPPED
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
+
+            {order.order?.orderStatus === "SHIPPED" && (
+              <Grid container justifyContent="flex-end" className="mt-5">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleDeliveredOrder(order.order?.id)}
+                    style={{color:"white", fontWeight:"bold", fontSize:"18px"}}
+                  >
+                    DELIVERED
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={900}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

@@ -1,22 +1,21 @@
-import { Route, Routes } from 'react-router-dom';
-import './App.css';
-import Navigation from './customer/Components/Navbar/Navigation';
-import CustomerRoutes from './Routers/CustomerRoutes';
-import AdminRoutes from './Routers/AdminRoutes';
-import NotFound from './Pages/Notfound';
-import AdminPannel from './Admin/AdminPannel';
-// import Routers from './Routers/Routers';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "./Redux/Store";
 
-function App() {
-  const isAdmin=true;
-  return (
-    <div className="">
-      <Routes>
-        <Route path="/*" element={<CustomerRoutes />} />
-        <Route path="/admin/*" element={<AdminPannel />} />
-      </Routes>
-    </div>
-  );
-}
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
+  </React.StrictMode>
+);
 
-export default App;
+reportWebVitals();

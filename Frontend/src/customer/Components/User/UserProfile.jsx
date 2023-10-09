@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Typography } from "@mui/material";
+import { InputAdornment, Typography } from "@mui/material";
 import {
   Grid,
   TextField,
@@ -12,6 +12,7 @@ import {
 import { deepPurple } from "@mui/material/colors";
 import { Fragment } from "react";
 import "./UserProfile.css";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -19,6 +20,7 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const jwt = localStorage.getItem("jwt");
+  const [avatarImage, setAvatarImage] = useState(null);
 
   useEffect(() => {
     if (jwt) {
@@ -104,6 +106,33 @@ const UserProfile = () => {
     return <div>Loading ...</div>;
   }
 
+  let iconColor = "yellow";
+
+  if (editedUser.rank === "BRONZE") {
+    iconColor = "brown";
+  } else if (editedUser.rank === "SILVER") {
+    iconColor = "silver";
+  } else if (editedUser.rank === "GOLD") {
+    iconColor = "gold";
+  } else if (editedUser.rank === "DIAMOND") {
+    iconColor = "lightblue";
+  }
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const imageURL = event.target.result;
+        setAvatarImage(imageURL);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <Fragment className="updateProfileContainer ">
       <Typography
@@ -111,8 +140,41 @@ const UserProfile = () => {
         sx={{ textAlign: "center" }}
         className="py-10 text-center "
       >
-        Profile
+        {editedUser.firstName} {editedUser.lastName}
         <div className="flex justify-center m-10">
+          <label htmlFor="fileInput">
+            <Avatar
+              className="text-white"
+              aria-haspopup="true"
+              sx={{
+                bgcolor: deepPurple[500],
+                color: "white",
+                cursor: "pointer",
+                width: "100px",
+                height: "100px",
+                fontSize: "30px",
+              }}
+            >
+              {avatarImage ? (
+                <img
+                  src={avatarImage}
+                  alt="Selected Avatar"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                editedUser.firstName.charAt(0)
+              )}
+            </Avatar>
+          </label>
+          <input
+            id="fileInput"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+        </div>
+        {/* <div className="flex justify-center m-10">
           <Avatar
           className="text-white"
           aria-haspopup="true"
@@ -128,12 +190,9 @@ const UserProfile = () => {
         >
           {editedUser.firstName.charAt(0)}
         </Avatar>
-        </div>
-        
+        </div> */}
       </Typography>
-      <form
-        className="updateProfileContainer min-h-screen"
-      >
+      <form className="updateProfileContainer min-h-screen">
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -201,16 +260,22 @@ const UserProfile = () => {
               //   onChange={handleChange}
               disabled={true}
               inputProps={{ readOnly: true }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MilitaryTechIcon style={{ color: iconColor }} />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
 
           <Grid item xs={12}>
             {isEditing ? (
-              // Hiển thị nút chỉnh sửa và lưu khi trong trạng thái chỉnh sửa
               <>
                 <Button
                   variant="contained"
-                  sx={{ p: 1.8 }}                                                                                                  
+                  sx={{ p: 1.8 }}
                   className="py-20"
                   size="large"
                   onClick={handleSaveEdit}
@@ -228,7 +293,6 @@ const UserProfile = () => {
                 </Button>
               </>
             ) : (
-
               <Button
                 variant="contained"
                 sx={{ p: 1.8 }}

@@ -107,7 +107,7 @@ const OrdersTable = () => {
   };
 
   const handleOrderClick = (orderId) => {
-    navigate(`/account/order/${orderId}`);
+    navigate(`/admin/orders/${orderId}`);
   };
 
   return (
@@ -160,10 +160,10 @@ const OrdersTable = () => {
                 <TableCell sx={{ textAlign: "center" }}>Price</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Payment</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Status</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
+                {/* <TableCell sx={{ textAlign: "center" }}>
                   Update Status
                 </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Cancel</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Cancel</TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -211,11 +211,11 @@ const OrdersTable = () => {
                     </Box>
                   </TableCell>
 
-                  <TableCell sx={{ textAlign: "center" }}>
-                    {item.totalPrice}
+                  <TableCell sx={{ textAlign: "center" }} style={{color:"yellow", fontStyle:"bold", fontSize:"18px"}}>
+                    ${item.totalDiscountedPrice}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    <span className="text-green-600 font-semibold text-md">
+                    <span className="font-semibold text-md" style={{color:"cyan"}}>
                       {item.paymentStatus === 0
                         ? "Cash On Delivery"
                         : item.paymentStatus === 1
@@ -244,16 +244,17 @@ const OrdersTable = () => {
                           ? "info"
                           : item.orderStatus === "SHIPPED"
                           ? "primary"
+                          : item.orderStatus === "SUCCESS"
+                          ? "success"
                           : "secondary"
                       }
                       className="text-white"
                     />
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     sx={{ textAlign: "center" }}
                     className="text-white"
                   >
-                    {/* <Button>{item.orderStatus==="PENDING"?"PENDING": item.orderStatus==="PLACED"?"CONFIRMED":item.orderStatus==="CONFIRMED"?"SHIPPED":"DELEVERED"}</Button> */}
                     <div>
                       <Button
                         id={`basic-button-${item.id}`}
@@ -261,6 +262,7 @@ const OrdersTable = () => {
                         aria-haspopup="true"
                         aria-expanded={Boolean(anchorElArray[index])}
                         disabled={
+                          item.orderStatus === "SUCCESS" ||
                           item.orderStatus === "CANCELLED" ||
                           item.orderStatus === "DELIVERED"
                         }
@@ -314,13 +316,14 @@ const OrdersTable = () => {
                         </MenuItem>
                       </Menu>
                     </div>
-                  </TableCell>
-                  <TableCell
+                  </TableCell> */}
+                  {/* <TableCell
                     sx={{ textAlign: "center" }}
                     className="text-white"
                   >
                     <Button
                       disabled={
+                        item.orderStatus === "SUCCESS" ||
                         item.orderStatus === "CANCELLED" ||
                         item.orderStatus === "CONFIRMED" ||
                         item.orderStatus === "SHIPPED" ||
@@ -331,7 +334,7 @@ const OrdersTable = () => {
                     >
                       <DeleteIcon style={{color:"red"}}/>
                     </Button>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
             </TableBody>

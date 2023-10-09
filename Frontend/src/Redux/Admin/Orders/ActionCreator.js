@@ -2,6 +2,9 @@ import {
   CANCELED_ORDER_FAILURE,
   CANCELED_ORDER_REQUEST,
   CANCELED_ORDER_SUCCESS,
+  SUCCESS_ORDER_FAILURE,
+  SUCCESS_ORDER_REQUEST,
+  SUCCESS_ORDER_SUCCESS,
   CONFIRMED_ORDER_FAILURE,
   CONFIRMED_ORDER_REQUEST,
   CONFIRMED_ORDER_SUCCESS,
@@ -90,7 +93,6 @@ export const deliveredOrderFailure = (error) => ({
   payload: error,
 });
 
-// Action creators for canceled order
 export const canceledOrderRequest = () => ({
   type: CANCELED_ORDER_REQUEST,
 });
@@ -105,7 +107,20 @@ export const canceledOrderFailure = (error) => ({
   payload: error,
 });
 
-// Action creators for deleting an order
+export const successOrderRequest = () => ({
+  type: SUCCESS_ORDER_REQUEST,
+});
+
+export const successOrderSuccess = (data) => ({
+  type: SUCCESS_ORDER_SUCCESS,
+  payload: data,
+});
+
+export const successOrderFailure = (error) => ({
+  type: SUCCESS_ORDER_FAILURE,
+  payload: error,
+});
+
 export const deleteOrderRequest = () => ({
   type: DELETE_ORDER_REQUEST,
 });

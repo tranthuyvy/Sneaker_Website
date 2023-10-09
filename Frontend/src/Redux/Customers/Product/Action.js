@@ -90,6 +90,8 @@ export const createProduct = (product) => async (dispatch) => {
       product.data
     );
 
+    const productId = data.id;
+
     dispatch({
       type: CREATE_PRODUCT_SUCCESS,
       payload: data,

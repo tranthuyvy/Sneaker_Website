@@ -85,9 +85,9 @@ const CreateProductForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createProduct({ data: productData, jwt }));
+    dispatch(createProduct({ data: productData, jwt }))
     navigate("/admin/products");
-    console.log(productData);
+    console.log("product Data ne" ,productData);
   };
 
   const [imageToShow, setImageToShow] = useState("");

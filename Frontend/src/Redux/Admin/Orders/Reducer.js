@@ -2,6 +2,9 @@ import {
   CANCELED_ORDER_FAILURE,
   CANCELED_ORDER_REQUEST,
   CANCELED_ORDER_SUCCESS,
+  SUCCESS_ORDER_FAILURE,
+  SUCCESS_ORDER_REQUEST,
+  SUCCESS_ORDER_SUCCESS,
   CONFIRMED_ORDER_FAILURE,
   CONFIRMED_ORDER_REQUEST,
   CONFIRMED_ORDER_SUCCESS,
@@ -51,6 +54,7 @@ const adminOrderReducer = (state = initialState, action) => {
     case PLACED_ORDER_REQUEST:
     case DELIVERED_ORDER_REQUEST:
     case CANCELED_ORDER_REQUEST:
+    case SUCCESS_ORDER_REQUEST:
       return {
         ...state,
         isLoading: true,
@@ -79,11 +83,18 @@ const adminOrderReducer = (state = initialState, action) => {
         canceled: action.payload,
         isLoading: false,
       };
+    case SUCCESS_ORDER_SUCCESS:
+      return {
+        ...state,
+        canceled: action.payload,
+        isLoading: false,
+      };
 
     case CONFIRMED_ORDER_FAILURE:
     case PLACED_ORDER_FAILURE:
     case DELIVERED_ORDER_FAILURE:
     case CANCELED_ORDER_FAILURE:
+    case SUCCESS_ORDER_FAILURE:
       return {
         ...state,
         error: action.payload,
@@ -93,11 +104,15 @@ const adminOrderReducer = (state = initialState, action) => {
     case DELETE_ORDER_REQUEST:
       return { ...state, loading: true };
     case DELETE_ORDER_SUCCESS:
-      return { ...state, loading: false, orders:state.orders.filter((order)=>order.id!==action.payload) };
+      return {
+        ...state,
+        loading: false,
+        orders: state.orders.filter((order) => order.id !== action.payload),
+      };
     case DELETE_ORDER_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
-      case SHIP_ORDER_REQUEST:
+    case SHIP_ORDER_REQUEST:
       return {
         ...state,
         isLoading: true,
@@ -107,7 +122,7 @@ const adminOrderReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        shipped:action.payload
+        shipped: action.payload,
       };
     case SHIP_ORDER_FAILURE:
       return {

@@ -16,6 +16,7 @@ import { deepOrange, deepPurple } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../../Redux/Admin/Users/Action";
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 
 const Customers = () => {
   const [page, setPage] = useState(1);
@@ -67,6 +68,7 @@ const Customers = () => {
             </TableHead>
             <TableBody>
               {usersToDisplay.map((user, index) => (
+                user.firstName !== "Sneakers" && (
                 <TableRow
                   hover
                   key={user.id}
@@ -83,9 +85,23 @@ const Customers = () => {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.mobile}</TableCell>
                   <TableCell>{user.points}</TableCell>
-                  <TableCell>{user.rank}</TableCell>
+                  <TableCell>
+                    <MilitaryTechIcon 
+                    style={{
+                      color:
+                        user.rank === "BRONZE"
+                          ? "brown"
+                          : user.rank === "SILVER"
+                          ? "silver"
+                          : user.rank === "GOLD"
+                          ? "gold"
+                          : user.rank === "DIAMOND"
+                          ? "lightblue"
+                          : "purple",
+                    }}
+                  />{user.rank}</TableCell>
                 </TableRow>
-              ))}
+              )))}
             </TableBody>
           </Table>
         </TableContainer>

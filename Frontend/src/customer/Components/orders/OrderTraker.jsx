@@ -25,7 +25,7 @@ export default function OrderTraker({activeStep}) {
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label) => (
           <Step key={label}>
-            <StepLabel  sx={{ color: '#9155FD',fontSize: '44px' }}  className={``}>{label}</StepLabel>
+            <StepLabel  sx={{ color: '#9155FD',fontSize: '45px' }}  className={``}>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>

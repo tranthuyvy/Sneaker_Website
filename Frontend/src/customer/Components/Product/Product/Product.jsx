@@ -12,7 +12,6 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import Pagination from "@mui/material/Pagination";
 
 import { filters, singleFilter, sortOptions } from "./FilterData";
@@ -24,7 +23,6 @@ import {
   findProducts,
   findProductsByCategory,
 } from "../../../../Redux/Customers/Product/Action";
-import { deepPurple } from "@mui/material/colors";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 function classNames(...classes) {

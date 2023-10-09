@@ -74,14 +74,14 @@ console.log("step",step)
       ) : (
         <React.Fragment>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button
+            {/* <Button
               color="inherit"
               disabled={step == 2}
               onClick={handleBack}
               sx={{ mr: 1 }}
             >
               Back
-            </Button>
+            </Button> */}
             <Box sx={{ flex: "1 1 auto" }} />
 
             
