@@ -1,0 +1,60 @@
+.product-card {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease-in-out;
+  margin: 30px;
+}
+
+.product-info-section {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.product-info {
+  flex: 1;
+  padding: 20px;
+}
+
+.product-info h2 {
+  font-family: "YourChosenFont", sans-serif; 
+  font-size: 2.2rem; 
+  font-weight: bold; 
+}
+
+.product-info p {
+  font-size: 1.2rem; 
+}
+
+.product-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-image img {
+  max-width: 110%;
+  max-height: 110%;
+  border-radius: 8px;
+}
+
+.product-image:hover {
+  transform: scale(1.1);
+}
+
+.product-image::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px; 
+  z-index: -1;
+  opacity: 0.7;
+  pointer-events: none;
+}

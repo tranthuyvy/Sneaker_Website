@@ -1,0 +1,38 @@
+.filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #ffffff;
+    padding: 10px;
+    border-left: 3px solid #f3f4f6;
+  }
+  
+  .filter-option {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    position: relative;
+  }
+  
+  .filter-option:hover {
+    color: #a400cd;
+  }
+  
+  .filter-option.active {
+    color: #a400cd;
+  }
+  
+  .selected-rectangle {
+    width: 20px;
+    height: 40px;
+    background-color: #a400cd;
+    border-radius: 2px;
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
