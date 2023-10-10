@@ -30,7 +30,7 @@ public class Account {
     @Column(nullable = false)
     private OffsetDateTime createAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
