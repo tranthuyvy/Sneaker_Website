@@ -12,7 +12,6 @@ import jakarta.persistence.OneToMany;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
-
 @Entity
 public class Category {
 
@@ -96,4 +95,7 @@ public class Category {
         this.categoryProducts = categoryProducts;
     }
 
+    public Category(int branchId) {
+        this.id = branchId;
+    }
 }
