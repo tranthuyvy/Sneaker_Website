@@ -16,10 +16,6 @@ public class HomeController {
     public String index() {
         return "Hello World!";
     }
-    @GetMapping("api/auth")
-    @ResponseBody
-    public String api() {
-        return "Call api";
-    }
+   
 
 }
