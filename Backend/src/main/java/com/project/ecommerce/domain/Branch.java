@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.Set;
 
-
 @Entity
 public class Branch {
 
@@ -69,4 +68,7 @@ public class Branch {
         this.branchProducts = branchProducts;
     }
 
+    public Branch(int branchId) {
+        this.id = branchId;
+    }
 }
