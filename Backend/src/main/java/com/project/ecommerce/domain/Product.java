@@ -12,7 +12,6 @@ import jakarta.persistence.OneToMany;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
-
 @Entity
 public class Product {
 
@@ -24,10 +23,11 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private Integer createBy;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "create_by", nullable = false)
+    private Staff createBy;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private OffsetDateTime createAt;
 
     @Column(nullable = false)
@@ -36,16 +36,16 @@ public class Product {
     @Column(nullable = false, name = "\"description\"")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;
- 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "discount_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "discount_id", nullable = true)
     private Discount discount;
 
     @OneToMany(mappedBy = "product")
@@ -70,11 +70,11 @@ public class Product {
         this.name = name;
     }
 
-    public Integer getCreateBy() {
+    public Staff getStaff() {
         return createBy;
     }
 
-    public void setCreateBy(final Integer createBy) {
+    public void setStaff(final Staff createBy) {
         this.createBy = createBy;
     }
 

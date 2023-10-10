@@ -12,7 +12,6 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.Set;
 
-
 @Entity
 public class Staff {
 
@@ -48,6 +47,9 @@ public class Staff {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+
+    @OneToMany(mappedBy = "createBy")
+    private Set<Product> createByProduct;
 
     public Integer getId() {
         return id;
@@ -119,6 +121,14 @@ public class Staff {
 
     public void setCreateByDiscounts(final Set<Discount> createByDiscounts) {
         this.createByDiscounts = createByDiscounts;
+    }
+
+    public Set<Product> getCreateByProduct() {
+        return createByProduct;
+    }
+
+    public void setCreateByProduct(final Set<Product> createByProduct) {
+        this.createByProduct = createByProduct;
     }
 
     public Account getAccount() {
