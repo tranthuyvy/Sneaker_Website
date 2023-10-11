@@ -26,6 +26,8 @@ public class ProductController {
     public Product addProduct(@RequestBody Product product) {
         return productRepository.save(product);
     }
-
-  
+    @GetMapping("/get")
+    public String getProduct(){
+        return "Mạnh";
+    }
 }
