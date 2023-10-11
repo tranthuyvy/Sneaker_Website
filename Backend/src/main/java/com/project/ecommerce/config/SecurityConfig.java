@@ -10,11 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +31,8 @@ public class SecurityConfig {
                 .securityMatcher("/api/v**/admin/**").authorizeHttpRequests(authorize -> authorize
                         .anyRequest().hasRole("ADMIN"))
                 .formLogin(withDefaults())
-                .httpBasic(withDefaults());
+                .httpBasic(withDefaults()).csrf(csrf -> csrf
+                .disable());
         return http.build();
     }
 
@@ -42,12 +40,13 @@ public class SecurityConfig {
     // @Bean
     // public SecurityFilterChain apiFilterChain2(HttpSecurity http) throws
     // Exception {
-    // http
-    // .securityMatcher("/api/v**/staff/**")
-    // .authorizeHttpRequests(authorize -> authorize
-    // .anyRequest().hasAnyRole("STAFF", "ADMIN"))
-    // .formLogin(withDefaults())
-    // .httpBasic(withDefaults());
+    //     http
+    //             .securityMatcher("/api/v**/staff/**")
+    //             .authorizeHttpRequests(authorize -> authorize
+    //                     .anyRequest().hasAnyRole("STAFF", "ADMIN"))
+    //             .formLogin(withDefaults())
+    //             .httpBasic(withDefaults()).csrf(csrf -> csrf
+    //             .disable());
     // return http.build();
     // }
 
@@ -57,8 +56,8 @@ public class SecurityConfig {
 
         http.securityMatcher("/api/v**/customer/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().hasAnyRole("CUSTOMER"))
-                .oauth2Login(withDefaults());
+                        .anyRequest().hasAnyRole("CUSTOMER")).csrf(csrf -> csrf
+                        .disable());
         return http.build();
     }
 
@@ -77,7 +76,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll());
+                        .anyRequest().permitAll()).csrf(csrf -> csrf
+                        .disable());
         return http.build();
     }
 
