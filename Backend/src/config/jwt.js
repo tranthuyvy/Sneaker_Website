@@ -3,6 +3,7 @@ require('dotenv').config()
 
 const createJWT = (data, type="") => {
     let payload = data;
+    delete payload.password
     let key = process.env.ACCESS_KEY
     let token = null
     let keyRefresh = process.env.REFRESH_KEY
@@ -25,7 +26,6 @@ const verifyJWT = (token, type = "") => {
     } catch (e) {
         console.log(e);
     }
-    // console.log(data);
     return data
 }
 
