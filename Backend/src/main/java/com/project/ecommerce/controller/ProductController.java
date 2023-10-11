@@ -16,7 +16,7 @@ import com.project.ecommerce.repos.ProductRepository;
 import com.project.ecommerce.service.ProductService;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/v1/staff/product")
 public class ProductController {
 
     @Autowired
@@ -26,9 +26,8 @@ public class ProductController {
     public Product addProduct(@RequestBody Product product) {
         return productRepository.save(product);
     }
-
-    @GetMapping("/hello")
-    public String testThuPhong() {
-        return "Phong pro";
+    @GetMapping("/get")
+    public String getProduct(){
+        return "Mạnh";
     }
 }
