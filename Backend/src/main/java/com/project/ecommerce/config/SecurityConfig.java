@@ -11,12 +11,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AnyRequestMatcher;
-
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfig {
     private UserDetailsService userDetailsService;
 
@@ -32,32 +31,35 @@ public class SecurityConfig {
                 .securityMatcher("/api/v**/admin/**").authorizeHttpRequests(authorize -> authorize
                         .anyRequest().hasRole("ADMIN"))
                 .formLogin(withDefaults())
-                .httpBasic(withDefaults());
+                .httpBasic(withDefaults()).csrf(csrf -> csrf
+                .disable());
         return http.build();
     }
 
     // @Order(2)
     // @Bean
-    // public SecurityFilterChain apiFilterChain2(HttpSecurity http) throws Exception {
+    // public SecurityFilterChain apiFilterChain2(HttpSecurity http) throws
+    // Exception {
     //     http
     //             .securityMatcher("/api/v**/staff/**")
     //             .authorizeHttpRequests(authorize -> authorize
     //                     .anyRequest().hasAnyRole("STAFF", "ADMIN"))
     //             .formLogin(withDefaults())
-    //             .httpBasic(withDefaults());
-    //     return http.build();
+    //             .httpBasic(withDefaults()).csrf(csrf -> csrf
+    //             .disable());
+    // return http.build();
     // }
 
-//     @Order(3)
-//     @Bean
-//     public SecurityFilterChain apiFilterChain3(HttpSecurity http) throws Exception {
+    @Order(3)
+    @Bean
+    public SecurityFilterChain apiFilterChain3(HttpSecurity http) throws Exception {
 
-//         http.securityMatcher("/api/v**/customer/**")
-//                 .authorizeHttpRequests(authorize -> authorize
-//                         .anyRequest().hasAnyRole("CUSTOMER"))
-//                 .oauth2Login(withDefaults());
-//         return http.build();
-//     }
+        http.securityMatcher("/api/v**/customer/**")
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().hasAnyRole("CUSTOMER")).csrf(csrf -> csrf
+                        .disable());
+        return http.build();
+    }
 
     @Order(4)
     @Bean
@@ -68,12 +70,14 @@ public class SecurityConfig {
                 .formLogin(withDefaults());
         return http.build();
     }
+
     @Order(3)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll());
+                        .anyRequest().permitAll()).csrf(csrf -> csrf
+                        .disable());
         return http.build();
     }
 
