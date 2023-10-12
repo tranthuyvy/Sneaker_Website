@@ -1,0 +1,9 @@
+{
+    "000": "Logged in successfully",
+    "001": "Login failed",
+    "002": "Successful data",
+    "003": "Get data failure",
+    "004": "Add successful data",
+    "005": "Add data failure",
+    "006": "System error"
+}
