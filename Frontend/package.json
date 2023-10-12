@@ -23,7 +23,6 @@
     "react-apexcharts": "^1.4.1",
     "react-barcode": "^1.4.6",
     "react-dom": "^18.2.0",
-    "react-i18next": "^13.2.2",
     "react-modal": "^3.16.1",
     "react-qr-code": "^2.0.12",
     "react-redux": "^8.0.5",
