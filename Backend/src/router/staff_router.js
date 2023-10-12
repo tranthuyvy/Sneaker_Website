@@ -9,4 +9,8 @@ staff_router.get("/:id_account", (req, res) =>
   staffController.getProfileByIdStaff(req, res)
 );
 
+staff_router.put("/:id_account", (req, res) =>
+  staffController.updateProfile(req, res)
+);
+
 export default staff_router;
