@@ -5,8 +5,8 @@ import AdminPannel from "./Admin/AdminPannel";
 import { useState, useEffect } from "react";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
 import api from "./config/api";
-import common_vi from "./Lang/vi.json";
-import common_en from "./Lang/en.json"
+import common_vi from "./Lang/vi.json
+import common_en from "./Lang/en.json";
 function App(props) {
   const [common, setCommon] = useState(common_en);
   const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty('jwt'))
@@ -43,5 +43,4 @@ function App(props) {
     </div>
   );
 }
-
 export default App;
