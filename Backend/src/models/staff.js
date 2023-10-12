@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('staff', {
     id: {
       autoIncrement: true,
@@ -9,19 +9,19 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
     phone: {
       type: DataTypes.STRING(10),
-      allowNull: false
+      allowNull: true
     },
     email: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
     id_card: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: true
     },
     id_account: {
       type: DataTypes.INTEGER,
@@ -33,15 +33,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     date_of_birth: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: true
     },
     sex: {
-      type: DataTypes.ENUM('Nam','Nữ','Khác'),
+      type: DataTypes.ENUM('Nam', 'Nữ', 'Khác'),
       allowNull: true
     },
     bank_account_number: {
       type: DataTypes.STRING(15),
-      allowNull: false
+      allowNull: true
     },
     start_work: {
       type: DataTypes.DATE,
@@ -50,7 +50,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     end_work: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     create_by: {
       type: DataTypes.INTEGER,
