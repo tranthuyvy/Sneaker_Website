@@ -15,23 +15,23 @@ function App() {
     // Xử lý thông tin người dùng sau khi đăng nhập thành công
     console.log('Logged in successfully:', response);
     console.log(jwtDecode(response.credential))
-};
+  };
 
-const handleFailure = (error) => {
+  const handleFailure = (error) => {
     // Xử lý khi đăng nhập thất bại
     console.error('Login failed:', error);
-};
+  };
   return (
     <GoogleOAuthProvider
       clientId="156409993558-716kd0g7s83nht2hekpd3vvkmqbne265.apps.googleusercontent.com"
-     
+
     >
       <div className="">
-      <GoogleLogin
-                   
-                   onSuccess={handleSuccess}
-                   onFailure={handleFailure}
-               />
+        <GoogleLogin
+          useOneTap
+          onSuccess={handleSuccess}
+          onFailure={handleFailure}
+        />
         <Routes>
           <Route path="/*" element={<CustomerRoutes />} />
           <Route path="/admin/*" element={<AdminPannel />} />
