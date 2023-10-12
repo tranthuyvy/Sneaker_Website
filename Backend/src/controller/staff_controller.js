@@ -16,7 +16,7 @@ class StaffController {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Lỗi server" });
+      res.status(500).json({ error: "Error" });
     }
   }
 }
