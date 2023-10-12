@@ -10,32 +10,20 @@ import { useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import api from "./config/api";
-import i18next from "react-i18next";
-function App() {
-  const [language, setLanguage] = useState("en");
-  const i18n = i18next.createInstance({
-    resources: {
-      en: {
-        translations: require("./Lang/en.json"),
-      },
-      vi: {
-        translations: require("./Lang/vi.json"),
-      },
-    },
-    detection: {
-      // detect language based on browser's preferred language
-      useBrowserDetection: true,
-    },
-  });
-  const isAdmin = true;
 
+import common_vi from "./Lang/vi.json";
+import common_en from "./Lang/en.json"
+function App(props) {
+  const [common, setCommon] = useState(common_en);
+ 
+  const isAdmin = true;
+ 
   const handleSuccess = async (response) => {
     // Xử lý thông tin người dùng sau khi đăng nhập thành công
-    const data = await api.post("/api/v1/auth/login/google", {
+    const data = (await api.post("/api/v1/auth/login/google", {
       code: response.credential
-    })
-    alert(i18n.t(data.code))
-    console.log(data)
+    })).data
+    alert(common[data.code])
   };
 
   const handleFailure = (error) => {
@@ -44,14 +32,14 @@ function App() {
   };
   return (
     <GoogleOAuthProvider clientId="156409993558-716kd0g7s83nht2hekpd3vvkmqbne265.apps.googleusercontent.com" >
-
-      <div className="">
-        <Routes>
-          <Route path="/*" element={<CustomerRoutes />} />
-          <Route path="/admin/*" element={<AdminPannel />} />
-        </Routes>
-        <GoogleLogin onSuccess={handleSuccess} onFailure={handleFailure} useOneTap={true} />
-      </div>
+        <div className="">
+          <Routes>
+            <Route path="/*" element={<CustomerRoutes />} />
+            <Route path="/admin/*" element={<AdminPannel />} />
+          </Routes>
+          <GoogleLogin onSuccess={handleSuccess} onFailure={handleFailure} useOneTap={true} />
+        </div>
+     
     </GoogleOAuthProvider>
   );
 }
