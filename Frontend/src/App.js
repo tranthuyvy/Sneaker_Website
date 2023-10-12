@@ -10,7 +10,7 @@ import { useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import api from "./config/api";
-
+import i18next from "react-i18next";
 function App() {
   // const [language, setLanguage] = useState("en");
   // const i18n = i18next.createInstance({
