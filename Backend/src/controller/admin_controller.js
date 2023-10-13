@@ -3,6 +3,7 @@ const admin = Model.account
 const staff = Model.staff
 import bcrypt from 'bcrypt'
 const salt = bcrypt.genSaltSync(10);
+import auth from '../middleware/authenJWT'
 
 class admin_controller {
     //Admin tạo tài khoản cho nhân viên
@@ -73,11 +74,14 @@ class admin_controller {
     }
 
     hello2 = (req, res) => {
-        let { email } = req.body
-        let emailPattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
-        let check = emailPattern.test(email);
-        // console.log("");
-        return res.json({ alo: "Hello Phong", check, email });
+        let hell = auth.tokenData(req).id;
+        console.log(hell);
+        return res.send("Hello world from admin controller")
+        // let { email } = req.body
+        // let emailPattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
+        // let check = emailPattern.test(email);
+        // // console.log("");
+        // return res.json({ alo: "Hello Phong", check, email });
     }
 }
 

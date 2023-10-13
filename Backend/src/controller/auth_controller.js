@@ -8,10 +8,13 @@ const saltRounds = 10;
 class auth_controller {
     async login(req, res) {
         const { username, password } = req.body;
+        console.log(username, password);
         try {
             const acc = await account.findOne({ where: { name: username } });
+            console.log(acc);
             if (acc) {
                 const match = await bcrypt.compare(password, acc.dataValues.password);
+                console.log(match);
                 if (match) {
                     res.status(200).send({
                         accessToken: createJWT(acc.dataValues),
@@ -56,7 +59,7 @@ class auth_controller {
                     code: "000"
                 })
             }
-            
+
         } catch (error) {
             console.log(error)
             res.send({ code: "006" })
