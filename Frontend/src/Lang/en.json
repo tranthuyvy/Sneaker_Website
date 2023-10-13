@@ -5,5 +5,12 @@
     "003": "Get data failure",
     "004": "Add successful data",
     "005": "Add data failure",
-    "006": "System error"
+    "006": "System error",
+    "007": "Email already exists in the system",
+    "008": "Successfully created employee account",
+    "009": "Enter missing data",
+    "010": "Email invalidate",
+    "011": "Product name already exists",
+    "012": "Added product successfully",
+    "013": "Updated data successfully"
 }
