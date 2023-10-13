@@ -57,7 +57,14 @@ class product_controller {
             if (page || pageSize) {
                 let startIndex = (page - 1) * pageSize;
                 let endIndex = startIndex + pageSize;
-                let data = await product.findAll();
+                let data = await product.findAll({
+                    include: [
+                        {
+                            model: Model.product_detail,
+                            as: 'product_details',
+                        }
+                    ],
+                });
                 const paginatedProducts = data.slice(startIndex, endIndex);
                 return res.status(200).send({ code: "002", data: paginatedProducts })
 
