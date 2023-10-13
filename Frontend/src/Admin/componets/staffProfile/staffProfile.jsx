@@ -99,7 +99,7 @@ const StaffProfile = () => {
         sx={{ textAlign: "center" }}
         className="py-10 text-center"
       >
-        {editedStaff.name}
+        Hello, {editedStaff.name}
         <div className="flex justify-center m-10">
           <label htmlFor="fileInput">
             <Avatar
@@ -149,7 +149,7 @@ const StaffProfile = () => {
             },
             {
               label: "CCCD",
-              name: "CCCD",
+              name: "id_card",
               value: editedStaff.id_card,
             },
             {
@@ -160,25 +160,17 @@ const StaffProfile = () => {
             {
               label: "Birthday",
               name: "date_of_birth",
-              value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy"),
-              disabled: true,
+              value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
             },
             {
               label: "Sex",
               name: "sex",
               value: editedStaff.sex,
-              disabled: true,
-              //   startAdornment: (
-              //     <InputAdornment position="start">
-              //       <MilitaryTechIcon />
-              //     </InputAdornment>
-              //   ),
             },
             {
               label: "Bank Number",
               name: "bank_account_number",
-              value: editedStaff.bank_account_number,
-              disabled: true,
+              value: editedStaff.bank_account_number
             },
             {
               label: "Start Work",
@@ -204,7 +196,6 @@ const StaffProfile = () => {
                         Ngừng Làm Việc
                     </>
                   )}
-                    {/* {editedStaff.status} */}
                 </InputAdornment>
               ),
             },
