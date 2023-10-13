@@ -15,6 +15,7 @@ import "./staffProfile.css";
 import { format } from "date-fns";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import api from '../../../config/api';
 
 const StaffProfile = () => {
   const [staff, setStaff] = useState(null);
@@ -22,10 +23,15 @@ const StaffProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
+  const token = localStorage.getItem("accessToken");
+  //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmFtZSI6InR0di50aHV5dnlAZ21haWwuY29tIiwiaWRfcm9sZSI6MSwiY3JlYXRlX2F0IjoiMjAyMy0xMC0xM1QwNjo0NTo1MS4wMDBaIiwiaWF0IjoxNjk3MjA3OTUwLCJleHAiOjE2OTcyMjU5NTB9.guJFU90JxRcak0YWz4egfp9gTt_yECKd3RyWXadMLzE";
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/v1/staff/1")
+      api.get("api/v1/staff", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const staffData = response.data;
         setStaff(staffData);
@@ -38,9 +44,9 @@ const StaffProfile = () => {
         setUpdateSuccess(true);
       })
       .catch((error) => {
-        console.error("Error Call API:", error.response?.data || error.message);
+        console.error("Lỗi khi gọi API:", error.response?.data || error.message);
       });
-  }, []);
+  }, [token]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -53,8 +59,7 @@ const StaffProfile = () => {
   };
 
   const handleSaveEdit = () => {
-    axios
-      .put("http://localhost:8080/api/v1/staff/1", editedStaff)
+      api.put("/api/v1/staff", editedStaff)
       .then((response) => {
         setStaff(response.data);
         setIsEditing(false);

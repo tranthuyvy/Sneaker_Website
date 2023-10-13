@@ -5,7 +5,6 @@ const staff = Model.staff;
 class StaffController {
   async getProfileByIdStaff(req, res) {
     const id_account = auth.tokenData(req).id;
-    console.log(id_account);
     try {
       // const id_account = req.params.id_account;
 
