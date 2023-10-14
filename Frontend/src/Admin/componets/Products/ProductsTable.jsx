@@ -12,6 +12,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Pagination,
 } from "@mui/material";
 
 import React from "react";
@@ -22,23 +23,49 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import Barcode from "react-barcode";
-import api from '../../../config/api';
+import api from "../../../config/api";
 
 const ProductsTable = () => {
-
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 5;
 
-  useEffect(() => {
-    api.get('api/v1/product/get')
+  const fetchProducts = (page) => {
+    api
+      .get(`api/v1/product/get?page=${page}&pageSize=${pageSize}`)
       .then((response) => {
-        const productsArray = Array.isArray(response.data.listProduct) ? response.data.listProduct : [];
+        const productsArray = Array.isArray(response.data.data)
+          ? response.data.data
+          : [];
         setProducts(productsArray);
+        setCurrentPage(page);
+        setTotalPages(response.data.totalPage);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchProducts(currentPage);
   }, []);
+
+  const handlePaginationChange = (event, page) => {
+    fetchProducts(page);
+  };
+
+  // useEffect(() => {
+  //   api.get('api/v1/product/get')
+  //     .then((response) => {
+  //       const productsArray = Array.isArray(response.data.data) ? response.data.data : [];
+  //       setProducts(productsArray);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi khi gọi API:", error);
+  //     });
+  // }, []);
 
   // const handleDeleteProduct = (productId) => {
   //   console.log("delete product ", productId);
@@ -148,9 +175,7 @@ const ProductsTable = () => {
                 <TableCell>Name</TableCell>
                 {/* <TableCell sx={{ textAlign: "center" }}>Category</TableCell> */}
                 <TableCell sx={{ textAlign: "center" }}>Price</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  Brand
-                </TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Brand</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Category</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
                 {/* <TableCell sx={{ textAlign: "center" }}>Delete</TableCell> */}
@@ -178,18 +203,18 @@ const ProductsTable = () => {
 
                   <TableCell>
                     <Barcode
-                      style={{ width: '50px', height: 'auto' }} 
-                      value={product.id} 
+                      style={{ width: "50px", height: "auto" }}
+                      value={product.id}
                     />
                   </TableCell>
 
                   <TableCell>
                     {" "}
-                    <Avatar 
-                      // alt={product.name} 
-                      // src={product.imageUrl} 
-                      style={{ width: '50px', height: '50px' }} 
-                      />{" "}
+                    <Avatar
+                      // alt={product.name}
+                      // src={product.imageUrl}
+                      style={{ width: "50px", height: "50px" }}
+                    />{" "}
                   </TableCell>
 
                   <TableCell
@@ -210,7 +235,7 @@ const ProductsTable = () => {
                     {product.id_category}
                   </TableCell> */}
                   <TableCell sx={{ textAlign: "center" }}>
-                  {product.product_price}
+                    {product.product_price}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     {product.id_branch}
@@ -236,7 +261,6 @@ const ProductsTable = () => {
                     >
                       <DeleteIcon />
                     </Button>
-
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     <Button
@@ -256,16 +280,17 @@ const ProductsTable = () => {
         </TableContainer>
       </Card>
       <Card className="mt-2 border">
-
-        {/* <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
+        <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
           <Pagination
-            count={customersProduct.products?.totalPages}
+            count={totalPages}
+            size="large"
+            page={currentPage}
             color="primary"
-            className=""
             onChange={handlePaginationChange}
-            // value={page}
+            showFirstButton
+            showLastButton
           />
-        </div> */}
+        </div>
       </Card>
     </Box>
   );
