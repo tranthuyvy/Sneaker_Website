@@ -1,8 +1,7 @@
 import React from "react";
-import "./ProductInfoSection.css";
 import { Link } from "react-router-dom";
-
-const ProductInfoSection = () => {
+import ProductItem from '../Styles/ProductItem.css'
+const ItemProduct = () => {
   return (
     <div className="product-card">
       <div className="product-info-section">
@@ -27,4 +26,4 @@ const ProductInfoSection = () => {
   );
 };
 
-export default ProductInfoSection;
+export default ItemProduct;

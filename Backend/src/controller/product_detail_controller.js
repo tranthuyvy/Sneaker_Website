@@ -6,11 +6,11 @@ class product_detail_controller {
             const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
             const { idProduct, size, color } = req.body;
             const product_detail = await Model.product_detail.create({ color, size, id_product: idProduct })
-            const img = await Model.product_image.create({id_product_detail:product_detail.dataValues.id,image})
-            res.status(200).send({code:"004"})
+            const img = await Model.product_image.create({ id_product_detail: product_detail.dataValues.id, image })
+            res.status(200).send({ code: "004" })
         } catch (error) {
             console.log(error)
-            res.status(500).send({code:"005"})
+            res.status(500).send({ code: "005" })
         }
     }
 }
