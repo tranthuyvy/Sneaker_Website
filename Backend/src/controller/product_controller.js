@@ -43,29 +43,44 @@ class product_controller {
 
         if (id_product) {
             console.log("id:", id_product);
-            let data = await product.findOne({ where: { id: id_product } });
-            return res.status(200).send({ code: "002", listProduct: data })
+            let data = await product.findOne({ where: { id: id_product },
+                include: [
+                    {
+                        model: Model.product_detail,
+                        as: 'product_details',
+                    }
+                ],
+             });
+            return res.status(200).send({ code: "002", data: data })
         }
         else {
             if (page || pageSize) {
                 let startIndex = (page - 1) * pageSize;
                 let endIndex = startIndex + pageSize;
-                let data = await product.findAll();
+                let data = await product.findAll({
+                    include: [
+                        {
+                            model: Model.product_detail,
+                            as: 'product_details',
+                        }
+                    ],
+                });
                 const paginatedProducts = data.slice(startIndex, endIndex);
-                return res.status(200).send({ code: "002", listProduct: paginatedProducts })
+                return res.status(200).send({ code: "002", data: paginatedProducts })
 
             }
             else {
 
                 let data = await product.findAll();
 
-                return res.status(200).send({ code: "002", listProduct: data })
+                return res.status(200).send({ code: "002", data: data })
             }
         }
 
         //nếu bình thường thì lấy hết còn không thì lấy theo id
         console.log("Check list product: ", data);
     }
+    
 }
 
 export default new product_controller;
