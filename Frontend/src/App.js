@@ -8,7 +8,7 @@ import api from "./config/api";
 import common_vi from "./Lang/vi.json";
 import common_en from "./Lang/en.json";
 function App(props) {
-  const [common, setCommon] = useState(common_en);
+  const [common, setCommon] = useState(common_vi);
   const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty('jwt'))
   const isAdmin = true;
   console.log(isLogin)
