@@ -30,6 +30,7 @@ import Customers from "./componets/customers/customers";
 import UpdateProductForm from "./componets/updateProduct/UpdateProduct";
 import ProductReview from "./componets/productReview/ProductReview";
 import StaffProfile from "./componets/staffProfile/staffProfile";
+import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Auth/Action";
 import { useDispatch } from "react-redux";
 
@@ -51,7 +52,7 @@ export default function AdminPannel() {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/");
+    navigate("/admin/login");
   };
 
   const drawer = (
@@ -147,6 +148,7 @@ export default function AdminPannel() {
             <Route path="/orders/:orderId" element={<OrderDetail/>}></Route>
             <Route path="/customers" element={<Customers/>}></Route>
             <Route path="/staff/profile" element={<StaffProfile/>}></Route>
+            <Route path="/login" element={<Login/>}></Route>
             <Route path="/demo" element={<DemoAdmin />}></Route>
           </Routes>
          
