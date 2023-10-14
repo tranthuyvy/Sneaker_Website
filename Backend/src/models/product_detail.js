@@ -2,8 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('product_detail', {
     id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(15),
       allowNull: false,
       primaryKey: true
     },
@@ -16,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     id_product: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(15),
       allowNull: false,
       references: {
         model: 'product',

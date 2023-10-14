@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     id_product: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(15),
       allowNull: false,
       references: {
         model: 'product',
