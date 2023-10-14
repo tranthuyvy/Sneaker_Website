@@ -4,12 +4,7 @@ import {
   Button,
   Card,
   CardHeader,
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Pagination,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -23,85 +18,47 @@ import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteProduct,
-  findProducts,
-} from "../../../Redux/Customers/Product/Action";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import Barcode from "react-barcode";
+import api from '../../../config/api';
 
 const ProductsTable = () => {
-  const location = useLocation();
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { customersProduct } = useSelector((store) => store);
-  const [filterValue, setFilterValue] = useState({
-    availability: "",
-    category: "",
-    sort: "",
-  });
-
-  // query
-  const searchParams = new URLSearchParams(location.search);
-  const availability = searchParams.get("availability");
-  const category = searchParams.get("category");
-  const sort = searchParams.get("sort");
-  const page = searchParams.get("page");
-
-  const handlePaginationChange = (event, value) => {
-    searchParams.set("page", value - 1);
-    const query = searchParams.toString();
-    navigate({ search: `?${query}` });
-  };
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // setFilterValue({ availability, category, sort });
-    const data = {
-      category: category || "",
-      colors: [],
-      sizes: [],
-      minPrice: 0,
-      maxPrice: 100000,
-      minDiscount: 0,
-      sort: sort || "price_low",
-      pageNumber: page || 0,
-      pageSize: 10,
-      stock: availability,
-    };
-    dispatch(findProducts(data));
-  }, [availability, category, sort, page, customersProduct.deleteProduct]);
+    api.get('api/v1/product/get')
+      .then((response) => {
+        const productsArray = Array.isArray(response.data.listProduct) ? response.data.listProduct : [];
+        setProducts(productsArray);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  }, []);
 
-  const handleFilterChange = (e, sectionId) => {
-    console.log(e.target.value, sectionId);
-    setFilterValue((values) => ({ ...values, [sectionId]: e.target.value }));
-    searchParams.set(sectionId, e.target.value);
-    const query = searchParams.toString();
-    navigate({ search: `?${query}` });
-  };
-
-  const handleDeleteProduct = (productId) => {
-    console.log("delete product ", productId);
-    dispatch(deleteProduct(productId));
-  };
+  // const handleDeleteProduct = (productId) => {
+  //   console.log("delete product ", productId);
+  //   dispatch(deleteProduct(productId));
+  // };
 
   return (
     <Box width={"100%"}>
       <Card className="p-3">
-        <CardHeader
+        {/* <CardHeader
           title="Sort"
           sx={{
             pt: 0,
             alignItems: "center",
             "& .MuiCardHeader-action": { mt: 0.6 },
           }}
-        />
+        /> */}
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <FormControl fullWidth>
+            {/* <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Category</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -126,7 +83,7 @@ const ProductsTable = () => {
                 <MenuItem value={"jordan"}>Nike Jordan</MenuItem>
                 <MenuItem value={"life_style"}>Nike Lifestyle</MenuItem>
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Grid>
           {/* <Grid item xs={4}>
             <FormControl fullWidth>
@@ -147,7 +104,7 @@ const ProductsTable = () => {
             </FormControl>
           </Grid> */}
           <Grid item xs={4}>
-            <FormControl fullWidth>
+            {/* <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
                 Sort By Price
               </InputLabel>
@@ -161,7 +118,7 @@ const ProductsTable = () => {
                 <MenuItem value={"price_high"}>Heigh - Low</MenuItem>
                 <MenuItem value={"price_low"}>Low - Heigh</MenuItem>
               </Select>
-            </FormControl>
+            </FormControl> */}
           </Grid>
         </Grid>
       </Card>
@@ -188,27 +145,27 @@ const ProductsTable = () => {
                 <TableCell>QR CODE</TableCell>
                 <TableCell>BAR CODE</TableCell>
                 <TableCell>Image</TableCell>
-                <TableCell>Title</TableCell>
+                <TableCell>Name</TableCell>
                 {/* <TableCell sx={{ textAlign: "center" }}>Category</TableCell> */}
                 <TableCell sx={{ textAlign: "center" }}>Price</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
-                  Discounted Price
+                  Brand
                 </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Quantity</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Category</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
                 {/* <TableCell sx={{ textAlign: "center" }}>Delete</TableCell> */}
                 <TableCell sx={{ textAlign: "center" }}>Reviews</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {customersProduct?.products?.content?.map((item) => (
+              {products.map((product) => (
                 <TableRow
                   hover
-                  key={item.name}
+                  key={product.id}
                   sx={{ "&:last-of-type td, &:last-of-type th": { border: 0 } }}
                 >
                   <TableCell>
-                    {item.id && (
+                    {product.id && (
                       <QRCode
                         size={140}
                         bgColor="white"
@@ -222,16 +179,16 @@ const ProductsTable = () => {
                   <TableCell>
                     <Barcode
                       style={{ width: '50px', height: 'auto' }} 
-                      value={item.id} 
+                      value={product.id} 
                     />
                   </TableCell>
 
                   <TableCell>
                     {" "}
                     <Avatar 
-                      alt={item.title} 
-                      src={item.imageUrl} 
-                      style={{ width: '100px', height: '100px' }} 
+                      // alt={product.name} 
+                      // src={product.imageUrl} 
+                      style={{ width: '50px', height: '50px' }} 
                       />{" "}
                   </TableCell>
 
@@ -245,28 +202,27 @@ const ProductsTable = () => {
                           fontSize: "0.875rem !important",
                         }}
                       >
-                        {item.title}
+                        {product.name}
                       </Typography>
-                      <Typography variant="caption">{item.brand}</Typography>
                     </Box>
                   </TableCell>
                   {/* <TableCell sx={{ textAlign: "center" }}>
-                    {item.category.name}
+                    {product.id_category}
                   </TableCell> */}
                   <TableCell sx={{ textAlign: "center" }}>
-                    {item.price}
+                  {product.product_price}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {item.discountedPrice}
+                    {product.id_branch}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {item.quantity}
+                    {product.id_category}
                   </TableCell>
                   <TableCell style={{}} sx={{ textAlign: "center" }}>
                     <Button
-                      onClick={() =>
-                        navigate(`/admin/product/update/${item.id}`)
-                      }
+                      // onClick={() =>
+                      //   navigate(`/admin/product/update/${item.id}`)
+                      // }
                       variant="text"
                       color="warning"
                     >
@@ -275,27 +231,18 @@ const ProductsTable = () => {
 
                     <Button
                       variant="text"
-                      onClick={() => handleDeleteProduct(item.id)}
+                      // onClick={() => handleDeleteProduct(item.id)}
                       color="secondary"
                     >
                       <DeleteIcon />
                     </Button>
 
                   </TableCell>
-                  {/* <TableCell sx={{ textAlign: "center" }}>
-                    <Button
-                      variant="text"
-                      onClick={() => handleDeleteProduct(item.id)}
-                      color="secondary"
-                    >
-                      <DeleteIcon />
-                    </Button>
-                  </TableCell> */}
                   <TableCell sx={{ textAlign: "center" }}>
                     <Button
-                      onClick={() =>
-                        navigate(`/admin/product/reviews/${item.id}`)
-                      }
+                      // onClick={() =>
+                      //   navigate(`/admin/product/reviews/${item.id}`)
+                      // }
                       variant="text"
                       color="success"
                     >
@@ -309,15 +256,8 @@ const ProductsTable = () => {
         </TableContainer>
       </Card>
       <Card className="mt-2 border">
-        {/* <Pagination
-          className="py-5 border w-auto"
-          size="large"
-          count={10}
-          color="primary"
-          onChange={handlePaginationChange}
-        /> */}
 
-        <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
+        {/* <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
           <Pagination
             count={customersProduct.products?.totalPages}
             color="primary"
@@ -325,7 +265,7 @@ const ProductsTable = () => {
             onChange={handlePaginationChange}
             // value={page}
           />
-        </div>
+        </div> */}
       </Card>
     </Box>
   );
