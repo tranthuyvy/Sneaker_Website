@@ -1,10 +1,12 @@
 import Model from "../config/sequelize";
+import auth from "../middleware/authenJWT";
 const staff = Model.staff;
 
 class StaffController {
   async getProfileByIdStaff(req, res) {
+    const id_account = auth.tokenData(req).id;
     try {
-      const id_account = req.params.id_account;
+      // const id_account = req.params.id_account;
 
       const staff_pro = await staff.findOne({
         where: { id_account },
@@ -23,7 +25,7 @@ class StaffController {
 
   async updateProfile(req, res) {
     try {
-      const id_account = req.params.id_account;
+      const id_account = auth.tokenData(req).id;
       const updatedData = req.body;
 
       const staff_pro = await staff.findOne({
