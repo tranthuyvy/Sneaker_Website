@@ -8,6 +8,7 @@ import common_vi from "./Lang/vi.json";
 import common_en from "./Lang/en.json";
 import Routers from "./Routers/Routers_Public";
 import Footer from "./Components/Footer";
+import AdminPannel from "./Admin/AdminPannel";
 function App(props) {
   const [common, setCommon] = useState(common_vi);
   const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty('jwt'))
@@ -40,7 +41,7 @@ function App(props) {
       })} />
       <Routes>
         <Route path="/*" element={<Routers />} />
-        {/* <Route path="/admin/*" element={<AdminPannel />} /> */}
+        <Route path="/admin/*" element={<AdminPannel />} />
       </Routes>
       <footer>
         <Footer></Footer>
