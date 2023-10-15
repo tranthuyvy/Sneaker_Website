@@ -4,6 +4,7 @@ import {
   generateProductDetailId,
   generateProductId
 } from '../service/common'
+const branch = Model.branch;
 
 class product_controller {
   createProduct = async (req, res) => {
@@ -24,39 +25,46 @@ class product_controller {
       description
     );
 
-    // let id = common.generateProductId("AF", "Nike");
-    console.log(generateProductDetailId(generateProductId("air jordan", "adidas"), '30', "Đỏ"))
-    // console.log(">>> Check id", id);
     //Kiểm tra nhập đủ trường chưa
     if (!name || !id_branch || !id_category || !product_price || !description) {
       return res.status(500).send({ code: "009" });
     }
 
-    //Check xem thằng name có trong db chưa
-    // let checkName = await product.findOne({ where: { name } });
-    // console.log(checkName);
-    // if (checkName?.dataValues) {
-    //   return res.status(500).send({ code: "011" });
-    // } else {
-    //   try {
-    //     let dataProduct = await product.create({
-    //       name,
-    //       id_branch,
-    //       id_category,
-    //       create_by,
-    //       product_price,
-    //       description,
-    //       status: 1,
-    //     });
+    // Check xem thằng name có trong db chưa
+    let checkName = await product.findOne({ where: { name } });
+    console.log(checkName);
+    if (checkName?.dataValues) {
+      return res.status(500).send({ code: "011" });
+    } else {
+      try {
+        let nameBranch = await branch.findOne({ id: id_branch });
+        console.log(nameBranch.dataValues.id);
+        let id = '';
+        if (nameBranch && nameBranch.dataValues && nameBranch.dataValues.id) {
+          id = generateProductId(name, nameBranch.dataValues.name);
+          // console.log(generateProductId(name, nameBranch));
+        }
 
-    //     console.log("Check data product: ", dataProduct.dataValues);
-    //     console.log("Thêm thành công");
-    //     return res.status(200).send({ code: "012" });
-    //   } catch (e) {
-    //     console.log(e);
-    //     return res.status(500).send({ code: "006" });
-    //   }
-    // }
+
+        let dataProduct = await product.create({
+          id,
+          name,
+          id_branch,
+          id_category,
+          create_by,
+          product_price,
+          description,
+          status: 1,
+        });
+
+        // console.log("Check data product: ", dataProduct.dataValues);
+        console.log("Thêm thành công");
+        return res.status(200).send({ code: "012" });
+      } catch (e) {
+        console.log(e);
+        return res.status(500).send({ code: "006" });
+      }
+    }
   };
 
   getAllProduct = async (req, res) => {
