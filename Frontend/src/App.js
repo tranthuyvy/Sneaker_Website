@@ -11,20 +11,22 @@ import Footer from "./Components/Footer";
 import AdminPannel from "./Admin/AdminPannel";
 function App(props) {
   const [common, setCommon] = useState(common_vi);
-  const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty('jwt'))
+  const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty("jwt"));
   const isAdmin = true;
-  console.log(isLogin)
+  console.log(isLogin);
   const handleSuccess = async (response) => {
     // Xử lý thông tin người dùng sau khi đăng nhập thành công
-    const data = (await api.post("/api/v1/auth/login/google", {
-      code: response.credential
-    })).data
+    const data = (
+      await api.post("/api/v1/auth/login/google", {
+        code: response.credential,
+      })
+    ).data;
     if (data.code.localeCompare("000" == 0)) {
-      localStorage.setItem('jwt', data.accessToken);
-      localStorage.setItem('refresh_token', data.refreshToken);
-      setIsLogin(true)
+      localStorage.setItem("jwt", data.accessToken);
+      localStorage.setItem("refresh_token", data.refreshToken);
+      setIsLogin(true);
     }
-    alert(common[data.code])
+    alert(common[data.code]);
   };
   const handleFailure = (error) => {
     // Xử lý khi đăng nhập thất bại
@@ -34,11 +36,13 @@ function App(props) {
   return (
     <div className="">
       <div></div>
-      <div useOneTap={useGoogleOneTapLogin({
-        onSuccess: handleSuccess,
-        onFailure: handleFailure,
-        disabled: isLogin
-      })} />
+      <div
+        useOneTap={useGoogleOneTapLogin({
+          onSuccess: handleSuccess,
+          onFailure: handleFailure,
+          disabled: isLogin,
+        })}
+      />
       <Routes>
         <Route path="/*" element={<Routers />} />
         <Route path="/admin/*" element={<AdminPannel />} />

@@ -14,25 +14,23 @@ import { useTheme } from "@mui/material/styles";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import { customTheme } from "./them/customeThem";
-import AdminNavbar from "./Navigation/AdminNavbar";
-import Dashboard from "./Views/Admin";
+import { customTheme } from "./them/customThem";
+// import AdminNavbar from "./Navigation/AdminNavbar";
+import Dashboard from "./Views/dashBoard";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import DemoAdmin from "./Views/DemoAdmin";
-import CreateProductForm from "./componets/createProduct/CreateProductFrom";
-import CreateProuductDemo from "./componets/createProduct/CreateProuductDemo";
-import CreateProduct from "../customer/Components/Create/CreateProduct";
+import SideBar from "./Views/sideBar";
+// import CreateProductForm from "./componets/createProduct/CreateProductFrom";
 import "./AdminPannel.css";
-import ProductsTable from "./componets/Products/ProductsTable";
-import OrdersTable from "./componets/Orders/OrdersTable";
-import OrderDetail from "./componets/Orders/OrderDetail";
-import Customers from "./componets/customers/customers";
-import UpdateProductForm from "./componets/updateProduct/UpdateProduct";
-import ProductReview from "./componets/productReview/ProductReview";
+// import ProductsTable from "./componets/Products/ProductsTable";
+// import OrdersTable from "./componets/Orders/OrdersTable";
+// import OrderDetail from "./componets/Orders/OrderDetail";
+// import Customers from "./componets/customers/customers";
+// import UpdateProductForm from "./componets/updateProduct/UpdateProduct";
+// import ProductReview from "./componets/productReview/ProductReview";
 import StaffProfile from "./componets/staffProfile/staffProfile";
 import CreateStaffAccount from "./componets/createStaffAccount/createStaffAccount";
 import Login from "./componets/auth/Login";
-import { logout } from "../Redux/Auth/Action";
+import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
 
 const drawerWidth = 240;
@@ -115,7 +113,7 @@ export default function AdminPannel() {
     <ThemeProvider theme={customTheme}>
       <Box sx={{ display: `${isLargeScreen ? "flex" : "block"}` }}>
         <CssBaseline />
-        <AdminNavbar handleSideBarViewInMobile={handleSideBarViewInMobile} />
+        {/* <AdminNavbar handleSideBarViewInMobile={handleSideBarViewInMobile} /> */}
 
         <Drawer
           variant={drawerVariant}
@@ -147,17 +145,17 @@ export default function AdminPannel() {
           <Toolbar />
           <Routes>
             <Route path="/" element={ <Dashboard />}></Route>
-            <Route path="/product/create" element={<CreateProductForm/>}></Route>
-            <Route path="/product/update/:productId" element={<UpdateProductForm/>}></Route>
-            <Route path="/product/reviews/:productId" element={<ProductReview/>}></Route>
-            <Route path="/products" element={<ProductsTable/>}></Route>
-            <Route path="/orders" element={<OrdersTable/>}></Route>
-            <Route path="/orders/:orderId" element={<OrderDetail/>}></Route>
-            <Route path="/customers" element={<Customers/>}></Route>
+            {/* <Route path="/product/create" element={<CreateProductForm/>}></Route> */}
+            {/* <Route path="/product/update/:productId" element={<UpdateProductForm/>}></Route> */}
+            {/* <Route path="/product/reviews/:productId" element={<ProductReview/>}></Route> */}
+            {/* <Route path="/products" element={<ProductsTable/>}></Route> */}
+            {/* <Route path="/orders" element={<OrdersTable/>}></Route> */}
+            {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
+            {/* <Route path="/customers" element={<Customers/>}></Route> */}
             <Route path="/staff/profile" element={<StaffProfile/>}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount/>}></Route>
             <Route path="/login" element={<Login/>}></Route>
-            <Route path="/demo" element={<DemoAdmin />}></Route>
+            <Route path="/demo" element={<SideBar />}></Route>
           </Routes>
          
         </Box>
