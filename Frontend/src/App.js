@@ -1,12 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import CustomerRoutes from "./Routers/CustomerRoutes";
-import AdminPannel from "./Admin/AdminPannel";
 import { useState, useEffect } from "react";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
 import api from "./config/api";
 import common_vi from "./Lang/vi.json";
 import common_en from "./Lang/en.json";
+import Routers from "./Routers/Routers_Public";
+import Footer from "./Components/Footer";
 function App(props) {
   const [common, setCommon] = useState(common_vi);
   const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty('jwt'))
@@ -31,15 +32,19 @@ function App(props) {
 
   return (
     <div className="">
+      <div></div>
       <div useOneTap={useGoogleOneTapLogin({
         onSuccess: handleSuccess,
         onFailure: handleFailure,
         disabled: isLogin
       })} />
       <Routes>
-        <Route path="/*" element={<CustomerRoutes />} />
-        <Route path="/admin/*" element={<AdminPannel />} />
+        <Route path="/*" element={<Routers />} />
+        {/* <Route path="/admin/*" element={<AdminPannel />} /> */}
       </Routes>
+      <footer>
+        <Footer></Footer>
+      </footer>
     </div>
   );
 }

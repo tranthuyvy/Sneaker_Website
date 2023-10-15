@@ -4,6 +4,9 @@ const staff = Model.staff
 import bcrypt from 'bcrypt'
 const salt = bcrypt.genSaltSync(10);
 import auth from '../middleware/authenJWT'
+const account = Model.account;
+const user = Model.user;
+const { Op } = require("sequelize");
 
 class admin_controller {
     //Admin tạo tài khoản cho nhân viên
@@ -90,6 +93,51 @@ class admin_controller {
         // let check = emailPattern.test(email);
         // // console.log("");
         // return res.json({ alo: "Hello Phong", check, email });
+    }
+
+    getAllUser = async (req, res) => {
+        //Lấy ra hết id account role > 1
+        //Phân trang
+        let { id_role } = req.query;
+        const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
+        const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu sản phẩm trong 1 trang
+        console.log(pageSize);
+        if (id_role) {
+            let data = [];
+            let startIndex = (page - 1) * pageSize;
+            let endIndex = startIndex + pageSize;
+            //1 Nhân viên
+            if (id_role == 1) {
+                try {
+                    data = await account.findAll({
+                        where: { id_role: 1 },
+                        include: { model: staff, as: 'id_account_staffs' }
+
+                    });
+                    // console.log(data);
+                } catch (error) {
+                    console.log(e);
+                    return res.status(500).send({ code: "006" });
+                }
+            }
+            else if (id_role == 2) {
+                //2 Khách hàng
+                try {
+                    data = await user.findAll();
+                    // console.log(data);
+
+                } catch (e) {
+                    console.log(e);
+                    return res.status(500).send({ code: "006" });
+                }
+            }
+            const paginatedProducts = data.slice(startIndex, endIndex);
+            console.log(pageSize);
+            const totalPage = Math.ceil(data.length / pageSize);
+            return res.status(200).send({ code: "002", data: paginatedProducts, totalPage });
+        }
+
+
     }
 }
 

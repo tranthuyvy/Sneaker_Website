@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_parent: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'category',
         key: 'id'

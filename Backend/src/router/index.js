@@ -3,6 +3,7 @@ import staff_router from "./staff_router";
 import admin_router from "./admin";
 import product_router from "./product";
 import product_detail_router from "./product_detail";
+import category_router from "./category";
 
 import discount_router from "./discount";
 import product_batch_router from "./product_batch";
@@ -16,6 +17,10 @@ export default function router(app) {
 
   app.use("/api/v1/product_detail", product_detail_router);
 
+  app.use("/api/v1/category", category_router)
+
+
   app.use('/api/v1/discount', discount_router)
+
   app.use("/api/v1/product-batch", product_batch_router)
 }

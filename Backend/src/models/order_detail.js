@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     id_product_detail: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(15),
       allowNull: false,
       references: {
         model: 'product_detail',
@@ -41,17 +41,17 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_orderdetail_productdetail",
-        using: "BTREE",
-        fields: [
-          { name: "id_product_detail" },
-        ]
-      },
-      {
         name: "FK_orderdetail_order",
         using: "BTREE",
         fields: [
           { name: "id_order" },
+        ]
+      },
+      {
+        name: "FK_orderdetail_productdetail",
+        using: "BTREE",
+        fields: [
+          { name: "id_product_detail" },
         ]
       },
     ]

@@ -55,6 +55,11 @@ export default function AdminPannel() {
     navigate("/admin/login");
   };
 
+  const handleAccount = () => {
+    
+    navigate("/admin/staff/profile");
+  };
+
   const drawer = (
     <Box
       sx={{
@@ -81,7 +86,7 @@ export default function AdminPannel() {
       <List sx={{ position: "absolute", bottom: 0, width: "100%" }}>
         <Divider />
         {["Account", "Logout"].map((text, index) => (
-          <ListItem key={text} disablePadding onClick={text === "Logout" ? handleLogout : null}>
+          <ListItem key={text} disablePadding onClick={text === "Logout" ? handleLogout : handleAccount}>
             <ListItemButton>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
