@@ -20,23 +20,23 @@ function removeVi(text) {
         .replace(/[đ]/g, "d").replace(" ", "")
     return withoutAccents
 }
-function generateProductDetailId(productId, size, color) {
-    // Lấy 2 chữ cái đầu tiên của ID sản phẩm
-    const brand = productId.slice(0, 3);
+// function generateProductDetailId(productId, size, color) {
+//     // Lấy 2 chữ cái đầu tiên của ID sản phẩm
+//     const brand = productId.slice(0, 3);
 
-    // Chuyển đổi size thành số
-    const sizeNumber = parseInt(size);
+//     // Chuyển đổi size thành số
+//     const sizeNumber = parseInt(size);
 
-    // Tạo mã màu
-    const colorCode = removeVi(color.toLowerCase()).toUpperCase();
+//     // Tạo mã màu
+//     const colorCode = removeVi(color.toLowerCase()).toUpperCase();
 
-    // Tạo ID sản phẩm
-    const productIdWithSizeAndColor = `${brand}${colorCode}${sizeNumber}`;
+//     // Tạo ID sản phẩm
+//     const productIdWithSizeAndColor = `${brand}${colorCode}${sizeNumber}`;
 
-    return productIdWithSizeAndColor.slice(0,15);
-}
+//     return productIdWithSizeAndColor.slice(0,15);
+// }
 function generateProductId(name, brand) {
-    return removeVi((name.replace(" ", "_") + "_" + brand.slice(0, 3)).slice(0,15)).toUpperCase()
+    return removeVi((name.replace(" ", "_") + "_" + brand.slice(0, 3)).slice(0, 15)).toUpperCase()
 }
 // console.log(generateProductId("air jordan","adidas"));
 // console.log(generateProductDetailId(generateProductId("air jordan","adidas"),'30',"Đỏ"))
