@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const auth = {}
 
-auth.tokenData = (req) => {
+auth.tokenData = (req,res) => {
     const authorizationHeader = req.headers['authorization'];
     if (!authorizationHeader) return null;
 
@@ -10,6 +10,7 @@ auth.tokenData = (req) => {
     let result = null;
     jwt.verify(token, process.env.ACCESS_KEY, (err, data) => {
         if (err) {
+            return res.sendStatus(403);
             console.log(err);
         } else {
             result = data;
