@@ -30,7 +30,7 @@ const ProductsTable = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 5;
+  const pageSize = 6;
 
   const fetchProducts = (page) => {
     api
@@ -283,7 +283,7 @@ const ProductsTable = () => {
         <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
           <Pagination
             count={totalPages}
-            size="large"
+            size="medium"
             page={currentPage}
             color="primary"
             onChange={handlePaginationChange}
