@@ -58,7 +58,7 @@ const navigate = useNavigate();
       <CardHeader
           title={
             <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ flex: 1 }}>All Products</span>
+              <span style={{ flex: 1 }}>All Staffs</span>
               <Button
                 onClick={() => navigate("/admin/staff/create")}
                 variant="contained"

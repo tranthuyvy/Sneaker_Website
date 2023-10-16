@@ -13,14 +13,13 @@ import {
   Pagination,
   Button,
 } from "@mui/material";
-import { deepPurple } from "@mui/material/colors";
+import { deepOrange } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
 import api from "../../../config/api";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import { useNavigate } from "react-router-dom";
 
 const AllUser = () => {
-  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -56,7 +55,7 @@ const AllUser = () => {
         <CardHeader
           title={
             <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ flex: 1 }}>All Users</span>
+              <span style={{ flex: 1 }}>All Customers</span>
             </div>
           }
           sx={{ pt: 2, "& .MuiCardHeader-action": { mt: 0.6 } }}
@@ -88,7 +87,7 @@ const AllUser = () => {
                       }}
                     >
                       <TableCell style={{ textAlign: "center" }}>
-                        <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                        <Avatar sx={{ bgcolor: deepOrange[500] }}>
                           {user.name.charAt(0).toUpperCase()}
                         </Avatar>
                       </TableCell>
