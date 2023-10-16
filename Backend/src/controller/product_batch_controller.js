@@ -26,18 +26,22 @@ class product_batch_controller {
         // ]
         let arrProductBatch = [
             {
-                "id": 5,
-                "name": "giày jodan air",
-                "id_branch": 1,
-                "id_category": 2,
-                "create_by": 1,
-                "create_at": "2023-10-12T14:14:43.000Z",
-                "product_price": 200,
-                "id_discount": null,
-                "description": "Giày xanh dương hơi đậm",
-                "update_by": null,
-                "update_at": "2023-10-12T14:14:43.000Z",
-                "status": 1,
+                id: 5,
+                name: "giày jodan air",
+                id_branch: 1,
+                id_category: 2,
+                create_by: 1,
+                create_at: "2023-10-12T14:14:43.000Z",
+                product_price: 200,
+                id_discount: null,
+                description: "Giày xanh dương hơi đậm",
+                update_by: null,
+                update_at: "2023-10-12T14:14:43.000Z",
+                status: 1,
+                id_product_detail: 'Hero',
+                quantity: 999,
+                import_price: 99,
+                id_supplier: 1,
                 "product_details": [
                     {
                         "id": 2,
@@ -54,49 +58,36 @@ class product_batch_controller {
                 ]
             },
             {
-                "id": 6,
-                "name": "giày jodan air pro",
-                "id_branch": 1,
-                "id_category": 2,
-                "create_by": 1,
-                "create_at": "2023-10-12T14:18:34.000Z",
-                "product_price": 2000,
-                "id_discount": null,
-                "description": "Giày xanh lá",
-                "update_by": null,
-                "update_at": "2023-10-12T14:18:34.000Z",
-                "status": 1,
-                "product_details": []
-            },
-            {
-                "id": 7,
-                "name": "giày jodan air pro",
-                "id_branch": 1,
-                "id_category": 2,
-                "create_by": 1,
-                "create_at": "2023-10-12T14:19:35.000Z",
-                "product_price": 2000,
-                "id_discount": null,
-                "description": "Giày xanh lá",
-                "update_by": null,
-                "update_at": "2023-10-12T14:19:35.000Z",
-                "status": 1,
-                "product_details": []
-            },
-            {
-                "id": 8,
-                "name": "giày jodan air pro",
-                "id_branch": 1,
-                "id_category": 2,
-                "create_by": 1,
-                "create_at": "2023-10-12T14:19:40.000Z",
-                "product_price": 2000,
-                "id_discount": null,
-                "description": "Giày xanh lá",
-                "update_by": null,
-                "update_at": "2023-10-12T14:19:40.000Z",
-                "status": 1,
-                "product_details": []
+                id: 5,
+                name: "giày jodan air",
+                id_branch: 1,
+                id_category: 2,
+                create_by: 1,
+                create_at: "2023-10-12T14:14:43.000Z",
+                product_price: 200,
+                id_discount: null,
+                description: "Giày xanh dương hơi đậm",
+                update_by: null,
+                update_at: "2023-10-12T14:14:43.000Z",
+                status: 1,
+                id_product_detail: 'Hero1',
+                quantity: 759,
+                import_price: 300,
+                id_supplier: 1,
+                "product_details": [
+                    {
+                        "id": 2,
+                        "color": "red",
+                        "size": 37,
+                        "id_product": 5
+                    },
+                    {
+                        "id": 1,
+                        "color": "red",
+                        "size": 37,
+                        "id_product": 5
+                    }
+                ]
             }
         ]
         // Tạo 1 cái lô trước product_batch
@@ -105,19 +96,55 @@ class product_batch_controller {
         //      id_supplier:1,
         //      create_by:1
         //  })
+        if (!arrProductBatch || arrProductBatch.length < 1) {
+            return res.status(500).send({ code: "009" });
+        }
+        let check = false;
+        let dataBatch = '';
         for (let i in arrProductBatch) {
             // console.log(arrProductBatch[i]);
             //Tạo từng sản phẩm trong lô
             console.log("quantity:", arrProductBatch[i].quantity);
-            console.log("import_price:", arrProductBatch[i].price);
-            // await product_batch_item.create({
-            //     quantity:,
-            //     id_product_batch_item:,
-            //     import_price:,
-            //     id_product_batch:
-            // })
+            console.log("import_price:", arrProductBatch[i].import_price);
+            console.log("id_product_detail:", arrProductBatch[i].id_product_detail);
+            console.log("id_supplier: ", arrProductBatch[i].id_supplier);
+            if (!arrProductBatch[i].quantity || !arrProductBatch[i].import_price || !arrProductBatch[i].id_product_detail) {
+                return res.status(500).send({ code: "009" });
+            }
+
+            if (!check) {
+                check = true;
+                try {
+                    dataBatch = await product_batch.create({
+                        name: "Lô 1",
+                        create_by: 2,
+                        id_supplier: arrProductBatch[i].id_supplier,
+                    })
+
+                } catch (e) {
+                    console.log(e);
+                    return res.status(500).send({ code: "006" });
+                }
+                console.log(dataBatch);
+            }
+            if (dataBatch && dataBatch.dataValues && dataBatch.dataValues.id) {
+                try {
+                    await product_batch_item.create({
+                        quantity: arrProductBatch[i].quantity,
+                        id_product_detail: arrProductBatch[i].id_product_detail,
+                        import_price: arrProductBatch[i].import_price,
+                        id_product_batch: dataBatch.dataValues.id
+                    })
+
+                } catch (e) {
+                    console.log(e);
+                    return res.status(500).send({ code: "006" });
+                }
+            }
+
         }
-        return res.status(200).send("Hello from enterbatch");
+        console.log("Thành công rồi bro");
+        return res.status(200).send({ code: "004" });
     }
 
 }
