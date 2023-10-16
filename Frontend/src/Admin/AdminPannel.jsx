@@ -21,7 +21,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import SideBar from "./Views/sideBar";
 // import CreateProductForm from "./componets/createProduct/CreateProductFrom";
 import "./AdminPannel.css";
-// import ProductsTable from "./componets/Products/ProductsTable";
+import ProductsTable from "./componets/Products/ProductsTable";
 // import OrdersTable from "./componets/Orders/OrdersTable";
 // import OrderDetail from "./componets/Orders/OrderDetail";
 // import Customers from "./componets/customers/customers";
@@ -148,7 +148,7 @@ export default function AdminPannel() {
             {/* <Route path="/product/create" element={<CreateProductForm/>}></Route> */}
             {/* <Route path="/product/update/:productId" element={<UpdateProductForm/>}></Route> */}
             {/* <Route path="/product/reviews/:productId" element={<ProductReview/>}></Route> */}
-            {/* <Route path="/products" element={<ProductsTable/>}></Route> */}
+            <Route path="/products" element={<ProductsTable/>}></Route>
             {/* <Route path="/orders" element={<OrdersTable/>}></Route> */}
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             {/* <Route path="/customers" element={<Customers/>}></Route> */}
