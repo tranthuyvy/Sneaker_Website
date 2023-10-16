@@ -27,8 +27,9 @@ import ProductsTable from "./componets/Products/ProductsTable";
 // import Customers from "./componets/customers/customers";
 // import UpdateProductForm from "./componets/updateProduct/UpdateProduct";
 // import ProductReview from "./componets/productReview/ProductReview";
-import StaffProfile from "./componets/staffProfile/staffProfile";
-import CreateStaffAccount from "./componets/createStaffAccount/createStaffAccount";
+import AllStaff from "./componets/Staff/allStaff";
+import StaffProfile from "./componets/Staff/staffProfile";
+import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
@@ -39,8 +40,9 @@ const menu = [
   {name:"Dashboard",path:"/admin"},
   {name:"Products",path:"/admin/products"},
   {name:"Customers",path:"/admin/customers"},
-  {name:"Orders",path:"/admin/orders"},
-  {name:"Create Account",path:"/admin/staff/create"},
+  {name:"Staff",path:"/admin/staff"},
+  // {name:"Orders",path:"/admin/orders"},
+  // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
 export default function AdminPannel() {
@@ -152,6 +154,7 @@ export default function AdminPannel() {
             {/* <Route path="/orders" element={<OrdersTable/>}></Route> */}
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             {/* <Route path="/customers" element={<Customers/>}></Route> */}
+            <Route path="/staff" element={<AllStaff/>}></Route>
             <Route path="/staff/profile" element={<StaffProfile/>}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount/>}></Route>
             <Route path="/login" element={<Login/>}></Route>
