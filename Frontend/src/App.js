@@ -48,7 +48,7 @@ function App(props) {
         <Route path="/admin/*" element={<AdminPannel />} />
       </Routes>
       <footer>
-        <Footer></Footer>
+        {window.location.pathname.indexOf("/admin") === -1 && <Footer />}
       </footer>
     </div>
   );

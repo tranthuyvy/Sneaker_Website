@@ -24,7 +24,7 @@ import "./AdminPannel.css";
 import ProductsTable from "./componets/Products/ProductsTable";
 // import OrdersTable from "./componets/Orders/OrdersTable";
 // import OrderDetail from "./componets/Orders/OrderDetail";
-// import Customers from "./componets/customers/customers";
+import Customers from "./componets/User/allUser";
 // import UpdateProductForm from "./componets/updateProduct/UpdateProduct";
 // import ProductReview from "./componets/productReview/ProductReview";
 import AllStaff from "./componets/Staff/allStaff";
@@ -153,7 +153,7 @@ export default function AdminPannel() {
             <Route path="/products" element={<ProductsTable/>}></Route>
             {/* <Route path="/orders" element={<OrdersTable/>}></Route> */}
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
-            {/* <Route path="/customers" element={<Customers/>}></Route> */}
+            <Route path="/customers" element={<Customers/>}></Route>
             <Route path="/staff" element={<AllStaff/>}></Route>
             <Route path="/staff/profile" element={<StaffProfile/>}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount/>}></Route>
