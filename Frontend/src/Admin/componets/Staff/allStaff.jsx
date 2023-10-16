@@ -52,6 +52,21 @@ const navigate = useNavigate();
     fetchStaffs(page);
   };
 
+  const handleDeleteStaff = (id) => {
+    
+    api
+      .put(`/api/v1/admin/change-status/?id=${id}`)
+      .then((response) => {
+
+        console.log('Successful');
+        fetchStaffs(currentPage);
+      })
+      .catch((error) => {
+        
+        console.error('Error', error);
+      });
+  };
+
   return (
     <Box>
       <Card>
@@ -156,7 +171,7 @@ const navigate = useNavigate();
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
                         <Button
-                          // onClick={() => handleDeleteProduct(item.id)}
+                          onClick={() => handleDeleteStaff(staff.id_account_staffs[0]?.id)}
                           variant="text"
                           color="secondary"
                         >

@@ -137,7 +137,7 @@ class admin_controller {
 
     try {
       const staffMember = await staff.findOne({ where: { id: id } });
-      console.log("Mem:", staffMember.dataValues.status);
+      console.log("Mem:", staffMember);
 
       if (!staffMember) {
         return res.status(404).send({ code: "014" });
