@@ -72,6 +72,9 @@ class discount_controller {
                 return res.status(500).send({ code: "006" });
             }
         }
+        else {
+            return res.status(404).send({ code: "014" });
+        }
 
     }
 }
