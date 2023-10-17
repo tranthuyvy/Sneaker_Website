@@ -27,6 +27,22 @@ function LoginForm() {
   const handleSubmit = async (event) => {
     
     event.preventDefault();
+
+    if (!username || !password) {
+      if (!username) {
+        const accountErrorCode = "100";
+        toast.error(errorMessages[accountErrorCode], {
+          autoClose: 1000,
+        });
+      }
+      if (!password) {
+        const passwordErrorCode = "101";
+        toast.error(errorMessages[passwordErrorCode], {
+          autoClose: 1000,
+        });
+      }
+      return;
+    }
   
     try {
       const response = await axios.post("/api/v1/auth/login", { username, password });
@@ -99,7 +115,6 @@ function LoginForm() {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
-              required
               name="username"
               label="Account"
               fullWidth
@@ -110,7 +125,6 @@ function LoginForm() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              required
               name="password"
               label="Password"
               fullWidth
