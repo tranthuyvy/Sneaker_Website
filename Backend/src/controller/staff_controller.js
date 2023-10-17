@@ -31,7 +31,6 @@ class StaffController {
       const staff_pro = await staff.findOne({
         where: { id_account },
       });
-
       if (staff_pro) {
         if (updatedData.name) {
           staff_pro.name = updatedData.name;
