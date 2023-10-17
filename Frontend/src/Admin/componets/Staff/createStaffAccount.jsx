@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Grid, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import api from '../../../config/api';
+import api from "../../../config/api";
 
 function CreateStaffAccount() {
   const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ function CreateStaffAccount() {
     if (name === "nameStaff") {
       setNameStaff(value);
     } else if (name === "email") {
-        setEmail(value);
+      setEmail(value);
     } else if (name === "password") {
       setPassword(value);
     }
@@ -24,18 +24,14 @@ function CreateStaffAccount() {
     event.preventDefault();
 
     try {
-      const response = await api.post("api/v1/admin/create-staff", { nameStaff, email, password });
+      const response = await api.post("api/v1/admin/create-staff", {
+        nameStaff,
+        email,
+        password,
+      });
 
       if (response.status === 200) {
-        console.log("sta",response.status)
-        const data = response.data;
-        
-        const token = data.accessToken;
-        localStorage.setItem("accessToken", token);
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          
-        navigate("/admin/staff");
-        
+      
       } else {
         console.error("Lỗi khi gửi yêu cầu tạo tài khoản nhân viên.");
       }

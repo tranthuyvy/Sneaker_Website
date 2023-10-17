@@ -28,8 +28,6 @@ function LoginForm() {
         if (data.accessToken) {
           const token = data.accessToken;
           localStorage.setItem("accessToken", token);
-
-          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           navigate("/admin/staff/profile");
         } else {
           console.error("Lỗi khi nhận token từ phản hồi.");

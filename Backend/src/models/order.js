@@ -54,6 +54,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'user',
         key: 'id'
       }
+    },
+    address: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,
