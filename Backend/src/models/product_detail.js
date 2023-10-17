@@ -21,6 +21,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'product',
         key: 'id'
       }
+    },
+    image: {
+      type: DataTypes.STRING(500),
+      allowNull: false
     }
   }, {
     sequelize,

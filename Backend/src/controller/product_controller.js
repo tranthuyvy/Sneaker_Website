@@ -82,6 +82,7 @@ class product_controller {
         include: [
           {
             model: Model.product_detail,
+            
             as: "product_details",
           },
         ],
@@ -96,6 +97,7 @@ class product_controller {
             {
               model: Model.product_detail,
               as: "product_details",
+              
             },
           ],
         });
