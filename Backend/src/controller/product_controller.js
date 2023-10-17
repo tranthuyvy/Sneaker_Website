@@ -82,6 +82,12 @@ class product_controller {
         include: [
           {
             model: Model.product_detail,
+            include: [
+              {
+                model: Model.product_image,
+                as: 'product_images'
+              }
+            ],
             as: "product_details",
           },
         ],
@@ -96,6 +102,12 @@ class product_controller {
             {
               model: Model.product_detail,
               as: "product_details",
+              include: [
+                {
+                  model: Model.product_image,
+                  as: 'product_images'
+                }
+              ],
             },
           ],
         });
