@@ -29,7 +29,7 @@ class product_controller {
     if (!name || !id_branch || !id_category || !product_price || !description) {
       return res.status(500).send({ code: "009" });
     }
-
+    name = name.trim();
     // Check xem thằng name có trong db chưa
     let checkName = await product.findOne({ where: { name } });
     console.log(checkName);
@@ -82,7 +82,7 @@ class product_controller {
         include: [
           {
             model: Model.product_detail,
-            
+
             as: "product_details",
           },
         ],
@@ -97,7 +97,7 @@ class product_controller {
             {
               model: Model.product_detail,
               as: "product_details",
-              
+
             },
           ],
         });
