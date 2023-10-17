@@ -32,18 +32,27 @@ class supplier_controller {
 
     updateSupplier = async (req, res) => {
         let { id } = req.query;
-        let { name, address, phone } = req.body;
-        if (!name || !address || !phone || !id) {
-            return res.status(500).send({ code: "009" });
-        }
+        let updataDta = req.body;
+        // if (!name || !address || !phone || !id) {
+        //     return res.status(500).send({ code: "009" });
+        // }
         if (id) {
             try {
                 let dataSupplier = await supplier.findOne({ where: { id } });
                 if (dataSupplier && dataSupplier.dataValues && dataSupplier.dataValues.id) {
-                    await dataSupplier.update({
-                        name, address, phone
-                    })
-                    dataSupplier.save();
+                    if (updataDta.name) {
+                        dataSupplier.name = updataDta.name;
+                    }
+                    if (updataDta.address) {
+                        dataSupplier.address = updataDta.address;
+                    }
+                    if (updataDta.phone) {
+                        dataSupplier.phone = updataDta.phone;
+                    }
+                    // await dataSupplier.update({
+                    //     name, address, phone
+                    // })
+                    await dataSupplier.save();
                     return res.status(200).send({ code: "013" });
                 }
                 else {

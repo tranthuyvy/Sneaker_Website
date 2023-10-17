@@ -13,5 +13,6 @@
     "011": "Name already exists",
     "012": "Added product successfully",
     "013": "Updated data successfully",
-    "014": "ID Not Found"
+    "014": "ID Not Found",
+    "015": "Password is not in correct format"
 }

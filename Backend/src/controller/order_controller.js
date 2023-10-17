@@ -24,7 +24,11 @@ class order_controller {
                     as: 'order_details',
                     include: {
                         model: product_detail,
-                        as: 'id_product_detail_product_detail'
+                        as: 'id_product_detail_product_detail',
+                        include: {
+                            model: Model.product,
+                            as: 'id_product_product'
+                        }
                     }
                 }]
             });
@@ -37,7 +41,11 @@ class order_controller {
                     as: 'order_details',
                     include: {
                         model: product_detail,
-                        as: 'id_product_detail_product_detail'
+                        as: 'id_product_detail_product_detail',
+                        include: {
+                            model: Model.product,
+                            as: 'id_product_product'
+                        }
                     }
                 }]
             });
