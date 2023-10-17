@@ -109,7 +109,7 @@ class admin_controller {
             include: { model: staff, as: "id_account_staffs" },
           });
           // console.log(data);
-        } catch (error) {
+        } catch (e) {
           console.log(e);
           return res.status(500).send({ code: "006" });
         }

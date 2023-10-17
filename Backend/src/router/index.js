@@ -8,6 +8,7 @@ import category_router from "./category";
 import discount_router from "./discount";
 import product_batch_router from "./product_batch";
 import order_router from "./order";
+import discount_user_router from "./discount_user";
 
 
 export default function router(app) {
@@ -20,4 +21,5 @@ export default function router(app) {
   app.use('/api/v1/discount', discount_router)
   app.use("/api/v1/product-batch", product_batch_router)
   app.use("/api/v1/order", order_router)
+  app.use("/api/v1/discount_user", discount_user_router)
 }
