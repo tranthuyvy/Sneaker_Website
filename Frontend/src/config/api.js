@@ -9,7 +9,7 @@ const axiosApiInstance = axios.create({
 
 axiosApiInstance.interceptors.request.use((config) => {
   let [accessToken, refreshToken] = [localStorage.getItem('accessToken'), localStorage.getItem('refreshToken')]
-  if (accessToken == null) {
+  if (!accessToken) {
     localStorage.clear();
     window.location.href = "/login";
   }
