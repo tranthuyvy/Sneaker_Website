@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import api from "../config/api";
+import axiosNoAuth from "../config/axios";
 function Navbar() {
     const [isNavigation, setIsNavigation] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
@@ -10,7 +10,7 @@ function Navbar() {
     };
     useEffect(() => {
         (async () => {
-            const data = (await api.get('/api/v1/category/get')).data
+            const data = (await axiosNoAuth.get('/api/v1/category/get')).data
             if (data.code.localeCompare("002") == 0) {
                 setListCategory([...data.data])
             }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "./axios";
 const LOCALHOST = "http://localhost:8081";
 
 export const API_BASE_URL = LOCALHOST
@@ -9,7 +9,7 @@ const axiosApiInstance = axios.create({
 
 axiosApiInstance.interceptors.request.use((config) => {
   let [accessToken, refreshToken] = [localStorage.getItem('accessToken'), localStorage.getItem('refreshToken')]
-  if (accessToken == null) {
+  if (!accessToken) {
     localStorage.clear();
     window.location.href = "/login";
   }
