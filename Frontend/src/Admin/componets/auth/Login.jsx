@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, TextField, Button } from "@mui/material";
-import api from '../../../config/api';
+// import api from '../../../config/api';
+import axios from "../../../config/axios";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function LoginForm() {
     event.preventDefault();
 
     try {
-      const response = await api.post("api/v1/auth/login", { username, password });
+      const response = await axios.post("/api/v1/auth/login", { username, password });
 
       if (response.status === 200) {
         const data = response.data;
@@ -28,6 +29,7 @@ function LoginForm() {
         if (data.accessToken) {
           const token = data.accessToken;
           localStorage.setItem("accessToken", token);
+          console.log("token", token)
           navigate("/admin/staff/profile");
         } else {
           console.error("Lỗi khi nhận token từ phản hồi.");
