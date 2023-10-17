@@ -42,10 +42,6 @@ function initModels(sequelize) {
   var supplier = _supplier(sequelize, DataTypes);
   var user = _user(sequelize, DataTypes);
 
-  staff.belongsTo(account, { as: "create_by_account", foreignKey: "create_by"});
-  account.hasMany(staff, { as: "staffs", foreignKey: "create_by"});
-  staff.belongsTo(account, { as: "id_account_account", foreignKey: "id_account"});
-  account.hasMany(staff, { as: "id_account_staffs", foreignKey: "id_account"});
   product.belongsTo(branch, { as: "id_branch_branch", foreignKey: "id_branch"});
   branch.hasMany(product, { as: "products", foreignKey: "id_branch"});
   category.belongsTo(category, { as: "id_parent_category", foreignKey: "id_parent"});

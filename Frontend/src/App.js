@@ -11,7 +11,7 @@ import Footer from "./Components/Footer";
 import AdminPannel from "./Admin/AdminPannel";
 function App(props) {
   const [common, setCommon] = useState(common_vi);
-  const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty("jwt"));
+  const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty("accessToken"));
   const isAdmin = true;
   console.log(isLogin);
   const handleSuccess = async (response) => {
@@ -22,8 +22,8 @@ function App(props) {
       })
     ).data;
     if (data.code.localeCompare("000" == 0)) {
-      localStorage.setItem("jwt", data.accessToken);
-      localStorage.setItem("refresh_token", data.refreshToken);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
       setIsLogin(true);
     }
     alert(common[data.code]);

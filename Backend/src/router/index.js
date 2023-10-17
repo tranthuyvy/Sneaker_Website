@@ -15,14 +15,9 @@ export default function router(app) {
   app.use("/api/v1/admin", admin_router);
   app.use("/api/v1/product", product_router);
   app.use("/api/v1/staff", staff_router);
-
   app.use("/api/v1/product_detail", product_detail_router);
-
   app.use("/api/v1/category", category_router)
-
-
   app.use('/api/v1/discount', discount_router)
-
   app.use("/api/v1/product-batch", product_batch_router)
   app.use("/api/v1/order", order_router)
 }

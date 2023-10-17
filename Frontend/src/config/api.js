@@ -3,14 +3,55 @@ const LOCALHOST = "http://localhost:8081";
 
 export const API_BASE_URL = LOCALHOST
 
-const api = axios.create({
+const axiosApiInstance = axios.create({
   baseURL: API_BASE_URL,
 });
 
-const token = localStorage.getItem("accessToken");
+axiosApiInstance.interceptors.request.use((config) => {
+  let [accessToken, refreshToken] = [localStorage.getItem('accessToken'), localStorage.getItem('refreshToken')]
+  if (accessToken == null) {
+    localStorage.clear();
+    window.location.href = "/login";
+  }
 
-api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  config.headers = {
 
-api.defaults.headers.post["Content-Type"] = "application/json";
+    'Authorization': `Bearer ${accessToken}`,
+    'Accept': 'application/json',
+    // 'Content-Type': 'application/json'
+  }
 
-export default api;
+  return config;
+});
+
+axiosApiInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response.status == 403) {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (refreshToken) {
+        let apiResponse = await axios.post(
+          axios.defaults.baseURL + `/api/v1/auth/refresh`,
+          { token: refreshToken }
+        );
+        if (apiResponse.data.status && apiResponse) {
+          // alert("Da Refresh Token")
+          const { accessToken, refreshToken } = apiResponse.data.data;
+          // setToken(accessToken, refreshToken);
+          //alert("Da set Token moi")
+          error.config.headers = {
+            Authorization: `Bearer ${accessToken}`,
+          };
+          window.location.reload();
+        } else {
+          localStorage.clear();
+          window.location.href = "/login";
+        }
+      }
+    } else {
+      return Promise.reject(error);
+    }
+  }
+);
+
+export default axiosApiInstance;

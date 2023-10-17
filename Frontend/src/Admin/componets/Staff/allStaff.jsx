@@ -146,11 +146,9 @@ const navigate = useNavigate();
                       <TableCell style={{ textAlign: "center" }}>
                         {staff.id_account_staffs[0]?.sex}
                       </TableCell>
-
                       <TableCell style={{ textAlign: "center" }}>
                         {staff.id_account_staffs[0]?.bank_account_number}
                       </TableCell>
-
                       <TableCell style={{ textAlign: "center" }}>
                         {staff.id_account_staffs[0]?.start_work &&
                           format(
