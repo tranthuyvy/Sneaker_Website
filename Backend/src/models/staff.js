@@ -25,7 +25,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_account: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true,
+      references: {
+        model: 'account',
+        key: 'id'
+      }
     },
     date_of_birth: {
       type: DataTypes.DATE,
@@ -75,17 +79,10 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_staff_account",
+        name: "FK_STAFF_ACCOUNT_idx",
         using: "BTREE",
         fields: [
           { name: "id_account" },
-        ]
-      },
-      {
-        name: "FK_staff_account_create_by",
-        using: "BTREE",
-        fields: [
-          { name: "create_by" },
         ]
       },
     ]

@@ -11,7 +11,6 @@ var _product = require("./product");
 var _product_batch = require("./product_batch");
 var _product_batch_item = require("./product_batch_item");
 var _product_detail = require("./product_detail");
-var _product_image = require("./product_image");
 var _refund = require("./refund");
 var _refund_image = require("./refund_image");
 var _review = require("./review");
@@ -33,7 +32,6 @@ function initModels(sequelize) {
   var product_batch = _product_batch(sequelize, DataTypes);
   var product_batch_item = _product_batch_item(sequelize, DataTypes);
   var product_detail = _product_detail(sequelize, DataTypes);
-  var product_image = _product_image(sequelize, DataTypes);
   var refund = _refund(sequelize, DataTypes);
   var refund_image = _refund_image(sequelize, DataTypes);
   var review = _review(sequelize, DataTypes);
@@ -42,6 +40,8 @@ function initModels(sequelize) {
   var supplier = _supplier(sequelize, DataTypes);
   var user = _user(sequelize, DataTypes);
 
+  staff.belongsTo(account, { as: "id_account_account", foreignKey: "id_account" });
+  account.hasMany(staff, { as: "staffs", foreignKey: "id_account" });
   product.belongsTo(branch, { as: "id_branch_branch", foreignKey: "id_branch" });
   branch.hasMany(product, { as: "products", foreignKey: "id_branch" });
   category.belongsTo(category, { as: "id_parent_category", foreignKey: "id_parent" });
@@ -68,8 +68,6 @@ function initModels(sequelize) {
   product_detail.hasMany(order_detail, { as: "order_details", foreignKey: "id_product_detail" });
   product_batch_item.belongsTo(product_detail, { as: "id_product_detail_product_detail", foreignKey: "id_product_detail" });
   product_detail.hasMany(product_batch_item, { as: "product_batch_items", foreignKey: "id_product_detail" });
-  product_image.belongsTo(product_detail, { as: "id_product_detail_product_detail", foreignKey: "id_product_detail" });
-  product_detail.hasMany(product_image, { as: "product_images", foreignKey: "id_product_detail" });
   refund_image.belongsTo(refund, { as: "id_feed_back_refund", foreignKey: "id_feed_back" });
   refund.hasMany(refund_image, { as: "refund_images", foreignKey: "id_feed_back" });
   account.belongsTo(role, { as: "id_role_role", foreignKey: "id_role" });
@@ -112,7 +110,6 @@ function initModels(sequelize) {
     product_batch,
     product_batch_item,
     product_detail,
-    product_image,
     refund,
     refund_image,
     review,
