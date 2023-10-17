@@ -106,11 +106,11 @@ class admin_controller {
         try {
           data = await account.findAll({
             where: { id_role: 1 },
-            include: { model: staff, as: "id_account_staffs" },
+            include: [{ model: staff, as: "staffs" }],
           });
           // console.log(data);
-        } catch (er) {
-          console.log(er);
+        } catch (error) {
+          console.log(error);
           return res.status(500).send({ code: "006" });
         }
       } else if (id_role == 2) {
