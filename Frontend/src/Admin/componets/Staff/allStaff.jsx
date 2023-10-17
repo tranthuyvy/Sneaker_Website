@@ -58,7 +58,7 @@ const navigate = useNavigate();
       .put(`/api/v1/admin/change-status/?id=${id}`)
       .then((response) => {
 
-        console.log('Successful');
+        console.log('Successful',id);
         fetchStaffs(currentPage);
       })
       .catch((error) => {
@@ -89,7 +89,7 @@ const navigate = useNavigate();
           <Table sx={{ minWidth: 390 }} aria-label="table in dashboard">
             <TableHead>
               <TableRow>
-                {/* <TableCell>STT</TableCell> */}
+                <TableCell>STT</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Avatar</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Email</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Phone</TableCell>
@@ -118,6 +118,9 @@ const navigate = useNavigate();
                       }}
                     >
                       <TableCell style={{ textAlign: "center" }}>
+                        {staff.id}
+                      </TableCell>
+                      <TableCell style={{ textAlign: "center" }}>
                         <Avatar sx={{ bgcolor: deepPurple[500] }}>
                           {staff.name.charAt(0).toUpperCase()}
                         </Avatar>
@@ -128,31 +131,31 @@ const navigate = useNavigate();
                       </TableCell>
 
                       <TableCell style={{ textAlign: "center" }}>
-                        {staff.id_account_staffs[0]?.phone}
+                        {staff.staffs[0]?.phone}
                       </TableCell>
 
                       <TableCell style={{ textAlign: "center" }}>
-                        {staff.id_account_staffs[0]?.id_card}
+                        {staff.staffs[0]?.id_card}
                       </TableCell>
 
                       <TableCell style={{ textAlign: "center" }}>
-                        {staff.id_account_staffs[0]?.date_of_birth &&
+                        {staff.staffs[0]?.date_of_birth &&
                           format(
-                            new Date(staff.id_account_staffs[0].date_of_birth),
+                            new Date(staff.staffs[0].date_of_birth),
                             "dd/MM/yyyy"
                           )}
                       </TableCell>
 
                       <TableCell style={{ textAlign: "center" }}>
-                        {staff.id_account_staffs[0]?.sex}
+                        {staff.staffs[0]?.sex}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
-                        {staff.id_account_staffs[0]?.bank_account_number}
+                        {staff.staffs[0]?.bank_account_number}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
-                        {staff.id_account_staffs[0]?.start_work &&
+                        {staff.staffs[0]?.start_work &&
                           format(
-                            new Date(staff.id_account_staffs[0].start_work),
+                            new Date(staff.staffs[0].start_work),
                             "dd/MM/yyyy"
                           )}
                       </TableCell>
@@ -160,7 +163,7 @@ const navigate = useNavigate();
                         <FiberManualRecordIcon
                           style={{
                             color:
-                              staff.id_account_staffs[0]?.status === 0
+                              staff.staffs[0]?.status === 0
                                 ? "red"
                                 : "green",
                           }}
@@ -169,7 +172,7 @@ const navigate = useNavigate();
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
                         <Button
-                          onClick={() => handleDeleteStaff(staff.id_account_staffs[0]?.id)}
+                          onClick={() => handleDeleteStaff(staff.staffs[0]?.id)}
                           variant="text"
                           color="secondary"
                         >

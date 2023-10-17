@@ -138,7 +138,7 @@ const AllOrder = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Image</TableCell>
-                {/* <TableCell>Product Name</TableCell> */}
+                <TableCell sx={{ textAlign: "center" }}>Product Name</TableCell>
 
                 <TableCell sx={{ textAlign: "center" }}>Price</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
@@ -158,14 +158,24 @@ const AllOrder = () => {
                   style={{ cursor: "pointer" }}
                 >
                   <TableCell sx={{}}>
-                    {/* <AvatarGroup max={4} sx={{ justifyContent: "start" }}>
-                        {order.orderItems.map((orderItem) => (
+                    <AvatarGroup max={4} sx={{ justifyContent: "start" }}>
+                        {order.order_details.map((orderItem) => (
                           <Avatar
-                            alt={item.name}
-                            src={orderItem.product.imageUrl}
+                            alt={order.id}
+                            src={orderItem.id_product_detail_product_detail.image}
                           />
                         ))}
-                      </AvatarGroup>{" "} */}
+                      </AvatarGroup>{" "}
+                      {/* <Typography
+                          sx={{
+                            fontWeight: 500,
+                            fontSize: "0.875rem !important",
+                          }}
+                        >
+                          {order?.order_details.map((item) => (
+                            <span className=""> {item.id_product_detail_product_detail.color},</span>
+                          ))}
+                        </Typography> */}
                   </TableCell>
 
                   {/* <TableCell
@@ -193,6 +203,12 @@ const AllOrder = () => {
                         </Typography>
                       </Box>
                     </TableCell> */}
+                    <TableCell
+                    sx={{ textAlign: "center" }}
+                    style={{ color: "yellow", fontStyle: "bold" }}
+                  >
+                    Name nè
+                  </TableCell>
 
                   <TableCell
                     sx={{ textAlign: "center" }}

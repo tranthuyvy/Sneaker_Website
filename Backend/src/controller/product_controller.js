@@ -68,25 +68,31 @@ class product_controller {
   };
 
   getAllProduct = async (req, res) => {
-    const { id_product } = req.query;
+    const id_product = req.query.id;
     const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
     const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu sản phẩm trong 1 trang
 
     console.log(page, pageSize);
     // Tính vị trí bắt đầu và vị trí kết thúc của sản phẩm trên trang hiện tại
-
+    const option = {
+      include: [
+        {
+          model: Model.product_detail,
+          as: "product_details",
+        },
+        {
+          model: Model.discount,
+          as: 'id_discount_discount'
+        },
+        {
+          model: Model.branch,
+          as: 'id_branch_branch'
+        }
+      ],
+    }
     if (id_product) {
-      console.log("id:", id_product);
-      let data = await product.findOne({
-        where: { id: id_product },
-        include: [
-          {
-            model: Model.product_detail,
-
-            as: "product_details",
-          },
-        ],
-      });
+      // console.log("id:", id_product);
+      let data = await product.findOne({ where: { id: id_product }, ...option });
       return res.status(200).send({ code: "002", data: data });
     } else {
       if (page || pageSize) {

@@ -31,6 +31,7 @@ function CreateStaffAccount() {
       });
 
       if (response.status === 200) {
+        navigate("/admin/staff")
       
       } else {
         console.error("Lỗi khi gửi yêu cầu tạo tài khoản nhân viên.");
