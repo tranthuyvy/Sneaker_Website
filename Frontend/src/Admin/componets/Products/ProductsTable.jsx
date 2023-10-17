@@ -56,17 +56,6 @@ const ProductsTable = () => {
     fetchProducts(page);
   };
 
-  // useEffect(() => {
-  //   api.get('api/v1/product/get')
-  //     .then((response) => {
-  //       const productsArray = Array.isArray(response.data.data) ? response.data.data : [];
-  //       setProducts(productsArray);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Lỗi khi gọi API:", error);
-  //     });
-  // }, []);
-
   // const handleDeleteProduct = (productId) => {
   //   console.log("delete product ", productId);
   //   dispatch(deleteProduct(productId));
