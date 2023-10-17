@@ -109,8 +109,8 @@ class admin_controller {
             include: { model: staff, as: "id_account_staffs" },
           });
           // console.log(data);
-        } catch (error) {
-          console.log(e);
+        } catch (er) {
+          console.log(er);
           return res.status(500).send({ code: "006" });
         }
       } else if (id_role == 2) {
