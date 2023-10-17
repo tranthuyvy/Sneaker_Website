@@ -1,9 +1,4 @@
-import axios from "axios";
-const LOCALHOST = "http://localhost:8081";
-
-export const API_BASE_URL = LOCALHOST
-
-const axios = axios.create({
-  baseURL: API_BASE_URL,
+import axios from 'axios';
+export default axios.create({
+	baseURL: 'http://localhost:8081',
 });
-export default axios
