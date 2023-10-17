@@ -1,6 +1,8 @@
 import Model from '../config/sequelize'
 const order = Model.order;
 const order_detail = Model.order_detail;
+const product_detail = Model.product_detail;
+
 class order_controller {
 
     hello = (req, res) => {
@@ -19,7 +21,11 @@ class order_controller {
                 where: { status },
                 include: [{
                     model: order_detail,
-                    as: 'order_details'
+                    as: 'order_details',
+                    include: {
+                        model: product_detail,
+                        as: 'id_product_detail_product_detail'
+                    }
                 }]
             });
         }
@@ -28,7 +34,11 @@ class order_controller {
             data = await order.findAll({
                 include: [{
                     model: order_detail,
-                    as: 'order_details'
+                    as: 'order_details',
+                    include: {
+                        model: product_detail,
+                        as: 'id_product_detail_product_detail'
+                    }
                 }]
             });
         }
