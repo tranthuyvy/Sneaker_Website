@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import CustomerRoutes from "./Routers/CustomerRoutes";
 import { useState, useEffect } from "react";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
 import api from "./config/api";
@@ -10,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Routers from "./Routers/Routers_Public";
 import Footer from "./Components/Footer";
 import AdminPannel from "./Admin/AdminPannel";
-
+import Navbar from "./Components/Navbar";
 function App(props) {
   const lang = useSelector((state) => state.lang)
   const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty("accessToken"));
@@ -34,10 +33,10 @@ function App(props) {
     // Xử lý khi đăng nhập thất bại
     console.error("Login failed:", error);
   };
-
   return (
     <div className="">
       <ToastContainer/>
+      <Navbar></Navbar>
       <div></div>
       <div
         useOneTap={useGoogleOneTapLogin({

@@ -16,9 +16,7 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    
-      navigate(`/product/${product?.id}`);
-    
+      navigate(`/product/?id=${product?.id}`);
   };
 
   return (
