@@ -104,13 +104,13 @@ class admin_controller {
       //1 Nhân viên
       if (id_role == 1) {
         try {
-          data = await account.findAll({
-            where: { id_role: 1 },
-            include: { model: staff, as: "id_account_staffs" },
+          data = await account.findAll({ 
+            where:{ id_role: 1 },
+            include: [{ model: staff, as: "staffs" }],
           });
           // console.log(data);
         } catch (error) {
-          console.log(e);
+          console.log(error);
           return res.status(500).send({ code: "006" });
         }
       } else if (id_role == 2) {
