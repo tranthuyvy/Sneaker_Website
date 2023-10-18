@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, TextField, Button } from "@mui/material";
-// import api from '../../../config/api';
 import axios from "../../../config/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import errorMessagesEn from "../../../Lang/en.json";
+import errorMessagesVi from "../../../Lang/vi.json";
 
 function LoginForm() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const lang = useSelector((state) => state);
+  const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
   const handleInputChange = (event) => {
     if (event.target.name === "username") {
@@ -18,39 +25,101 @@ function LoginForm() {
   };
 
   const handleSubmit = async (event) => {
+    
     event.preventDefault();
 
+    if (!username || !password) {
+      if (!username) {
+        const accountErrorCode = "100";
+        toast.error(errorMessages[accountErrorCode], {
+          autoClose: 1000,
+        });
+      }
+      else if (!password) {
+        const passwordErrorCode = "101";
+        toast.error(errorMessages[passwordErrorCode], {
+          autoClose: 1000,
+        });
+      }
+      return;
+    }
+  
     try {
       const response = await axios.post("/api/v1/auth/login", { username, password });
-
+  
       if (response.status === 200) {
         const data = response.data;
-
+        // console.log("code", response.data.code)
+  
         if (data.accessToken) {
           const token = data.accessToken;
           localStorage.setItem("accessToken", token);
-          console.log("token", token)
-          navigate("/admin/staff/profile");
+          
+          const successCode = response.data.code;
+  
+          if (successCode) {
+            toast.success(errorMessages[successCode], {
+              autoClose: 1000,
+            });
+          }
+  
+          dispatch({ type: 'LANG_ENG' });
+          navigate("/admin/staff");
         } else {
-          console.error("Lỗi khi nhận token từ phản hồi.");
+          const errorCode = response.data.code;
+          
+          if (errorCode) {
+            toast.error(errorMessages[errorCode], {
+              autoClose: 1000,
+            });
+            
+          } else {
+            const errorCode = "105";
+            toast.error(errorMessages[errorCode], {
+              autoClose: 1000,
+            });
+          }
         }
       } else {
-        console.error("Đăng nhập thất bại");
+        const errorCode = response.data.code;
+        
+        if (errorCode) {
+          toast.error(errorMessages[errorCode], {
+            autoClose: 1000,
+          });
+
+        } else {
+          const errorCode = "001";
+          toast.error(errorMessages[errorCode], {
+            autoClose: 1000,
+          });
+        }
       }
     } catch (error) {
-      console.error("Lỗi khi thực hiện đăng nhập:", error);
+      const errorCode = error.response ? error.response.data.code : null;
+      
+      if (errorCode) {
+        toast.error(errorMessages[errorCode], {
+          autoClose: 1000,
+        });
+
+      } else {
+        const errorCode = "106";
+          toast.error(errorMessages[errorCode], {
+            autoClose: 1000,
+          });
+      }
     }
   };
-
+  
   return (
     <React.Fragment>
       <form style={{ width: "50%" }} onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
-              required
               name="username"
-              label="Tài khoản"
+              label="Account"
               fullWidth
               autoComplete="given-name"
               value={username}
@@ -59,9 +128,8 @@ function LoginForm() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              required
               name="password"
-              label="Mật khẩu"
+              label="Password"
               fullWidth
               autoComplete="given-name"
               type="password"
@@ -78,11 +146,12 @@ function LoginForm() {
               size="large"
               sx={{ padding: ".8rem 0" }}
             >
-              Đăng nhập
+              {lang === "vi" ? "Đăng nhập" : "Login"}
             </Button>
           </Grid>
         </Grid>
       </form>
+      <ToastContainer />
     </React.Fragment>
   );
 }
