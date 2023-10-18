@@ -104,8 +104,8 @@ class admin_controller {
       //1 Nhân viên
       if (id_role == 1) {
         try {
-          data = await account.findAll({ 
-            where:{ id_role: 1 },
+          data = await account.findAll({
+            where: { id_role: 1 },
             include: [{ model: staff, as: "staffs" }],
           });
           // console.log(data);

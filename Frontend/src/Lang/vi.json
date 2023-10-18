@@ -10,8 +10,17 @@
     "008": "Tạo tài khoản nhân viên thành công",
     "009": "Nhập thiếu dữ liệu",
     "010": "Email không đúng định dạng",
-    "011": "Tên sản phẩm đã tồn tại",
+    "011": "Tên đã tồn tại",
     "012": "Thêm sản phẩm thành công",
     "013": "Cập nhật dữ liệu thành công",
-    "014": "Không tìm thấy ID"
+    "014": "Không tìm thấy ID",
+    "015": "Mật khẩu không đúng định dạng",
+    
+    "100": "Vui lòng nhập email",
+    "101": "Vui lòng nhập mật khẩu",
+    "102": "Vui lòng nhập tên nhân viên",
+    "103": "Lỗi khi tạo tài khoản nhân viên",
+    "104": "Lỗi ngoại lệ",
+    "105": "Lỗi nhận token",
+    "106": "Lỗi khi thực hiện đăng nhập"
 }

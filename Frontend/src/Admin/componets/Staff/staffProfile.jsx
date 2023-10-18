@@ -1,12 +1,9 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { InputAdornment, Typography } from "@mui/material";
 import {
   Grid,
   TextField,
   Button,
-  Snackbar,
-  Alert,
   Avatar,
 } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
@@ -14,8 +11,11 @@ import { Fragment } from "react";
 import "./staffProfile.css";
 import { format } from "date-fns";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import api from '../../../config/api';
+import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import errorMessagesEn from "../../../Lang/en.json";
+import errorMessagesVi from "../../../Lang/vi.json";
 
 const StaffProfile = () => {
   const [staff, setStaff] = useState(null);
@@ -23,17 +23,20 @@ const StaffProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
-  const token = localStorage.getItem("accessToken");
+  const lang = useSelector((state) => state);
+  const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
+  // const token = localStorage.getItem("accessToken");
   //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmFtZSI6InR0di50aHV5dnlAZ21haWwuY29tIiwiaWRfcm9sZSI6MSwiY3JlYXRlX2F0IjoiMjAyMy0xMC0xM1QwNjo0NTo1MS4wMDBaIiwiaWF0IjoxNjk3MjA3OTUwLCJleHAiOjE2OTcyMjU5NTB9.guJFU90JxRcak0YWz4egfp9gTt_yECKd3RyWXadMLzE";
 
   useEffect(() => {
       api.get("api/v1/staff", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+
       })
       .then((response) => {
         const staffData = response.data;
+        toast.success(errorMessages["002"], {
+          autoClose: 900,
+        });
         setStaff(staffData);
 
         setEditedStaff({
@@ -41,12 +44,14 @@ const StaffProfile = () => {
         });
 
         setIsEditing(false);
-        setUpdateSuccess(true);
+        // setUpdateSuccess(false);
       })
       .catch((error) => {
-        console.error("Lỗi khi gọi API:", error.response?.data || error.message);
+        toast.error(errorMessages["006"], {
+          autoClose: 900,
+        });
       });
-  }, [token]);
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -64,9 +69,16 @@ const StaffProfile = () => {
         setStaff(response.data);
         setIsEditing(false);
         setUpdateSuccess(true);
+        if(response.data.code === "013"){
+          toast.success(errorMessages["013"], {
+            autoClose: 900,
+          });
+        }
       })
       .catch((error) => {
-        console.error("Error: ", error.response?.data || error.message);
+        toast.error(errorMessages["006"], {
+          autoClose: 900,
+        });
       });
   };
 
@@ -163,11 +175,13 @@ const StaffProfile = () => {
               name: "phone",
               value: editedStaff.phone,
             },
-            {
-              label: "Birthday",
-              name: "date_of_birth",
-              value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
-            },
+            // {
+            //   label: "Birthday",
+            //   name: "date_of_birth",
+            //   type: Date,
+            //   value: editedStaff.date_of_birth
+            //   // value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
+            // },
             {
               label: "Sex",
               name: "sex",
@@ -213,6 +227,7 @@ const StaffProfile = () => {
                 name={field.name}
                 value={field.value}
                 onChange={handleChange}
+                type={field.type || "text"}
                 disabled={!isEditing || field.disabled}
                 InputProps={
                   field.startAdornment && {
@@ -257,20 +272,8 @@ const StaffProfile = () => {
             )}
           </Grid>
         </Grid>
+        <ToastContainer />
       </form>
-
-      {updateSuccess && (
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={updateSuccess}
-          autoHideDuration={5000}
-          onClose={() => setUpdateSuccess(false)}
-        >
-          <Alert onClose={() => setUpdateSuccess(false)} severity="success">
-            Profile updated successfully!
-          </Alert>
-        </Snackbar>
-      )}
     </Fragment>
   );
 };

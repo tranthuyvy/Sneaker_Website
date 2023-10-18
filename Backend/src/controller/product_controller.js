@@ -29,7 +29,7 @@ class product_controller {
     if (!name || !id_branch || !id_category || !product_price || !description) {
       return res.status(500).send({ code: "009" });
     }
-
+    name = name.trim();
     // Check xem thằng name có trong db chưa
     let checkName = await product.findOne({ where: { name } });
     console.log(checkName);
@@ -68,7 +68,7 @@ class product_controller {
   };
 
   getAllProduct = async (req, res) => {
-    const id_product  = req.query.id;
+    const id_product = req.query.id;
     const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
     const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu sản phẩm trong 1 trang
 
@@ -81,12 +81,12 @@ class product_controller {
           as: "product_details",
         },
         {
-          model:Model.discount,
-          as:'id_discount_discount'
+          model: Model.discount,
+          as: 'id_discount_discount'
         },
         {
-          model:Model.branch,
-          as:'id_branch_branch'
+          model: Model.branch,
+          as: 'id_branch_branch'
         }
       ],
     }
@@ -98,7 +98,15 @@ class product_controller {
       if (page || pageSize) {
         let startIndex = (page - 1) * pageSize;
         let endIndex = startIndex + pageSize;
-        let data = await product.findAll({...option});
+        let data = await product.findAll({
+          include: [
+            {
+              model: Model.product_detail,
+              as: "product_details",
+
+            },
+          ],
+        });
         const paginatedProducts = data.slice(startIndex, endIndex);
         const totalPage = Math.ceil(data.length / pageSize);
         return res

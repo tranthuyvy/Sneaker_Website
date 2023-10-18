@@ -6,14 +6,12 @@ class StaffController {
   async getProfileByIdStaff(req, res) {
     const id_account = auth.tokenData(req).id;
     try {
-      // const id_account = req.params.id_account;
-
       const staff_pro = await staff.findOne({
         where: { id_account },
       });
 
       if (staff_pro) {
-        res.json(staff_pro);
+        res.status(200).json(staff_pro);
       } else {
         res.status(404).json({ error: "Not Found User Profile" });
       }
@@ -58,13 +56,13 @@ class StaffController {
 
         await staff_pro.save();
 
-        res.json({ message: "Updated successfully" });
+        res.json({ code: "013" });
       } else {
-        res.status(404).json({ error: "Not Found User Profile" });
+        res.status(404).json({ code: "014" });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Error" });
+      res.status(500).json({ code: "006" });
     }
   }
 }

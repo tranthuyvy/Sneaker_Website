@@ -22,7 +22,7 @@ import SideBar from "./Views/sideBar";
 // import CreateProductForm from "./componets/createProduct/CreateProductFrom";
 import "./AdminPannel.css";
 import ProductsTable from "./componets/Products/ProductsTable";
-// import OrdersTable from "./componets/Orders/OrdersTable";
+import AllOrder from "./componets/Order/allOrder";
 // import OrderDetail from "./componets/Orders/OrderDetail";
 import Customers from "./componets/User/allUser";
 // import UpdateProductForm from "./componets/updateProduct/UpdateProduct";
@@ -41,7 +41,7 @@ const menu = [
   {name:"Products",path:"/admin/products"},
   {name:"Customers",path:"/admin/customers"},
   {name:"Staff",path:"/admin/staff"},
-  // {name:"Orders",path:"/admin/orders"},
+  {name:"Orders",path:"/admin/orders"},
   // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
@@ -151,7 +151,7 @@ export default function AdminPannel() {
             {/* <Route path="/product/update/:productId" element={<UpdateProductForm/>}></Route> */}
             {/* <Route path="/product/reviews/:productId" element={<ProductReview/>}></Route> */}
             <Route path="/products" element={<ProductsTable/>}></Route>
-            {/* <Route path="/orders" element={<OrdersTable/>}></Route> */}
+            <Route path="/orders" element={<AllOrder/>}></Route>
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             <Route path="/customers" element={<Customers/>}></Route>
             <Route path="/staff" element={<AllStaff/>}></Route>
