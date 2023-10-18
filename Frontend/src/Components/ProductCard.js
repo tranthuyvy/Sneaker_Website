@@ -1,6 +1,6 @@
 import React from "react";
 import "../Styles/ProductCard.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const {
@@ -15,13 +15,13 @@ const ProductCard = ({ product }) => {
   } = product;
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-      navigate(`/product/?id=${product?.id}`);
-  };
+  // const handleNavigate = () => {
+  //     navigate(,);
+  // };
 
   return (
-    <div
-      onClick={handleNavigate}
+    <Link
+      to={`/product/?id=${product.id}`}
       className="productCard w-[20rem] border m-3 transition-all cursor-pointer "
     >
       <div className="h-[20rem]">
@@ -57,7 +57,7 @@ const ProductCard = ({ product }) => {
 
         
       </div>
-    </div>
+    </Link>
   );
 };
 

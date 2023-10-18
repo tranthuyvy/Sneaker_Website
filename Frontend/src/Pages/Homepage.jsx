@@ -3,10 +3,9 @@ import {
   Card,
   Pagination,
 } from "@mui/material";
-import { ToastContainer, toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import ItemProduct from "../Components/ProductCard";
-import Navbar from "../Components/Navbar";
 import axios from "../config/axios";
 const Homepage = (props) => {
   const lang = useSelector((state) => state.lang)
@@ -21,7 +20,6 @@ const Homepage = (props) => {
   }, [])
   return (
     <div className="">
-      <Navbar></Navbar>
       <div className="">
         <div className="relative h-9">
           <button className="right-10 absolute top-0">SORT</button>
@@ -70,6 +68,7 @@ const Homepage = (props) => {
   );
   async function getProduct() {
     let data = (await axios.get(`/api/v1/product/get?page=${currentPage}`)).data;
+  
     if (data.code.localeCompare("002") != 0) {
       toast(lang[data.code])
     }

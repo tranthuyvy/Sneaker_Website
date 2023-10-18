@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Routers from "./Routers/Routers_Public";
-import Footer from "./Components/Footer";
+
 import AdminPannel from "./Admin/AdminPannel";
 
 function App(props) {
@@ -36,8 +36,6 @@ function App(props) {
   return (
     <div className="">
       <ToastContainer/>
-      
-      <div></div>
       <div
         useOneTap={useGoogleOneTapLogin({
           onSuccess: handleSuccess,
@@ -49,9 +47,6 @@ function App(props) {
         <Route path="/*" element={<Routers />} />
         <Route path="/admin/*" element={<AdminPannel />} />
       </Routes>
-      <footer>
-        {window.location.pathname.indexOf("/admin") === -1 && <Footer />}
-      </footer>
     </div>
   );
 }
