@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Grid, TextField, Button } from "@mui/material";
+import { Grid, TextField, Button, Box } from "@mui/material";
 import axios from "../../../config/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
@@ -25,7 +25,6 @@ function LoginForm() {
   };
 
   const handleSubmit = async (event) => {
-    
     event.preventDefault();
 
     if (!username || !password) {
@@ -34,8 +33,7 @@ function LoginForm() {
         toast.error(errorMessages[accountErrorCode], {
           autoClose: 1000,
         });
-      }
-      else if (!password) {
+      } else if (!password) {
         const passwordErrorCode = "101";
         toast.error(errorMessages[passwordErrorCode], {
           autoClose: 1000,
@@ -43,36 +41,38 @@ function LoginForm() {
       }
       return;
     }
-  
+
     try {
-      const response = await axios.post("/api/v1/auth/login", { username, password });
-  
+      const response = await axios.post("/api/v1/auth/login", {
+        username,
+        password,
+      });
+
       if (response.status === 200) {
         const data = response.data;
         // console.log("code", response.data.code)
-  
+
         if (data.accessToken) {
           const token = data.accessToken;
           localStorage.setItem("accessToken", token);
-          
+
           const successCode = response.data.code;
-  
+
           if (successCode) {
             toast.success(errorMessages[successCode], {
               autoClose: 1000,
             });
           }
-  
-          dispatch({ type: 'LANG_ENG' });
+
+          dispatch({ type: "LANG_ENG" });
           navigate("/admin/staff");
         } else {
           const errorCode = response.data.code;
-          
+
           if (errorCode) {
             toast.error(errorMessages[errorCode], {
               autoClose: 1000,
             });
-            
           } else {
             const errorCode = "105";
             toast.error(errorMessages[errorCode], {
@@ -82,12 +82,11 @@ function LoginForm() {
         }
       } else {
         const errorCode = response.data.code;
-        
+
         if (errorCode) {
           toast.error(errorMessages[errorCode], {
             autoClose: 1000,
           });
-
         } else {
           const errorCode = "001";
           toast.error(errorMessages[errorCode], {
@@ -97,62 +96,68 @@ function LoginForm() {
       }
     } catch (error) {
       const errorCode = error.response ? error.response.data.code : null;
-      
+
       if (errorCode) {
         toast.error(errorMessages[errorCode], {
           autoClose: 1000,
         });
-
       } else {
         const errorCode = "106";
-          toast.error(errorMessages[errorCode], {
-            autoClose: 1000,
-          });
+        toast.error(errorMessages[errorCode], {
+          autoClose: 1000,
+        });
       }
     }
   };
-  
-  return (
-    <React.Fragment>
-      <form style={{ width: "50%" }} onSubmit={handleSubmit}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <TextField
-              name="username"
-              label="Account"
-              fullWidth
-              autoComplete="given-name"
-              value={username}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              name="password"
-              label="Password"
-              fullWidth
-              autoComplete="given-name"
-              type="password"
-              value={password}
-              onChange={handleInputChange}
-            />
-          </Grid>
 
-          <Grid item xs={12}>
-            <Button
-              className="bg-[#9155FD] w-full"
-              type="submit"
-              variant="contained"
-              size="large"
-              sx={{ padding: ".8rem 0" }}
-            >
-              {lang === "vi" ? "Đăng nhập" : "Login"}
-            </Button>
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="70vh"
+    >
+      <React.Fragment>
+        <form style={{ width: "50%" }} onSubmit={handleSubmit}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <TextField
+                name="username"
+                label="Account"
+                fullWidth
+                autoComplete="given-name"
+                value={username}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="password"
+                label="Password"
+                fullWidth
+                autoComplete="given-name"
+                type="password"
+                value={password}
+                onChange={handleInputChange}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                className="bg-[#9155FD] w-full"
+                type="submit"
+                variant="contained"
+                size="large"
+                sx={{ padding: ".8rem 0" }}
+              >
+                {lang === "vi" ? "Đăng nhập" : "Login"}
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
-      <ToastContainer />
-    </React.Fragment>
+        </form>
+        <ToastContainer />
+      </React.Fragment>
+    </Box>
   );
 }
 

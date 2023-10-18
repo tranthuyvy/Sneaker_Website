@@ -6,7 +6,7 @@
     "004": "Add successful data",
     "005": "Add data failure",
     "006": "System error",
-    "007": "Email already exists in the system",
+    "007": "Username already exists in the system",
     "008": "Successfully created employee account",
     "009": "Enter missing data",
     "010": "Email invalidate",

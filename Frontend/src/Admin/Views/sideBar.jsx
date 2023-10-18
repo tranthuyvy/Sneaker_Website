@@ -22,12 +22,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 
 const drawerWidth = 240;
 
-const menu=["Dashboard","Products","Customers","Orders","Total Earnings","Weekly Overview","Monthly Overview","Add Product"]
+const menu=["Dashboard","Products","Customers","Orders","Add Product"]
 
 export default function DemoAdmin() {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const [sideBarVisible,setSideBarVisible]=React.useState(false);
+  const [sideBarVisible, setSideBarVisible]=React.useState(false);
 
   const drawer = (
     <Box sx={{ overflow: 'auto',display:"flex",flexDirection:"column",justifyContent:"space-between" }}>
