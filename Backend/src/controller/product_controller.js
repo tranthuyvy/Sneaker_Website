@@ -114,11 +114,9 @@ class product_controller {
           .send({ code: "002", data: paginatedProducts, totalPage });
       } else {
         let data = await product.findAll();
-
         return res.status(200).send({ code: "002", data: data });
       }
     }
-
     //nếu bình thường thì lấy hết còn không thì lấy theo id
     console.log("Check list product: ", data);
   };
