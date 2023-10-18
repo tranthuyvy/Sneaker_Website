@@ -11,34 +11,34 @@ const { Op } = require("sequelize");
 class admin_controller {
   //Admin tạo tài khoản cho nhân viên
   createNewStaff = async (req, res) => {
-    let { nameStaff, email, password } = req.body;
+    let { nameStaff, username, password } = req.body;
     let id_account = auth.tokenData(req)?.id;
     let create_by = "";
 
     //Bắt lỗi không nhập
     //Băm password
-    console.log(nameStaff, email, password);
-    if (!nameStaff || !email || !password) {
+    // console.log(nameStaff, username, password);
+    if (!nameStaff || !username || !password) {
       return res.status(500).send({ code: "009" });
     }
     //Check định dạng email
-    let emailPattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
-    let check = emailPattern.test(email);
-    if (!check) {
-      return res.status(500).send({ code: "010" });
-    }
+    // let emailPattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
+    // let check = emailPattern.test(email);
+    // if (!check) {
+    //   return res.status(500).send({ code: "010" });
+    // }
     //Lấy id của staff
     let dataStaff = await staff.findOne({ where: { id_account } });
     if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
       create_by = dataStaff.dataValues.id;
     }
     console.log(create_by);
-    const checkEmailExist = await admin.findOne({ where: { name: email } });
+    const checkUsernameExist = await admin.findOne({ where: { name: username } });
     //1. Email này cũng là của nhân viên
     //2. Từ cái id_account vừa thêm thì thêm 1 thằng nhân viên có id_account đó và thêm tên cho nó
-    console.log(">>> Check email exist: ", checkEmailExist?.dataValues);
+    // console.log(">>> Check email exist: ", checkEmailExist?.dataValues);
     //Check email tồn tại
-    if (checkEmailExist?.dataValues) {
+    if (checkUsernameExist?.dataValues) {
       return res.status(500).send({ code: "007" });
     } else {
       try {
@@ -46,7 +46,7 @@ class admin_controller {
         console.log(hash);
         if (hash) {
           const account = await admin.create({
-            name: email,
+            name: username,
             password: hash,
             id_role: 1,
           });
@@ -57,7 +57,6 @@ class admin_controller {
           try {
             const data = await staff.create({
               name: nameStaff,
-              email: email,
               id_account: account.dataValues.id,
               status: 1,
               create_by,
