@@ -163,7 +163,6 @@ const StaffProfile = () => {
               label: "Email",
               name: "email",
               value: editedStaff.email,
-              disabled: true,
             },
             {
               label: "CCCD",
