@@ -22,5 +22,9 @@
     "103": "Error when create account",
     "104": "An unexpected error",
     "105": "Error receiving token",
-    "106": "Error while logging in"
+    "106": "Error while logging in",
+    "107": "Phone number must have 10 digits",
+    "108": "CCCD must have 12 digits",
+    "109": "Gender must be Male (Nam) or Female (Nữ)",
+    "110": "Please check again"
 }

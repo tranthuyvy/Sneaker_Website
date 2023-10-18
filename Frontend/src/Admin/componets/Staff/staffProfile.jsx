@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { InputAdornment, Typography } from "@mui/material";
-import {
-  Grid,
-  TextField,
-  Button,
-  Avatar,
-} from "@mui/material";
+import { Grid, TextField, Button, Avatar } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import { Fragment } from "react";
 import "./staffProfile.css";
 import { format } from "date-fns";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import api from '../../../config/api';
+import api from "../../../config/api";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import errorMessagesEn from "../../../Lang/en.json";
@@ -28,10 +23,25 @@ const StaffProfile = () => {
   // const token = localStorage.getItem("accessToken");
   //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmFtZSI6InR0di50aHV5dnlAZ21haWwuY29tIiwiaWRfcm9sZSI6MSwiY3JlYXRlX2F0IjoiMjAyMy0xMC0xM1QwNjo0NTo1MS4wMDBaIiwiaWF0IjoxNjk3MjA3OTUwLCJleHAiOjE2OTcyMjU5NTB9.guJFU90JxRcak0YWz4egfp9gTt_yECKd3RyWXadMLzE";
 
-  useEffect(() => {
-      api.get("api/v1/staff", {
+  const validatePhoneNumber = (phone) => {
+    return /^\d{10}$/.test(phone);
+  };
 
-      })
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validateCCCD = (cccd) => {
+    return /^\d{12}$/.test(cccd);
+  };
+
+  const validateGender = (sex) => {
+    return sex === "Nam" || sex === "Nữ";
+  };
+
+  useEffect(() => {
+    api
+      .get("api/v1/staff", {})
       .then((response) => {
         const staffData = response.data;
         toast.success(errorMessages["002"], {
@@ -64,22 +74,61 @@ const StaffProfile = () => {
   };
 
   const handleSaveEdit = () => {
-      api.put("/api/v1/staff", editedStaff)
-      .then((response) => {
-        setStaff(response.data);
-        setIsEditing(false);
-        setUpdateSuccess(true);
-        if(response.data.code === "013"){
-          toast.success(errorMessages["013"], {
+    const errorCode = {};
+
+    if (!validatePhoneNumber(editedStaff.phone)) {
+      errorCode.phone = "107";
+      toast.error(errorMessages[errorCode.phone], {
+        autoClose: 1000,
+      });
+    }
+
+    if (!validateEmail(editedStaff.email)) {
+      errorCode.email = "010";
+      toast.error(errorMessages[errorCode.email], {
+        autoClose: 1000,
+      });
+    }
+
+    if (!validateCCCD(editedStaff.id_card)) {
+      errorCode.id_card = "108";
+      toast.error(errorMessages[errorCode.id_card], {
+        autoClose: 1000,
+      });
+    }
+
+    if (!validateGender(editedStaff.sex)) {
+      errorCode.sex = "109";
+      toast.error(errorMessages[errorCode.sex], {
+        autoClose: 1000,
+      });
+    }
+
+    if (Object.keys(errorCode).length > 0) {
+      // for (const field in errorCode) {
+        toast.warning(errorMessages["110"], {
+          autoClose: 1000,
+        });
+      // }
+    } else {
+      api
+        .put("/api/v1/staff", editedStaff)
+        .then((response) => {
+          setStaff(response.data);
+          setIsEditing(false);
+          setUpdateSuccess(true);
+          if (response.data.code === "013") {
+            toast.success(errorMessages["013"], {
+              autoClose: 900,
+            });
+          }
+        })
+        .catch((error) => {
+          toast.error(errorMessages["006"], {
             autoClose: 900,
           });
-        }
-      })
-      .catch((error) => {
-        toast.error(errorMessages["006"], {
-          autoClose: 900,
         });
-      });
+    }
   };
 
   const handleChange = (event) => {
@@ -189,7 +238,7 @@ const StaffProfile = () => {
             {
               label: "Bank Number",
               name: "bank_account_number",
-              value: editedStaff.bank_account_number
+              value: editedStaff.bank_account_number,
             },
             {
               label: "Start Work",
@@ -200,19 +249,19 @@ const StaffProfile = () => {
             {
               label: "Status",
               name: "status",
-            //   value: editedStaff.status,
+              //   value: editedStaff.status,
               disabled: true,
               startAdornment: (
                 <InputAdornment position="start">
                   {editedStaff.status === 0 ? (
                     <>
-                        <FiberManualRecordIcon style={{ color: "green" }} />
-                        Làm Việc
+                      <FiberManualRecordIcon style={{ color: "green" }} />
+                      Làm Việc
                     </>
                   ) : (
                     <>
-                        <FiberManualRecordIcon style={{ color: "red" }} />
-                        Ngừng Làm Việc
+                      <FiberManualRecordIcon style={{ color: "red" }} />
+                      Ngừng Làm Việc
                     </>
                   )}
                 </InputAdornment>
