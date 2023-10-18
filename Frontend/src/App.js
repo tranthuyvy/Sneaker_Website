@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Routers from "./Routers/Routers_Public";
 import Footer from "./Components/Footer";
 import AdminPannel from "./Admin/AdminPannel";
-import Navbar from "./Components/Navbar";
+
 function App(props) {
   const lang = useSelector((state) => state.lang)
   const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty("accessToken"));
@@ -36,7 +36,7 @@ function App(props) {
   return (
     <div className="">
       <ToastContainer/>
-      <Navbar></Navbar>
+      
       <div></div>
       <div
         useOneTap={useGoogleOneTapLogin({
