@@ -35,7 +35,7 @@ function LoginForm() {
           autoClose: 1000,
         });
       }
-      if (!password) {
+      else if (!password) {
         const passwordErrorCode = "101";
         toast.error(errorMessages[passwordErrorCode], {
           autoClose: 1000,
@@ -74,7 +74,8 @@ function LoginForm() {
             });
             
           } else {
-            toast.error(lang === "vi" ? "Lỗi khi nhận token từ phản hồi." : "Error receiving token from response", {
+            const errorCode = "105";
+            toast.error(errorMessages[errorCode], {
               autoClose: 1000,
             });
           }
@@ -88,7 +89,8 @@ function LoginForm() {
           });
 
         } else {
-          toast.error(lang === "vi" ? "Đăng nhập thất bại." : "Login failed", {
+          const errorCode = "001";
+          toast.error(errorMessages[errorCode], {
             autoClose: 1000,
           });
         }
@@ -102,9 +104,10 @@ function LoginForm() {
         });
 
       } else {
-        toast.error(lang === "vi" ? "Lỗi khi thực hiện đăng nhập." : "Error while logging in", {
-          autoClose: 1000,
-        });
+        const errorCode = "106";
+          toast.error(errorMessages[errorCode], {
+            autoClose: 1000,
+          });
       }
     }
   };

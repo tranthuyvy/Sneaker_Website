@@ -15,6 +15,12 @@
     "013": "Updated data successfully",
     "014": "ID Not Found",
     "015": "Password is not in correct format",
-    "100": "Please fill in account fields",
-    "101": "Please fill in password fields"
+    
+    "100": "Please fill in Email fields",
+    "101": "Please fill in Password fields",
+    "102": "Please fill in Staff Name fields",
+    "103": "Error when create account",
+    "104": "An unexpected error",
+    "105": "Error receiving token",
+    "106": "Error while logging in"
 }

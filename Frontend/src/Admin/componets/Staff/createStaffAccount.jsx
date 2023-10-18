@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import { Grid, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import api from "../../../config/api";
+import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import errorMessagesEn from "../../../Lang/en.json";
+import errorMessagesVi from "../../../Lang/vi.json";
 
 function CreateStaffAccount() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nameStaff, setNameStaff] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const lang = useSelector((state) => state);
+  const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -22,24 +30,77 @@ function CreateStaffAccount() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
+    if (!nameStaff || !email || !password) {
+      if (!nameStaff) {
+        const accountErrorCode = "102";
+        toast.error(errorMessages[accountErrorCode], {
+          autoClose: 1000,
+        });
+      }
+      else if (!email) {
+        const accountErrorCode = "100";
+        toast.error(errorMessages[accountErrorCode], {
+          autoClose: 1000,
+        });
+      }
+      else if (!password) {
+        const accountErrorCode = "101";
+        toast.error(errorMessages[accountErrorCode], {
+          autoClose: 1000,
+        });
+      }
+      return;
+    }
 
     try {
-      const response = await api.post("api/v1/admin/create-staff", {
+      const response = await api.post("/api/v1/admin/create-staff", {
         nameStaff,
         email,
         password,
       });
-
-      if (response.status === 200) {
-        navigate("/admin/staff")
-      
+  
+      if (response.data.code === "008") {
+        const accountErrorCode = "008";
+        toast.success(errorMessages[accountErrorCode], {
+          autoClose: 1000,
+        });
+        dispatch({ type: 'LANG_ENG' });
+        navigate("/admin/staff");
       } else {
-        console.error("Lỗi khi gửi yêu cầu tạo tài khoản nhân viên.");
+        
       }
     } catch (error) {
-      console.error("Lỗi khi thực hiện đăng ký tài khoản nhân viên:", error);
+      if (error.response && error.response.status === 500) {
+        if (error.response.data.code === "010") {
+          const accountErrorCode = "010";
+          toast.error(errorMessages[accountErrorCode], {
+            autoClose: 1000,
+          });
+        } else if (error.response.data.code === "007") {
+          const accountErrorCode = "007";
+          toast.error(errorMessages[accountErrorCode], {
+            autoClose: 1000,
+          });
+        } else if (error.response.data.code === "006") {
+          const accountErrorCode = "006";
+          toast.error(errorMessages[accountErrorCode], {
+            autoClose: 1000,
+          });
+        } else {
+          const accountErrorCode = "104";
+          toast.error(errorMessages[accountErrorCode], {
+            autoClose: 1000,
+          });
+        }
+      } else {
+        const accountErrorCode = "103";
+          toast.error(errorMessages[accountErrorCode], {
+            autoClose: 1000,
+          });
+      }
     }
-  };
+  }
 
   return (
     <React.Fragment>
@@ -47,7 +108,6 @@ function CreateStaffAccount() {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
-              required
               name="nameStaff"
               label="Staff Name"
               fullWidth
@@ -58,7 +118,6 @@ function CreateStaffAccount() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              required
               name="email"
               label="Email"
               fullWidth
@@ -69,7 +128,6 @@ function CreateStaffAccount() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              required
               name="password"
               label="Password"
               fullWidth
@@ -88,11 +146,12 @@ function CreateStaffAccount() {
               size="large"
               sx={{ padding: ".8rem 0" }}
             >
-              Create Account
+              {lang === "vi" ? "Tạo Tài Khoản" : "Create Account"}
             </Button>
           </Grid>
         </Grid>
       </form>
+      <ToastContainer />
     </React.Fragment>
   );
 }
