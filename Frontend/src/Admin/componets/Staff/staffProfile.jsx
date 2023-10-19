@@ -40,8 +40,9 @@ const StaffProfile = () => {
   };
 
   useEffect(() => {
-    api
-      .get("api/v1/staff", {})
+    api.get("api/v1/staff", {
+
+    })
       .then((response) => {
         const staffData = response.data;
         toast.success(errorMessages["002"], {
@@ -74,61 +75,22 @@ const StaffProfile = () => {
   };
 
   const handleSaveEdit = () => {
-    const errorCode = {};
-
-    if (!validatePhoneNumber(editedStaff.phone)) {
-      errorCode.phone = "107";
-      toast.error(errorMessages[errorCode.phone], {
-        autoClose: 1000,
-      });
-    }
-
-    if (!validateEmail(editedStaff.email)) {
-      errorCode.email = "010";
-      toast.error(errorMessages[errorCode.email], {
-        autoClose: 1000,
-      });
-    }
-
-    if (!validateCCCD(editedStaff.id_card)) {
-      errorCode.id_card = "108";
-      toast.error(errorMessages[errorCode.id_card], {
-        autoClose: 1000,
-      });
-    }
-
-    if (!validateGender(editedStaff.sex)) {
-      errorCode.sex = "109";
-      toast.error(errorMessages[errorCode.sex], {
-        autoClose: 1000,
-      });
-    }
-
-    if (Object.keys(errorCode).length > 0) {
-      // for (const field in errorCode) {
-        toast.warning(errorMessages["110"], {
-          autoClose: 1000,
-        });
-      // }
-    } else {
-      api
-        .put("/api/v1/staff", editedStaff)
-        .then((response) => {
-          setStaff(response.data);
-          setIsEditing(false);
-          setUpdateSuccess(true);
-          if (response.data.code === "013") {
-            toast.success(errorMessages["013"], {
-              autoClose: 900,
-            });
-          }
-        })
-        .catch((error) => {
-          toast.error(errorMessages["006"], {
+    api.put("/api/v1/staff", editedStaff)
+      .then((response) => {
+        setStaff(response.data);
+        setIsEditing(false);
+        setUpdateSuccess(true);
+        if (response.data.code === "013") {
+          toast.success(errorMessages["013"], {
             autoClose: 900,
           });
+        }
+      })
+      .catch((error) => {
+        toast.error(errorMessages["006"], {
+          autoClose: 900,
         });
-    }
+      });
   };
 
   const handleChange = (event) => {
@@ -223,13 +185,13 @@ const StaffProfile = () => {
               name: "phone",
               value: editedStaff.phone,
             },
-            // {
-            //   label: "Birthday",
-            //   name: "date_of_birth",
-            //   type: Date,
-            //   value: editedStaff.date_of_birth
-            //   // value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
-            // },
+            {
+              label: "Birthday",
+              name: "date_of_birth",
+              type: Date,
+              value: editedStaff.date_of_birth
+              // value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
+            },
             {
               label: "Sex",
               name: "sex",
