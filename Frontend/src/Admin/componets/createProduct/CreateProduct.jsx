@@ -21,6 +21,7 @@ import { toast, ToastContainer } from "react-toastify";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
 import { useSelector } from "react-redux";
+import { ImageMarker } from "mdi-material-ui";
 
 const initialSizes = [
     { name: "6", quantity: 0 },
@@ -140,7 +141,11 @@ const CreateProduct = () => {
         formData.append("id_category", productData.category);
         formData.append("product_price", productData.price);
         formData.append("description", productData.description);
-        formData.append("file", productData.image);
+        if (productData.image.length > 0) {
+            for (let i = 0; i < productData.image.length; i++) {
+                formData.append(`file${i + 1}`, productData.image[i]);
+            }
+        }
 
         try {
             let res = await api.post("/api/v1/product/create", formData
@@ -167,7 +172,20 @@ const CreateProduct = () => {
 
     const handleImageChangeGPT = (e) => {
         const files = Array.from(e.target.files);
-        setImages(files);
+        // setImages(files);
+        if (files) {
+            setProductData((prevState) => ({
+                ...prevState,
+                image: files,
+            }));
+            // setSelectedImage(URL.createObjectURL(files));
+        } else {
+            setProductData((prevState) => ({
+                ...prevState,
+                image: null,
+            }));
+            // setSelectedImage(null);
+        }
     };
 
     const handleImageLinkChange = (e) => {
@@ -213,7 +231,7 @@ const CreateProduct = () => {
                                 onChange={handleImageChangeGPT}
                             />
                             <div>
-                                {images.map((image, index) => (
+                                {productData.image && productData.image.map((image, index) => (
                                     <img
                                         key={index}
                                         src={URL.createObjectURL(image)}

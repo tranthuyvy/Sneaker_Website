@@ -58,11 +58,12 @@ class product_controller {
           status: 1,
         });
         const listImageName = saveImg(req, res);
+        console.log("listImageName: ", listImageName);
         const image = req.files.length == 0 ? [] : listImageName.map(item => {
           return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
         });
         const img = image.length == 0 ? null : await productImage.bulkCreate(image);
-        // console.log("Check data product: ", dataProduct.dataValues);
+        console.log("Check data product: ", dataProduct.dataValues);
         console.log("Thêm thành công");
         return res.status(200).send({ code: "012" });
       } catch (e) {

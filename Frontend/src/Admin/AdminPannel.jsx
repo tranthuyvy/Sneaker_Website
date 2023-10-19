@@ -176,6 +176,7 @@ export default function AdminPannel() {
             <Route path="/staff" element={<AllStaff />}></Route>
             <Route path="/staff/profile" element={<StaffProfile />}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount />}></Route>
+            <Route path="/product/create" element={<CreateProduct />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/demo" element={<SideBar />} />
           </Routes>
