@@ -76,19 +76,15 @@ class product_controller {
     let { id } = req.query;
     let updataData = req.body;
     //Ảnh
-    const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
+   
     if (id) {
       try {
         let dataProduct = await product.findOne({ where: { id } });
-        let dataImage = await productImage.findOne({ where: { id_product: id } })
-        if (dataImage && dataImage.dataValues && dataImage.dataValues.id) {
-          if (image) {
-            dataImage.link = image;
-          }
-          await dataImage.save();
-        }
-
-
+        const listImageName = saveImg(req, res);
+        const image = req.files.length == 0 ? [] : listImageName.map(item => {
+          return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
+        });
+        const img = image.length == 0 ? null : await productImage.bulkCreate(image);
         if (dataProduct && dataProduct.dataValues && dataProduct.dataValues.id) {
           if (updataData.name) {
             dataProduct.name = updataData.name;
