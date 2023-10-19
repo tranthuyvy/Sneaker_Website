@@ -4,7 +4,9 @@ import {
   generateProductDetailId,
   generateProductId
 } from '../service/common'
+import saveImg from 'service/saveImg';
 const branch = Model.branch;
+const productImage = Model.image;
 
 class product_controller {
   createProduct = async (req, res) => {
@@ -25,11 +27,15 @@ class product_controller {
       description
     );
 
+    //Ảnh
+    const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
+
     //Kiểm tra nhập đủ trường chưa
-    if (!name || !id_branch || !id_category || !product_price || !description) {
+    if (!name || !id_branch || !id_category || !product_price || !description || !image) {
       return res.status(500).send({ code: "009" });
     }
     name = name.trim();
+
     // Check xem thằng name có trong db chưa
     let checkName = await product.findOne({ where: { name } });
     console.log(checkName);
@@ -55,6 +61,8 @@ class product_controller {
           status: 1,
         });
 
+        const img = await productImage.create({ id_product: id, link: image });
+
         // console.log("Check data product: ", dataProduct.dataValues);
         console.log("Thêm thành công");
         return res.status(200).send({ code: "012" });
@@ -68,10 +76,20 @@ class product_controller {
   updateProduct = async (req, res) => {
     let { id } = req.query;
     let updataData = req.body;
-
+    //Ảnh
+    const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
     if (id) {
       try {
         let dataProduct = await product.findOne({ where: { id } });
+        let dataImage = await productImage.findOne({ where: { id_product: id } })
+        if (dataImage && dataImage.dataValues && dataImage.dataValues.id) {
+          if (image) {
+            dataImage.link = image;
+          }
+          await dataImage.save();
+        }
+
+
         if (dataProduct && dataProduct.dataValues && dataProduct.dataValues.id) {
           if (updataData.name) {
             dataProduct.name = updataData.name;
@@ -87,6 +105,9 @@ class product_controller {
           }
           if (updataData.description) {
             dataProduct.description = updataData.description;
+          }
+          if (updataData.image) {
+            dataProduct.image = updataData.image;
           }
           // await dataProduct.update({
           //     name, address, phone
@@ -128,38 +149,35 @@ class product_controller {
 
     console.log(page, pageSize);
     // Tính vị trí bắt đầu và vị trí kết thúc của sản phẩm trên trang hiện tại
-    const option = {
-      include: [
-        {
-          model: Model.product_detail,
-          as: "product_details",
-        },
-        {
-          model: Model.discount,
-          as: 'id_discount_discount'
-        },
-        {
-          model: Model.branch,
-          as: 'id_branch_branch'
-        }
-      ],
-    }
+    const option = [
+      {
+        model: Model.product_detail,
+        as: "product_details",
+      },
+      {
+        model: Model.discount,
+        as: 'id_discount_discount'
+      },
+      {
+        model: Model.branch,
+        as: 'id_branch_branch'
+      },
+      {
+        model: Model.image,
+        as: "images"
+      }
+    ]
+
     if (id_product) {
       // console.log("id:", id_product);
-      let data = await product.findOne({ where: { id: id_product }, ...option });
+      let data = await product.findOne({ where: { id: id_product }, include: option });
       return res.status(200).send({ code: "002", data: data });
     } else {
       if (page || pageSize) {
         let startIndex = (page - 1) * pageSize;
         let endIndex = startIndex + pageSize;
         let data = await product.findAll({
-          include: [
-            {
-              model: Model.product_detail,
-              as: "product_details",
-
-            },
-          ],
+          include: option
         });
         const paginatedProducts = data.slice(startIndex, endIndex);
         const totalPage = Math.ceil(data.length / pageSize);
