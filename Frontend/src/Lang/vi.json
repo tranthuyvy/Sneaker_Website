@@ -6,7 +6,7 @@
     "004": "Thêm dữ liệu thành công",
     "005": "Thêm dữ liệu thất bại",
     "006": "Lỗi hệ thống",
-    "007": "Email đã tồn tại trong hệ thống",
+    "007": "Username đã tồn tại trong hệ thống",
     "008": "Tạo tài khoản nhân viên thành công",
     "009": "Nhập thiếu dữ liệu",
     "010": "Email không đúng định dạng",
@@ -21,5 +21,9 @@
     "103": "Lỗi khi tạo tài khoản nhân viên",
     "104": "Lỗi ngoại lệ",
     "105": "Lỗi nhận token",
-    "106": "Lỗi khi thực hiện đăng nhập"
+    "106": "Lỗi khi thực hiện đăng nhập",
+    "107": "Số điện thoại có 10 chữ số",
+    "108": "CCCD phải có 12 chữ số",
+    "109": "Giới tính phải là Nam hoặc Nữ",
+    "110": "Hãy kiểm tra lại thông tin"
 }

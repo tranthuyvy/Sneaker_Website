@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { InputAdornment, Typography } from "@mui/material";
-import {
-  Grid,
-  TextField,
-  Button,
-  Avatar,
-} from "@mui/material";
+import { Grid, TextField, Button, Avatar } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import { Fragment } from "react";
 import "./staffProfile.css";
 import { format } from "date-fns";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import api from '../../../config/api';
+import api from "../../../config/api";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import errorMessagesEn from "../../../Lang/en.json";
@@ -27,6 +22,22 @@ const StaffProfile = () => {
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
   // const token = localStorage.getItem("accessToken");
   //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmFtZSI6InR0di50aHV5dnlAZ21haWwuY29tIiwiaWRfcm9sZSI6MSwiY3JlYXRlX2F0IjoiMjAyMy0xMC0xM1QwNjo0NTo1MS4wMDBaIiwiaWF0IjoxNjk3MjA3OTUwLCJleHAiOjE2OTcyMjU5NTB9.guJFU90JxRcak0YWz4egfp9gTt_yECKd3RyWXadMLzE";
+
+  const validatePhoneNumber = (phone) => {
+    return /^\d{10}$/.test(phone);
+  };
+
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validateCCCD = (cccd) => {
+    return /^\d{12}$/.test(cccd);
+  };
+
+  const validateGender = (sex) => {
+    return sex === "Nam" || sex === "Nữ";
+  };
 
   useEffect(() => {
     api.get("api/v1/staff", {
@@ -163,7 +174,6 @@ const StaffProfile = () => {
               label: "Email",
               name: "email",
               value: editedStaff.email,
-              disabled: true,
             },
             {
               label: "CCCD",
@@ -190,7 +200,7 @@ const StaffProfile = () => {
             {
               label: "Bank Number",
               name: "bank_account_number",
-              value: editedStaff.bank_account_number
+              value: editedStaff.bank_account_number,
             },
             {
               label: "Start Work",

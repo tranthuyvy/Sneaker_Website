@@ -34,6 +34,10 @@ class StaffController {
           staff_pro.name = updatedData.name;
         }
 
+        if (updatedData.email) {
+          staff_pro.email = updatedData.email;
+        }
+
         if (updatedData.phone) {
           staff_pro.phone = updatedData.phone;
         }

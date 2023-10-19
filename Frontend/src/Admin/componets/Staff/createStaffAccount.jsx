@@ -119,7 +119,7 @@ function CreateStaffAccount() {
           <Grid item xs={12}>
             <TextField
               name="email"
-              label="Email"
+              label="User Name"
               fullWidth
               autoComplete="email"
               value={email}
