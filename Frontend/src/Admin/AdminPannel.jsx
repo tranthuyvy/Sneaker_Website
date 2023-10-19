@@ -33,6 +33,7 @@ import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
+import CreateProduct from "./componets/createProduct/CreateProduct";
 
 const drawerWidth = 240;
 
@@ -138,16 +139,16 @@ export default function AdminPannel() {
                 ...(isLargeScreen
                   ? {}
                   : {
-                      top: 0,
-                      [`& .MuiPaper-root.MuiDrawer-paperAnchorTop.MuiDrawer-paperTemporary`]:
-                        {
-                          position: "fixed",
-                          left: 0,
-                          right: 0,
-                          height: "100%",
-                          zIndex: (theme) => theme.zIndex.drawer + 2,
-                        },
-                    }),
+                    top: 0,
+                    [`& .MuiPaper-root.MuiDrawer-paperAnchorTop.MuiDrawer-paperTemporary`]:
+                    {
+                      position: "fixed",
+                      left: 0,
+                      right: 0,
+                      height: "100%",
+                      zIndex: (theme) => theme.zIndex.drawer + 2,
+                    },
+                  }),
               },
             }}
             open={isLargeScreen || (sideBarVisible && isLoginPage)}
@@ -173,6 +174,8 @@ export default function AdminPannel() {
               path="/staff/create"
               element={<CreateStaffAccount />}
             ></Route>
+            {/* Phong create Product */}
+            <Route path="/product/create" element={<CreateProduct />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/demo" element={<SideBar />} />
           </Routes>

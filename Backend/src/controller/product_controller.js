@@ -7,6 +7,8 @@ import {
 import saveImg from 'service/saveImg';
 const branch = Model.branch;
 const productImage = Model.image;
+const staff = Model.staff;
+import auth from "../middleware/authenJWT"
 
 class product_controller {
   createProduct = async (req, res) => {
@@ -14,7 +16,7 @@ class product_controller {
       name,
       id_branch,
       id_category,
-      create_by,
+      // create_by,
       product_price,
       description,
     } = req.body;
@@ -22,55 +24,61 @@ class product_controller {
       name,
       id_branch,
       id_category,
-      create_by,
+      // create_by,
       product_price,
       description
     );
-
+    // let id_account = auth.tokenData(req)?.id;
+    // let create_by = "";
+    // let dataStaff = await staff.findOne({ where: { id_account } });
+    // if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
+    //   create_by = dataStaff.dataValues.id;
+    // }
+    // console.log(">>>Check create by: ", id_account);
     //Ảnh
     const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
+    console.log("Ảnh: ", image);
+    // // //Kiểm tra nhập đủ trường chưa
+    // if (!name || !id_branch || !id_category || !product_price || !description || !image || !create_by) {
+    //   return res.status(500).send({ code: "009" });
+    // }
+    // name = name.trim();
+    // product_price = Number(product_price);
+    // // Check xem thằng name có trong db chưa
+    // let checkName = await product.findOne({ where: { name } });
+    // console.log(checkName);
+    // if (checkName?.dataValues) {
+    //   return res.status(500).send({ code: "011" });
+    // } else {
+    //   try {
+    //     let nameBranch = await branch.findOne({ id: id_branch });
+    //     console.log(nameBranch.dataValues.id);
+    //     let id = '';
+    //     if (nameBranch && nameBranch.dataValues && nameBranch.dataValues.id) {
+    //       id = generateProductId(name, nameBranch.dataValues.name);
+    //       // console.log(generateProductId(name, nameBranch));
+    //     }
+    //     let dataProduct = await product.create({
+    //       id,
+    //       name,
+    //       id_branch,
+    //       id_category,
+    //       create_by,
+    //       product_price,
+    //       description,
+    //       status: 1,
+    //     });
 
-    //Kiểm tra nhập đủ trường chưa
-    if (!name || !id_branch || !id_category || !product_price || !description || !image) {
-      return res.status(500).send({ code: "009" });
-    }
-    name = name.trim();
+    //     const img = await productImage.create({ id_product: id, link: image });
 
-    // Check xem thằng name có trong db chưa
-    let checkName = await product.findOne({ where: { name } });
-    console.log(checkName);
-    if (checkName?.dataValues) {
-      return res.status(500).send({ code: "011" });
-    } else {
-      try {
-        let nameBranch = await branch.findOne({ id: id_branch });
-        console.log(nameBranch.dataValues.id);
-        let id = '';
-        if (nameBranch && nameBranch.dataValues && nameBranch.dataValues.id) {
-          id = generateProductId(name, nameBranch.dataValues.name);
-          // console.log(generateProductId(name, nameBranch));
-        }
-        let dataProduct = await product.create({
-          id,
-          name,
-          id_branch,
-          id_category,
-          create_by,
-          product_price,
-          description,
-          status: 1,
-        });
-
-        const img = await productImage.create({ id_product: id, link: image });
-
-        // console.log("Check data product: ", dataProduct.dataValues);
-        console.log("Thêm thành công");
-        return res.status(200).send({ code: "012" });
-      } catch (e) {
-        console.log(e);
-        return res.status(500).send({ code: "006" });
-      }
-    }
+    //     // console.log("Check data product: ", dataProduct.dataValues);
+    //     console.log("Thêm thành công");
+    //     return res.status(200).send({ code: "012" });
+    //   } catch (e) {
+    //     console.log(e);
+    //     return res.status(500).send({ code: "006" });
+    //   }
+    // }
   };
 
   updateProduct = async (req, res) => {
