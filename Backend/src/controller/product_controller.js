@@ -44,8 +44,6 @@ class product_controller {
           id = generateProductId(name, nameBranch.dataValues.name);
           // console.log(generateProductId(name, nameBranch));
         }
-
-
         let dataProduct = await product.create({
           id,
           name,
