@@ -4,7 +4,6 @@ import admin_router from "./admin";
 import product_router from "./product";
 import product_detail_router from "./product_detail";
 import category_router from "./category";
-
 import discount_router from "./discount";
 import product_batch_router from "./product_batch";
 import order_router from "./order";
