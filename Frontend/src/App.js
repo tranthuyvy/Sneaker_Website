@@ -12,9 +12,11 @@ import AdminPannel from "./Admin/AdminPannel";
 
 function App(props) {
   const lang = useSelector((state) => state.lang)
-  const [isLogin, setIsLogin] = useState(localStorage.hasOwnProperty("accessToken"));
+  const [isLogin, setIsLogin] = useState();
   const isAdmin = true;
-  console.log(isLogin);
+  useEffect(() => {
+    setIsLogin(localStorage.hasOwnProperty("accessToken"))
+  }, [])
   const handleSuccess = async (response) => {
     // Xử lý thông tin người dùng sau khi đăng nhập thành công
     const data = (
@@ -35,14 +37,14 @@ function App(props) {
   };
   return (
     <div className="">
-      <ToastContainer/>
-      <div
+      <ToastContainer />
+      {/* <div
         useOneTap={useGoogleOneTapLogin({
           onSuccess: handleSuccess,
           onFailure: handleFailure,
           disabled: isLogin,
         })}
-      />
+      /> */}
       <Routes>
         <Route path="/*" element={<Routers />} />
         <Route path="/admin/*" element={<AdminPannel />} />

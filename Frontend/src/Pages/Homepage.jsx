@@ -7,12 +7,14 @@ import {toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import ItemProduct from "../Components/ProductCard";
 import axios from "../config/axios";
+import { getImage } from "../config/common";
 const Homepage = (props) => {
   const lang = useSelector((state) => state.lang)
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   useEffect(() => {
+   
     getProduct().catch(err => {
       toast(lang['003']);
       console.error(err)
@@ -76,13 +78,7 @@ const Homepage = (props) => {
       setListProduct([...data.data])
     }
   }
-  function getImage(product) {
-    for (let i of product.product_details) {
-      if (i.image.localeCompare("") != 0)
-        return i.image
-    }
-    return "https://w7.pngwing.com/pngs/296/367/png-transparent-shoe-sneakers-graphy-canvas-cartoon-shoes-miscellaneous-white-photography-thumbnail.png"
-  }
+  
 };
 
 
