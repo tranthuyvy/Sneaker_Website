@@ -72,27 +72,8 @@ function CreateStaffAccount() {
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
-        if (error.response.data.code === "010") {
-          const accountErrorCode = "010";
-          toast.error(errorMessages[accountErrorCode], {
-            autoClose: 1000,
-          });
-        } else if (error.response.data.code === "007") {
-          const accountErrorCode = "007";
-          toast.error(errorMessages[accountErrorCode], {
-            autoClose: 1000,
-          });
-        } else if (error.response.data.code === "006") {
-          const accountErrorCode = "006";
-          toast.error(errorMessages[accountErrorCode], {
-            autoClose: 1000,
-          });
-        } else {
-          const accountErrorCode = "104";
-          toast.error(errorMessages[accountErrorCode], {
-            autoClose: 1000,
-          });
-        }
+          toast.error(errorMessages[error.response.data.code], 
+            {autoClose: 1000})
       } else {
         const accountErrorCode = "103";
           toast.error(errorMessages[accountErrorCode], {
