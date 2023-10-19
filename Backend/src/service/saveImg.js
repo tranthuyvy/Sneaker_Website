@@ -1,22 +1,29 @@
 import { bucket } from "../config/firebase"
 import { v4 as uuidv4 } from 'uuid';
+
 export default function saveImg(req, res) {
-    const filename = uuidv4()
-    const blob = bucket.file(filename)
+  const filenames = [];
 
+  for (const file of req.files) {
+    const filename = uuidv4();
+    const blob = bucket.file(filename);
     const blobWriter = blob.createWriteStream({
-        metadata: {
-            contentType: req.files[0].mimetype
-        }
-    })
-    blobWriter.on('error', (err) => {
-        console.log(err)
-    })
+      metadata: {
+        contentType: file.mimetype
+      }
+    });
 
-    blobWriter.on('finish', (data) => {
-        console.log('uploaded')
-    })
+    blobWriter.on("error", (err) => {
+      console.log(err);
+    });
 
-    blobWriter.end(req.files[0].buffer)
-    return filename
+    blobWriter.on("finish", (data) => {
+      console.log("uploaded");
+    });
+
+    blobWriter.end(file.buffer);
+    filenames.push(filename);
+  }
+
+  return filenames;
 }

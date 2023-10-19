@@ -18,12 +18,15 @@
     "100": "Vui lòng nhập email",
     "101": "Vui lòng nhập mật khẩu",
     "102": "Vui lòng nhập tên nhân viên",
-    "103": "Lỗi khi tạo tài khoản nhân viên",
+    "103": "Lỗi khi tạo mới",
     "104": "Lỗi ngoại lệ",
     "105": "Lỗi nhận token",
     "106": "Lỗi khi thực hiện đăng nhập",
     "107": "Số điện thoại có 10 chữ số",
     "108": "CCCD phải có 12 chữ số",
     "109": "Giới tính phải là Nam hoặc Nữ",
-    "110": "Hãy kiểm tra lại thông tin"
+    "110": "Hãy kiểm tra lại thông tin",
+    "111": "Vui lòng nhập tên nhà cung cấp",
+    "112": "Vui lòng nhập địa chỉ nhà cung cấp",
+    "113": "Vui lòng nhập số điện thoại nhà cung cấp"
 }

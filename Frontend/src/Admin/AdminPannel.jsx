@@ -19,15 +19,16 @@ import { customTheme } from "./them/customThem";
 import Dashboard from "./Views/dashBoard";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "./Views/sideBar";
-// import CreateProductForm from "./componets/createProduct/CreateProductFrom";
 import "./AdminPannel.css";
 import ProductsTable from "./componets/Products/ProductsTable";
 import AllOrder from "./componets/Order/allOrder";
 // import OrderDetail from "./componets/Orders/OrderDetail";
 import Customers from "./componets/User/allUser";
-// import UpdateProductForm from "./componets/updateProduct/UpdateProduct";
 // import ProductReview from "./componets/productReview/ProductReview";
 import AllStaff from "./componets/Staff/allStaff";
+import AllSupplier from "./componets/Supplier/allSupplier";
+import CreateSupplier from "./componets/Supplier/createSupplier";
+import UpdateSupplier from "./componets/Supplier/updateSupplier";
 import StaffProfile from "./componets/Staff/staffProfile";
 import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
@@ -43,6 +44,7 @@ const menu = [
   { name: "Customers", path: "/admin/customers" },
   { name: "Staff", path: "/admin/staff" },
   { name: "Orders", path: "/admin/orders" },
+  { name: "Supplier", path: "/admin/supplier" },
   // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
@@ -168,14 +170,12 @@ export default function AdminPannel() {
             <Route path="/orders" element={<AllOrder />}></Route>
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             <Route path="/customers" element={<Customers />}></Route>
+            <Route path="/supplier" element={<AllSupplier />}></Route>
+            <Route path="/supplier/create" element={<CreateSupplier />}></Route>
+            <Route path="/supplier/update/:id" element={<UpdateSupplier />}></Route>
             <Route path="/staff" element={<AllStaff />}></Route>
             <Route path="/staff/profile" element={<StaffProfile />}></Route>
-            <Route
-              path="/staff/create"
-              element={<CreateStaffAccount />}
-            ></Route>
-            {/* Phong create Product */}
-            <Route path="/product/create" element={<CreateProduct />}></Route>
+            <Route path="/staff/create" element={<CreateStaffAccount />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/demo" element={<SideBar />} />
           </Routes>
