@@ -29,9 +29,9 @@ const StaffProfile = () => {
   //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmFtZSI6InR0di50aHV5dnlAZ21haWwuY29tIiwiaWRfcm9sZSI6MSwiY3JlYXRlX2F0IjoiMjAyMy0xMC0xM1QwNjo0NTo1MS4wMDBaIiwiaWF0IjoxNjk3MjA3OTUwLCJleHAiOjE2OTcyMjU5NTB9.guJFU90JxRcak0YWz4egfp9gTt_yECKd3RyWXadMLzE";
 
   useEffect(() => {
-      api.get("api/v1/staff", {
+    api.get("api/v1/staff", {
 
-      })
+    })
       .then((response) => {
         const staffData = response.data;
         toast.success(errorMessages["002"], {
@@ -64,12 +64,12 @@ const StaffProfile = () => {
   };
 
   const handleSaveEdit = () => {
-      api.put("/api/v1/staff", editedStaff)
+    api.put("/api/v1/staff", editedStaff)
       .then((response) => {
         setStaff(response.data);
         setIsEditing(false);
         setUpdateSuccess(true);
-        if(response.data.code === "013"){
+        if (response.data.code === "013") {
           toast.success(errorMessages["013"], {
             autoClose: 900,
           });
@@ -175,13 +175,13 @@ const StaffProfile = () => {
               name: "phone",
               value: editedStaff.phone,
             },
-            // {
-            //   label: "Birthday",
-            //   name: "date_of_birth",
-            //   type: Date,
-            //   value: editedStaff.date_of_birth
-            //   // value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
-            // },
+            {
+              label: "Birthday",
+              name: "date_of_birth",
+              type: Date,
+              value: editedStaff.date_of_birth
+              // value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
+            },
             {
               label: "Sex",
               name: "sex",
@@ -201,19 +201,19 @@ const StaffProfile = () => {
             {
               label: "Status",
               name: "status",
-            //   value: editedStaff.status,
+              //   value: editedStaff.status,
               disabled: true,
               startAdornment: (
                 <InputAdornment position="start">
                   {editedStaff.status === 0 ? (
                     <>
-                        <FiberManualRecordIcon style={{ color: "green" }} />
-                        Làm Việc
+                      <FiberManualRecordIcon style={{ color: "green" }} />
+                      Làm Việc
                     </>
                   ) : (
                     <>
-                        <FiberManualRecordIcon style={{ color: "red" }} />
-                        Ngừng Làm Việc
+                      <FiberManualRecordIcon style={{ color: "red" }} />
+                      Ngừng Làm Việc
                     </>
                   )}
                 </InputAdornment>
