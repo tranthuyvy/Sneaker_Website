@@ -169,8 +169,8 @@ export default function ProductDetails(props) {
                             <RadioGroup.Option
                               key={item.id}
                               value={item.value}
-                              className={`cursor-pointer bg-white text-gray-900 shadow-sm ring-1 ring-indigo-500 font-medium uppercase min-h-[40px] min-w-[40px] justify-content: center align-items: center
-                                ${item.isChecked ? "bg-blue-400" : ""} `}
+                              className={`cursor-pointer text-gray-900 shadow-sm ring-1 ring-indigo-500 font-medium uppercase min-h-[40px] min-w-[40px] justify-content: center align-items: center
+                                ${item.isChecked ? "bg-blue-400" : "bg-white"} `}
                             >
                               <RadioGroup.Label
                                 as="p"
