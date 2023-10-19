@@ -67,6 +67,62 @@ class product_controller {
     }
   };
 
+  updateProduct = async (req, res) => {
+    let { id } = req.query;
+    let updataData = req.body;
+
+    if (id) {
+      try {
+        let dataProduct = await product.findOne({ where: { id } });
+        if (dataProduct && dataProduct.dataValues && dataProduct.dataValues.id) {
+          if (updataData.name) {
+            dataProduct.name = updataData.name;
+          }
+          if (updataData.id_branch) {
+            dataProduct.id_branch = updataData.id_branch;
+          }
+          if (updataData.id_category) {
+            dataProduct.id_category = updataData.id_category;
+          }
+          if (updataData.product_price) {
+            dataProduct.product_price = Number(updataData.product_price);
+          }
+          if (updataData.description) {
+            dataProduct.description = updataData.description;
+          }
+          // await dataProduct.update({
+          //     name, address, phone
+          // })
+          await dataProduct.save();
+          return res.status(200).send({ code: "013" });
+        }
+        else {
+          return res.status(404).send({ code: "014" });
+        }
+      } catch (e) {
+        console.log(e);
+        return res.status(500).send({ code: "006" });
+      }
+    }
+  }
+
+  disableProduct = async (req, res) => {
+    let { id } = req.query;
+    let checkIdProduct = await product.findOne({ where: { id } });
+    if (checkIdProduct && checkIdProduct.dataValues && checkIdProduct.dataValues.id) {
+      try {
+        await checkIdProduct.update({ status: 2 });
+        return res.status(200).send({ code: "013" });
+      } catch (e) {
+        console.log(e);
+        return res.status(500).send({ code: "006" });
+      }
+    }
+    else {
+      return res.status(404).send({ code: "014" });
+    }
+  }
+
   getAllProduct = async (req, res) => {
     const id_product = req.query.id;
     const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
@@ -121,5 +177,6 @@ class product_controller {
     console.log("Check list product: ", data);
   };
 }
+
 
 export default new product_controller();

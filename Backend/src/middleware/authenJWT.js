@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const auth = {}
 
-auth.tokenData = (req,res) => {
+auth.tokenData = (req, res) => {
     const authorizationHeader = req.headers['authorization'];
     if (!authorizationHeader) return null;
 
