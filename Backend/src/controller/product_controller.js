@@ -5,33 +5,24 @@ import {
   generateProductId
 } from '../service/common'
 import saveImg from 'service/saveImg';
+import auth from '../middleware/authenJWT'
 const branch = Model.branch;
 const productImage = Model.image;
-
+const staff = Model.staff
 class product_controller {
   createProduct = async (req, res) => {
     let {
       name,
       id_branch,
       id_category,
-      create_by,
       product_price,
       description,
     } = req.body;
-    console.log(
-      name,
-      id_branch,
-      id_category,
-      create_by,
-      product_price,
-      description
-    );
-
     //Ảnh
-    const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
+
 
     //Kiểm tra nhập đủ trường chưa
-    if (!name || !id_branch || !id_category || !product_price || !description || !image) {
+    if (!name || !id_branch || !id_category || !product_price || !description) {
       return res.status(500).send({ code: "009" });
     }
     name = name.trim();
@@ -43,6 +34,12 @@ class product_controller {
       return res.status(500).send({ code: "011" });
     } else {
       try {
+        let id_account = auth.tokenData(req)?.id || 1;
+        let create_by = 1;
+        let dataStaff = await staff.findOne({ where: { id_account } });
+        if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
+          create_by = dataStaff.dataValues.id;
+        }
         let nameBranch = await branch.findOne({ id: id_branch });
         console.log(nameBranch.dataValues.id);
         let id = '';
@@ -60,9 +57,11 @@ class product_controller {
           description,
           status: 1,
         });
-
-        const img = await productImage.create({ id_product: id, link: image });
-
+        const listImageName = saveImg(req, res);
+        const image = req.files.length == 0 ? [] : listImageName.map(item => {
+          return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
+        });
+        const img = image.length == 0 ? null : await productImage.bulkCreate(image);
         // console.log("Check data product: ", dataProduct.dataValues);
         console.log("Thêm thành công");
         return res.status(200).send({ code: "012" });
@@ -77,19 +76,15 @@ class product_controller {
     let { id } = req.query;
     let updataData = req.body;
     //Ảnh
-    const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
+   
     if (id) {
       try {
         let dataProduct = await product.findOne({ where: { id } });
-        let dataImage = await productImage.findOne({ where: { id_product: id } })
-        if (dataImage && dataImage.dataValues && dataImage.dataValues.id) {
-          if (image) {
-            dataImage.link = image;
-          }
-          await dataImage.save();
-        }
-
-
+        const listImageName = saveImg(req, res);
+        const image = req.files.length == 0 ? [] : listImageName.map(item => {
+          return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
+        });
+        const img = image.length == 0 ? null : await productImage.bulkCreate(image);
         if (dataProduct && dataProduct.dataValues && dataProduct.dataValues.id) {
           if (updataData.name) {
             dataProduct.name = updataData.name;

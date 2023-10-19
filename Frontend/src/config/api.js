@@ -9,8 +9,9 @@ const axiosApiInstance = axios.create({
 
 axiosApiInstance.interceptors.request.use((config) => {
   let [accessToken, refreshToken] = [localStorage.getItem('accessToken'), localStorage.getItem('refreshToken')]
-  if (accessToken==null) {
-    localStorage.clear();
+  if (accessToken == null) {
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('accessToken');
     window.location.href = "/login";
   }
 
@@ -44,7 +45,8 @@ axiosApiInstance.interceptors.response.use(
           };
           window.location.reload();
         } else {
-          localStorage.clear();
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('accessToken');
           window.location.href = "/login";
         }
       }
