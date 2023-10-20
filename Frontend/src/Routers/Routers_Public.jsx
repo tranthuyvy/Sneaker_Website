@@ -7,6 +7,7 @@ import SideBar from "../Admin/Views/sideBar";
 import AdminPannel from "../Admin/AdminPannel";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import Cart from "../Pages/Cart";
 const Routers = () => {
   return (
     <div className="">
@@ -19,8 +20,8 @@ const Routers = () => {
         <Route path="/privaciy-policy" element={<PrivacyPolicy/>}></Route>
         <Route path="/terms-condition" element={<TearmsCondition/>}></Route>
         <Route path="/contact" element={<Contact/>}></Route>
-        <Route path="/men" element={<Product/>}></Route>
-        <Route path="/cart" element={<Cart/>}></Route>*/}
+        <Route path="/men" element={<Product/>}></Route>*/}
+        <Route path="/cart" element={<Cart/>}></Route>
         <Route path="/admin" element={<AdminPannel />}></Route>
         <Route path="/demo" element={<SideBar />}></Route>
       </Routes>
