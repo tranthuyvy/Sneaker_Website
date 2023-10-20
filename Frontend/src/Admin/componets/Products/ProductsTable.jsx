@@ -234,9 +234,9 @@ const ProductsTable = () => {
                   </TableCell>
                   <TableCell style={{}} sx={{ textAlign: "center" }}>
                     <Button
-                      // onClick={() =>
-                      //   navigate(`/admin/product/update/${item.id}`)
-                      // }
+                      onClick={() =>
+                        navigate(`/admin/product/update/${product.id}`)
+                      }
                       variant="text"
                       color="warning"
                     >

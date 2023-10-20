@@ -14,7 +14,7 @@ import { Fragment } from "react";
 import "./CreateProduct.css";
 // import { useDispatch } from "react-redux";
 // import { createProduct } from "../../../Redux/Customers/Product/Action";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "../../../config/axios";
 import api from "../../../config/api"
 import { toast, ToastContainer } from "react-toastify";
@@ -22,15 +22,6 @@ import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
 import { useSelector } from "react-redux";
 import { ImageMarker } from "mdi-material-ui";
-
-const initialSizes = [
-    { name: "6", quantity: 0 },
-    { name: "7", quantity: 0 },
-    { name: "8", quantity: 0 },
-    { name: "9", quantity: 0 },
-    { name: "10", quantity: 0 },
-    { name: "11", quantity: 0 },
-];
 
 const listBrand = [
     { id: 1, name: "Nike" },
@@ -41,18 +32,17 @@ const listBrand = [
 ]
 
 
+const UpdateProduct = () => {
 
-const CreateProduct = () => {
-    const [productData, setProductData] = useState({
-        image: "",
-        brand: "",
-        category: "",
-        name: "",
-        price: "",
-        discountPersent: "",
-        size: initialSizes,
-        description: "",
-    });
+    const [image, setImage] = useState([])
+    const [brand, setBrand] = useState('')
+    const [category, setCategory] = useState('')
+    const [name, setName] = useState('')
+    const [price, setPrice] = useState('')
+    const [description, setDescription] = useState('')
+    const [listImage, setListImage] = useState('')
+
+
     const lang = useSelector((state) => state);
     const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
@@ -63,11 +53,32 @@ const CreateProduct = () => {
     const jwt = localStorage.getItem("jwt");
     const navigate = useNavigate();
 
+    //user Params
+    let id = useParams().id;
+    console.log(">>> Check id: ", id);
+
     useEffect(() => {
-        fetchApi(listCategory);
+        fetchApi();
+        fetchApiCategory();
     }, []);
 
-    const fetchApi = async (listCategory) => {
+    const fetchApi = async () => {
+        let res = await api.get(`/api/v1/product/get?id=${id}`);
+        console.log("Check update data: ", res.data);
+        if (res && res.data && res.data.data) {
+            let data = res.data.data
+            setName(data.name);
+            setBrand(data.id_branch);
+            setDescription(data.description);
+            setPrice(data.product_price);
+            setCategory(data.id_category);
+            setImage(data.images);
+            setListImage(data.images);
+        }
+        // setListCategory(res.data.data);
+    }
+
+    const fetchApiCategory = async () => {
         let res = await axios.get("/api/v1/category/get");
         console.log("Check category: ", res.data.data);
         setListCategory(res.data.data);
@@ -76,42 +87,45 @@ const CreateProduct = () => {
     const handleOnChangeImage = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setProductData((prevState) => ({
-                ...prevState,
-                image: file,
-            }));
+            // setProductData((prevState) => ({
+            //     ...prevState,
+            //     image: file,
+            // }));
             setSelectedImage(URL.createObjectURL(file));
         } else {
-            setProductData((prevState) => ({
-                ...prevState,
-                image: null,
-            }));
+            // setProductData((prevState) => ({
+            //     ...prevState,
+            //     image: null,
+            // }));
             setSelectedImage(null);
         }
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProductData((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+
+        // setProductData((prevState) => ({
+        //     ...prevState,
+        //     [name]: value,
+        // }));
     };
 
-    const handleSizeChange = (e, index) => {
-        let { name, value } = e.target;
-        name === "size_quantity" ? (name = "quantity") : (name = e.target.name);
+    const handleChangeNumber = (e) => {
+        const { name, value } = e.target;
+        if (isNaN(value) || value.includes('.') || value.includes(' ')) {
+            return;
+        }
 
-        const sizes = [...productData.size];
-        sizes[index][name] = value;
-        setProductData((prevState) => ({
-            ...prevState,
-            size: sizes,
-        }));
+        // setProductData((prevState) => ({
+        //     ...prevState,
+        //     [name]: value,
+        // }));
     };
+
+
 
     // const handleAddSize = () => {
-    //   const sizes = [...productData.size];
+    //   const sizes = [...size];
     //   sizes.push({ name: "", quantity: "" });
     //   setProductData((prevState) => ({
     //     ...prevState,
@@ -120,7 +134,7 @@ const CreateProduct = () => {
     // };
 
     // const handleRemoveSize = (index) => {
-    //   const sizes = [...productData.size];
+    //   const sizes = [...size];
     //   sizes.splice(index, 1);
     //   setProductData((prevState) => ({
     //     ...prevState,
@@ -134,27 +148,66 @@ const CreateProduct = () => {
         // navigate("/admin/products")
 
 
-        console.log("product Data ne", productData);
+        console.log("product Data ne", name, price, image, category, brand, description);
         const formData = new FormData();
-        formData.append("name", productData.name);
-        formData.append("id_branch", productData.brand);
-        formData.append("id_category", productData.category);
-        formData.append("product_price", productData.price);
-        formData.append("description", productData.description);
-        if (productData.image.length > 0) {
-            for (let i = 0; i < productData.image.length; i++) {
-                formData.append(`file${i + 1}`, productData.image[i]);
+        formData.append("name", name);
+        formData.append("id_branch", brand);
+        formData.append("id_category", category);
+        formData.append("product_price", price);
+        formData.append("description", description);
+        if (image.length > 0) {
+            // if (image.length === listImage.length) {
+            //     return;
+            // }
+            if (image[0] && image[0].id) {
+                console.log("Còn ảnh");
+                const commonIds = [];
+                console.log(">>> image: ", image, listImage);
+                for (const item2 of listImage) {
+                    let isCommon = false;
+                    for (const item1 of image) {
+                        if (item1.id === item2.id) {
+                            isCommon = true;
+                            break;
+                        }
+                    }
+                    if (!isCommon && !commonIds.includes(item2.id)) {
+                        commonIds.push(item2.id);
+                    }
+                }
+                console.log(">>>> check commonIds: ", commonIds);
+                for (let i = 0; i < commonIds.length; i++) {
+                    formData.append(`listImageDelete[${i}]`, commonIds[i]);
+                }
+
+                // formData.append(`listImageDelete${}`, commonIds);
+                // return commonIds;
             }
+            else {
+                console.log("Ảnh mới");
+                console.log(image);
+                for (let i = 0; i < image.length; i++) {
+                    formData.append(`file${i + 1}`, image[i]);
+                }
+            }
+        }
+        else {
+            // if (listImage) {
+            //     return;
+            // }
+            // else {
+            //     formData.append("listImageDelete: ", '');
+            // }
         }
 
         try {
-            let res = await api.post("/api/v1/product/create", formData
+            let res = await api.put(`/api/v1/product/update?id=${id}`, formData
             );
 
             toast.success(errorMessages[res.data.code], {
                 autoClose: 1000,
             });
-            navigate("/admin/products")
+            // navigate("/admin/products")
         } catch (error) {
             if (error.response && error.response.status === 500) {
                 toast.error(errorMessages[error.response.data.code],
@@ -174,28 +227,33 @@ const CreateProduct = () => {
         const files = Array.from(e.target.files);
         // setImages(files);
         if (files) {
-            setProductData((prevState) => ({
-                ...prevState,
-                image: files,
-            }));
+            setImage(files);
+
             // setSelectedImage(URL.createObjectURL(files));
         } else {
-            setProductData((prevState) => ({
-                ...prevState,
-                image: null,
-            }));
+            setImage(null);
             // setSelectedImage(null);
         }
     };
 
     const handleImageLinkChange = (e) => {
         const imageUrl = e.target.value;
-        setProductData((prevState) => ({
-            ...prevState,
-            imageUrl: imageUrl,
-        }));
+        // setProductData((prevState) => ({
+        //     ...prevState,
+        //     imageUrl: imageUrl,
+        // }));
 
         setImageToShow(imageUrl);
+    };
+
+    const handleRemoveImage = (index) => {
+        const filteredImages = image.filter((image, i) => i !== index);
+        console.log("filteredImages: ", filteredImages);
+        setImage(filteredImages)
+        // setProductData((prevState) => ({
+        //     ...prevState,
+        //     image: filteredImages,
+        // }));
     };
 
     return (
@@ -205,11 +263,12 @@ const CreateProduct = () => {
                 sx={{ textAlign: "center" }}
                 className="py-10 text-center "
             >
-                Product
+                Update Product
             </Typography>
-            <form
-                onSubmit={handleSubmit}
+            <div
+                // onSubmit={handleSubmit}
                 className="createProductContainer min-h-screen"
+
             >
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -217,7 +276,7 @@ const CreateProduct = () => {
                             fullWidth
                             label="Image URL"
                             name="imageUrl"
-                            // value={productData.image}
+                            // value={image}
                             // onChange={handleImageLinkChange}
                             multiple
                             onChange={handleOnChangeImage}
@@ -230,24 +289,30 @@ const CreateProduct = () => {
                                 multiple="multiple"
                                 onChange={handleImageChangeGPT}
                             />
-                            <div>
-                                {productData.image && productData.image.map((image, index) => (
-                                    <img
-                                        key={index}
-                                        src={URL.createObjectURL(image)}
-                                        alt={`img-${index}`}
-                                        style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                                    />
+                            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                                {image && image.map((img, index) => (
+                                    // console.log(img.link)
+                                    <div style={{ position: 'relative', marginRight: '10px' }}>
+                                        <img
+                                            key={index}
+                                            // src={URL.createObjectURL(img && img.link)}
+                                            src={img.link ? img.link : URL.createObjectURL(img)}
+                                            alt={`img-${index}`}
+                                            style={{ width: "180px", height: "180px", marginRight: "12px", borderRadius: "8px" }}
+                                        />
+                                        <button onClick={() => handleRemoveImage(index)} style={{ position: 'absolute', top: 0, right: "12px", backgroundColor: "green", color: "#ddd", padding: "6px" }}>X</button>
+                                    </div>
                                 ))}
+                                {/* {console.log(">>> Check: ", image)} */}
                             </div>
                         </div>
                     </Grid>
                     {selectedImage && (
-                        <Grid item xs={12}>
+                        <Grid item xs={12} style={{ textAlign: 'center' }}>
                             <img
                                 src={selectedImage}
                                 alt="Product"
-                                style={{ maxWidth: "200px", height: "auto" }}
+                                style={{ maxWidth: "50%", height: "auto", objectFit: "contain" }}
                             />
                             <div onClick={() => setSelectedImage(null)}>x</div>
                         </Grid>
@@ -257,8 +322,8 @@ const CreateProduct = () => {
                             fullWidth
                             label="Name"
                             name="name"
-                            value={productData.name}
-                            onChange={handleChange}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -266,8 +331,8 @@ const CreateProduct = () => {
                             <InputLabel>Brand</InputLabel>
                             <Select
                                 name="brand"
-                                value={productData.brand}
-                                onChange={handleChange}
+                                value={brand}
+                                onChange={(e) => setBrand(e.target.value)}
                                 label="Brand"
                             >
                                 {listBrand && listBrand.map((item, index) => {
@@ -285,8 +350,8 @@ const CreateProduct = () => {
                             <InputLabel>Category</InputLabel>
                             <Select
                                 name="category"
-                                value={productData.category}
-                                onChange={handleChange}
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
                                 label="Category"
                             >
                                 {listCategory && listCategory.map((item, index) => {
@@ -307,108 +372,10 @@ const CreateProduct = () => {
                             fullWidth
                             label="Price"
                             name="price"
-                            value={productData.price}
-                            onChange={handleChange}
-                            type="number"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
                         />
                     </Grid>
-
-                    {/* <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            label="Discounted Price"
-                            name="discountedPrice"
-                            value={productData.discountedPrice}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            label="Discount Percentage"
-                            name="discountPersent"
-                            value={productData.discountPersent}
-                            onChange={handleChange}
-                            type="number"
-                        />
-                    </Grid> */}
-
-                    {/*
-                    <Grid item xs={6} sm={4}>
-                        <FormControl fullWidth>
-                            <InputLabel>Second Level Category</InputLabel>
-                            <Select
-                                name="secondLavelCategory"
-                                value={productData.secondLavelCategory}
-                                onChange={handleChange}
-                                label="Second Level Category"
-                            >
-                                <MenuItem value="adidas">Adidas</MenuItem>
-                                <MenuItem value="converse">Converse</MenuItem>
-                                <MenuItem value="nike">Nike</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6} sm={4}>
-                        <FormControl fullWidth>
-                            <InputLabel>Third Level Category</InputLabel>
-                            <Select
-                                name="thirdLavelCategory"
-                                value={productData.thirdLavelCategory}
-                                onChange={handleChange}
-                                label="Third Level Category"
-                            >
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="air_force_1">Air Force 1</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="air_max">Air Max</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="basketball">Basketball</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "converse" && (
-                                    <MenuItem value="chuck_70">Chuck 70</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "converse" && (
-                                    <MenuItem value="classic_chuck">Classic Chuck</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="jordan">Jordan</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="life_style">Lifestyle</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="hiking">Hiking</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="golf">Golf</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="gym">Gym</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="running">Running</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="soccer">Soccer</MenuItem>
-                                )}
-                            </Select>
-                        </FormControl>
-                    </Grid> */}
                     <Grid item xs={12}>
                         <TextField
                             fullWidth
@@ -417,11 +384,11 @@ const CreateProduct = () => {
                             multiline
                             name="description"
                             rows={3}
-                            onChange={handleChange}
-                            value={productData.description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            value={description}
                         />
                     </Grid>
-                    {/* {productData.size.map((size, index) => (
+                    {/* {size.map((size, index) => (
                         <Grid container item spacing={3}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -452,8 +419,9 @@ const CreateProduct = () => {
                             className="py-20"
                             size="large"
                             type="submit"
+                            onClick={handleSubmit}
                         >
-                            Add New Product
+                            Update Product
                         </Button>
                         {/* <Button
               variant="contained"
@@ -466,9 +434,9 @@ const CreateProduct = () => {
             </Button> */}
                     </Grid>
                 </Grid>
-            </form>
+            </div>
         </Fragment>
     );
 };
 
-export default CreateProduct;
+export default UpdateProduct;
