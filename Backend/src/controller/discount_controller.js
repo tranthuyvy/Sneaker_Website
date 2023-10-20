@@ -52,8 +52,15 @@ class discount_controller {
 
     getAllDiscount = async (req, res) => {
         try {
+
+            const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
+            const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu discount trong 1 trang
+            let startIndex = (page - 1) * pageSize;
+            let endIndex = startIndex + pageSize;
             let data = await discount.findAll();
-            return res.status(200).send({ code: "002", data })
+            const paginatedProducts = data.slice(startIndex, endIndex);
+            const totalPage = Math.ceil(data.length / pageSize);
+            return res.status(200).send({ code: "002", data: paginatedProducts, totalPage })
         } catch (e) {
             console.log(e);
             return res.status(500).send({ code: "006" });
