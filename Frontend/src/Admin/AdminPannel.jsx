@@ -36,7 +36,8 @@ import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
-import CreateProduct from "./componets/createProduct/CreateProduct";
+import CreateProduct from "./componets/Products/CreateProduct";
+import UpdateProduct from "./componets/Products/UpdateProduct";
 
 const drawerWidth = 240;
 
@@ -170,6 +171,8 @@ export default function AdminPannel() {
             {/* <Route path="/product/update/:productId" element={<UpdateProductForm/>}></Route> */}
             {/* <Route path="/product/reviews/:productId" element={<ProductReview/>}></Route> */}
             <Route path="/products" element={<ProductsTable />}></Route>
+            <Route path="/product/create" element={<CreateProduct />}></Route>
+            <Route path="/product/update/:id" element={<UpdateProduct />}></Route>
             <Route path="/orders" element={<AllOrder />}></Route>
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             <Route path="/customers" element={<Customers />}></Route>
@@ -181,7 +184,7 @@ export default function AdminPannel() {
             <Route path="/staff" element={<AllStaff />}></Route>
             <Route path="/staff/profile" element={<StaffProfile />}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount />}></Route>
-            <Route path="/product/create" element={<CreateProduct />}></Route>
+
             <Route path="/login" element={<Login />}></Route>
             <Route path="/demo" element={<SideBar />} />
           </Routes>

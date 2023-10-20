@@ -26,7 +26,7 @@ class product_controller {
       return res.status(500).send({ code: "009" });
     }
     name = name.trim();
-
+    product_price = Number(product_price);
     // Check xem thằng name có trong db chưa
     let checkName = await product.findOne({ where: { name } });
     console.log(checkName);
@@ -58,6 +58,9 @@ class product_controller {
           status: 1,
         });
         const listImageName = saveImg(req, res);
+        if (listImageName.length < 1) {
+          return res.status(500).send({ code: "009" });
+        }
         console.log("listImageName: ", listImageName);
         const image = req.files.length == 0 ? [] : listImageName.map(item => {
           return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
@@ -82,10 +85,41 @@ class product_controller {
       try {
         let dataProduct = await product.findOne({ where: { id } });
         const listImageName = saveImg(req, res);
-        const image = req.files.length == 0 ? [] : listImageName.map(item => {
-          return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
-        });
-        const img = image.length == 0 ? null : await productImage.bulkCreate(image);
+        console.log("listImageName: ", listImageName);
+        if (listImageName.length > 0) {
+          await productImage.destroy({
+            where: {
+              id_product: id
+            },
+          })
+          const image = req.files.length == 0 ? [] : listImageName.map(item => {
+            return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
+          });
+          const img = image.length == 0 ? null : await productImage.bulkCreate(image);
+        }
+        else {
+
+          console.log("Hello");
+          let { listImageDelete } = req.body;
+          // console.log(listImageDelete);
+          if (!listImageDelete) {
+            console.log("listImageDelete:", listImageDelete);
+            // return res.status(500).send({ code: "009" });
+          }
+          else {
+            for (let i = 0; i < listImageDelete.length; i++) {
+              console.log("Delete: ", listImageDelete[i]);
+              await productImage.destroy({
+                where: {
+                  id: listImageDelete[i]
+                },
+              })
+              //api delete từng cái ảnh
+              //Bỏ ảnh thì xóa ảnh
+              //Chọn ảnh thì thêm ảnh
+            }
+          }
+        }
         if (dataProduct && dataProduct.dataValues && dataProduct.dataValues.id) {
           if (updataData.name) {
             dataProduct.name = updataData.name;
@@ -102,9 +136,9 @@ class product_controller {
           if (updataData.description) {
             dataProduct.description = updataData.description;
           }
-          if (updataData.image) {
-            dataProduct.image = updataData.image;
-          }
+          // if (updataData.image) {
+          //   dataProduct.image = updataData.image;
+          // }
           // await dataProduct.update({
           //     name, address, phone
           // })
