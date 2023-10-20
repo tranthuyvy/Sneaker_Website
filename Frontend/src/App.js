@@ -3,7 +3,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { useGoogleOneTapLogin } from "@react-oauth/google";
 import api from "./config/api";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Routers from "./Routers/Routers_Public";
@@ -14,7 +14,9 @@ function App(props) {
   const lang = useSelector((state) => state.lang)
   const [isLogin, setIsLogin] = useState();
   const isAdmin = true;
+  const dispatch = useDispatch()
   useEffect(() => {
+    dispatch({ type: "INIT_CART" })
     setIsLogin(localStorage.hasOwnProperty("accessToken"))
   }, [])
   const handleSuccess = async (response) => {

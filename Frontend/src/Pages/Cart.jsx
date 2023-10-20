@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CartItem from "../Components/CartItem";
-import { Badge, Button, cardActionAreaClasses } from "@mui/material";
+import { Badge, Button, cardActionAreaClasses, ListItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -19,20 +19,22 @@ const Cart = () => {
           await axios.get(`/api/v1/product_detail/get?id=${i.id}`)
         );
       }
-      const data = await Promise.all(listPromise);
       const listTmp = [];
-      for (let a of data) {
-        listTmp.push({ ...(await a.data.data), quantity: findQuantity((await a.data.data).id) });
-      }
-      let totalTmp = 0;
-      listTmp.forEach((i) => {
-        totalTmp += i.id_product_product.product_price * findQuantity(i.id);
+
+      const data = (await Promise.all(listPromise)).map((item) => {
+        let quantity = findQuantity(item.data.data.id);
+        return { ...item.data.data, quantity: quantity };
       });
-      setTotal(totalTmp);
+      for (let a of data) {
+        listTmp.push({ ...a });
+      }
+
       setListCart([...listTmp]);
     })();
   }, []);
-
+  useEffect(() => {
+    getTotal();
+  });
   return (
     <div className="">
       {cart.length > 0 && (
@@ -91,6 +93,13 @@ const Cart = () => {
       )}
     </div>
   );
+  function getTotal() {
+    let totalTmp = 0;
+    listCart.forEach((item) => {
+      totalTmp += findQuantity(item.id) * item.id_product_product.product_price;
+    });
+    setTotal(totalTmp);
+  }
   function findQuantity(id) {
     let quantity = 0;
     for (let i of cart) {

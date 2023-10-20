@@ -6,7 +6,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import axios from "../config/axios";
-import { getImage } from "../config/common";
+import { getImage, setCart } from "../config/common";
 import { useSelector } from "react-redux";
 const CartItem = ({ detail, showButton }) => {
   const dispatch = useDispatch();
@@ -18,11 +18,14 @@ const CartItem = ({ detail, showButton }) => {
   };
   const handleUpdateCartItem = (num) => {
     dispatch({type:'SET_CART',data:cart.map(item=>{
-      return item.id.localeCompare(detail.id)==0 ? {...item,quantity: detail.quantity+num}: item
+      return item.id.localeCompare(detail.id)==0 ? {...item,quantity: item.quantity+num}: item
     })})
+    setCart(cart.map(item=>{
+      return item.id.localeCompare(detail.id)==0 ? {...item,quantity: item.quantity+num}: item
+    }))
     // window.location.reload();
   };
-
+  console.log(detail)
   return (
     <div className="p-5 shadow-lg border rounded-md">
       <div className="flex items-center">
@@ -73,7 +76,7 @@ const CartItem = ({ detail, showButton }) => {
             </IconButton>
 
             <span className="py-1 px-7 border rounded-sm">
-              {detail?.quantity}
+              {findQuantity(detail.id)}
             </span>
             <IconButton
               onClick={() => handleUpdateCartItem(1)}
@@ -92,6 +95,13 @@ const CartItem = ({ detail, showButton }) => {
       )}
     </div>
   );
+  function findQuantity(id) {
+    let quantity = 0;
+    for (let i of cart) {
+      if (i.id.localeCompare(id) == 0) quantity = i.quantity;
+    }
+    return quantity;
+  }
 };
 
 export default CartItem;

@@ -1,22 +1,23 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+
 import { RadioGroup } from "@headlessui/react";
 import { Button, Rating } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "../config/axios";
-import { getImage } from "../config/common";
+import { getImage, setCart } from "../config/common";
 export default function ProductDetails(props) {
   const location = useLocation();
-  const lang = useSelector((state) => state.lang);
+  const { lang, cart } = useSelector((state) => {
+    return { lang: state.lang, cart: state.cart };
+  });
   const dispatch = useDispatch();
   const [product, setProduct] = useState();
   const [listSize, setListSize] = useState([]);
   const [discountedPrice, setDiscountedPrice] = useState(0);
   const [discountPersent, setDiscountedPresent] = useState(10);
   const id = location.search.match(/id=(.+)/)[1];
-  const call = 1;
   useEffect(() => {
     (async () => {
       const data = (await axios.get(`/api/v1/product/get?id=${id}`)).data;
@@ -244,9 +245,15 @@ export default function ProductDetails(props) {
   function addCart() {
     let listCart = [];
     listSize.forEach((item) => {
-      if (item.isChecked) listCart.push({ ...item, quantity: 1 });
+      if (item.isChecked && !checkInCart(item.id)) listCart.push({ ...item, quantity: 1 });
     });
-    console.log(listCart);
-    dispatch({type:'SET_CART',data:listCart})
+    dispatch({ type: "SET_CART", data: [...cart,...listCart] });
+    setCart([...cart,...listCart]);
+  }
+  function checkInCart(id){
+    for(let i of cart){
+       if (i.id.localeCompare(id)==0) return true
+    }
+    return false
   }
 }
