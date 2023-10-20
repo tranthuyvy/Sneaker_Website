@@ -15,24 +15,26 @@ import {
 } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
-import api from "../../../config/api";
-import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { useNavigate } from "react-router-dom";
+import axios from "../../../config/axios";
+import { format } from "date-fns";
 
 const AllDiscount = () => {
-  const [users, setUsers] = useState([]);
+  const [discounts, setDiscounts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 8;
+  const navigate = useNavigate();
 
-  const fetchUsers = (page) => {
-    api
-      .get(`/api/v1/admin/get?id_role=2&page=${page}&pageSize=${pageSize}`)
+  const fetchDiscounts = (page) => {
+    axios
+      .get(`/api/v1/discount/get?page=${page}&pageSize=${pageSize}`)
       .then((response) => {
-        const UsersArray = Array.isArray(response.data.data)
+        const DiscountsArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
-        setUsers(UsersArray);
+        setDiscounts(DiscountsArray);
         setCurrentPage(page);
         setTotalPages(response.data.totalPage);
       })
@@ -42,20 +44,42 @@ const AllDiscount = () => {
   };
 
   useEffect(() => {
-    fetchUsers(currentPage);
+    fetchDiscounts(currentPage);
   }, []);
 
   const handlePaginationChange = (event, page) => {
-    fetchUsers(page);
+    fetchDiscounts(page);
+  };
+
+  const handleDeleteDiscount = (id) => {
+    
+    axios
+      .put(`/api/v1/discount/disable/?id=${id}`)
+      .then((response) => {
+
+        console.log('Successful',id);
+        fetchDiscounts(currentPage);
+      })
+      .catch((error) => {
+        
+        console.error('Error', error);
+      });
   };
 
   return (
     <Box>
       <Card>
-        <CardHeader
+      <CardHeader
           title={
             <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ flex: 1 }}>All Customers</span>
+              <span style={{ flex: 1 }}>All Discounts</span>
+              <Button
+                onClick={() => navigate("/admin/discount/create")}
+                variant="contained"
+                color="primary"
+              >
+                Create Discount
+              </Button>
             </div>
           }
           sx={{ pt: 2, "& .MuiCardHeader-action": { mt: 0.6 } }}
@@ -64,91 +88,65 @@ const AllDiscount = () => {
           <Table sx={{ minWidth: 390 }} aria-label="table in dashboard">
             <TableHead>
               <TableRow>
-                {/* <TableCell>STT</TableCell> */}
-                <TableCell style={{ textAlign: "center" }}>Avatar</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Name</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Phone</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Email</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Platform</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Point</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Rank</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Code</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Value</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Type</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Expiration Date</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Create At</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Status</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map(
-                (user) =>
-                  user.name !== "admin@gmail.com" && (
-                    <TableRow
-                      hover
-                      key={user.id}
-                      sx={{
-                        "&:last-of-type td, &:last-of-type th": { border: 0 },
+              {discounts.map((discount, index) => (
+                <TableRow
+                  hover
+                  key={discount.id}
+                  sx={{
+                    "&:last-of-type td, &:last-of-type th": { border: 0 },
+                  }}
+                >
+                  <TableCell style={{ textAlign: "center" }}>
+                    KM0{index + 1}
+                  </TableCell>
+
+                  <TableCell style={{ textAlign: "center" }}>
+                    {discount.value}
+                  </TableCell>
+
+                  <TableCell style={{ textAlign: "center" }}>
+                    {discount.type && discount.type === 1 ? "$" : "%"}
+                  </TableCell>
+
+                  <TableCell style={{ textAlign: "center" }}>
+                    {discount.expiration_date &&
+                      format(new Date(discount.expiration_date), "dd/MM/yyyy")}
+                  </TableCell>
+
+                  <TableCell style={{ textAlign: "center" }}>
+                    {discount.create_at &&
+                      format(new Date(discount.create_at), "dd/MM/yyyy")}
+                  </TableCell>
+
+                  <TableCell style={{ textAlign: "center" }}>
+                    <FiberManualRecordIcon
+                      style={{
+                        color: discount.status === 1 ? "green" : "red",
                       }}
+                    />
+                  </TableCell>
+
+                  <TableCell sx={{ textAlign: "center" }}>
+                    <Button
+                      onClick={() => handleDeleteDiscount(discount.id)}
+                      variant="text"
+                      color="secondary"
                     >
-                      <TableCell style={{ textAlign: "center" }}>
-                        <Avatar sx={{ bgcolor: deepOrange[500] }}>
-                          {user.name.charAt(0).toUpperCase()}
-                        </Avatar>
-                      </TableCell>
-
-                      <TableCell style={{ textAlign: "center" }}>
-                        {user.name}
-                      </TableCell>
-
-                      <TableCell style={{ textAlign: "center" }}>
-                        {user.phone}
-                      </TableCell>
-
-                      <TableCell style={{ textAlign: "center" }}>
-                        {user.email}
-                      </TableCell>
-
-                      <TableCell style={{ textAlign: "center" }}>
-                        {user.platform}
-                      </TableCell>
-
-                      <TableCell style={{ textAlign: "center" }}>
-                        {user.point}
-                      </TableCell>
-
-                      <TableCell style={{ textAlign: "center" }}>
-                        <MilitaryTechIcon
-                          style={{
-                            color:
-                              user.point < 200
-                                ? "brown"
-                                : user.point >= 200 && user.point < 400
-                                ? "silver"
-                                : user.point >= 400 && user.point < 600
-                                ? "gold"
-                                : user.point >= 600
-                                ? "lightblue"
-                                : "purple",
-                          }}
-                        />
-                        {user.point < 200 && <span>BROWN</span>}
-                        {user.point >= 200 && user.point < 400 && (
-                          <span>SILVER</span>
-                        )}
-                        {user.point >= 400 && user.point < 600 && (
-                          <span>GOLD</span>
-                        )}
-                        {user.point >= 600 && <span>DIAMOND</span>}
-                      </TableCell>
-
-                      <TableCell sx={{ textAlign: "center" }}>
-                        <Button
-                          // onClick={() => handleDeleteProduct(item.id)}
-                          variant="text"
-                          color="secondary"
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  )
-              )}
+                      <DeleteIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
