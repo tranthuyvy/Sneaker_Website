@@ -19,20 +19,24 @@ import { customTheme } from "./them/customThem";
 import Dashboard from "./Views/dashBoard";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "./Views/sideBar";
-// import CreateProductForm from "./componets/createProduct/CreateProductFrom";
 import "./AdminPannel.css";
 import ProductsTable from "./componets/Products/ProductsTable";
 import AllOrder from "./componets/Order/allOrder";
 // import OrderDetail from "./componets/Orders/OrderDetail";
 import Customers from "./componets/User/allUser";
-// import UpdateProductForm from "./componets/updateProduct/UpdateProduct";
 // import ProductReview from "./componets/productReview/ProductReview";
+import AllDiscount from "./componets/Discount/allDiscount";
+import CreateDiscount from "./componets/Discount/createDiscount";
 import AllStaff from "./componets/Staff/allStaff";
+import AllSupplier from "./componets/Supplier/allSupplier";
+import CreateSupplier from "./componets/Supplier/createSupplier";
+import UpdateSupplier from "./componets/Supplier/updateSupplier";
 import StaffProfile from "./componets/Staff/staffProfile";
 import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
+import CreateProduct from "./componets/createProduct/CreateProduct";
 
 const drawerWidth = 240;
 
@@ -42,6 +46,8 @@ const menu = [
   { name: "Customers", path: "/admin/customers" },
   { name: "Staff", path: "/admin/staff" },
   { name: "Orders", path: "/admin/orders" },
+  { name: "Supplier", path: "/admin/supplier" },
+  { name: "Discount", path: "/admin/discount" },
   // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
@@ -138,16 +144,16 @@ export default function AdminPannel() {
                 ...(isLargeScreen
                   ? {}
                   : {
-                      top: 0,
-                      [`& .MuiPaper-root.MuiDrawer-paperAnchorTop.MuiDrawer-paperTemporary`]:
-                        {
-                          position: "fixed",
-                          left: 0,
-                          right: 0,
-                          height: "100%",
-                          zIndex: (theme) => theme.zIndex.drawer + 2,
-                        },
-                    }),
+                    top: 0,
+                    [`& .MuiPaper-root.MuiDrawer-paperAnchorTop.MuiDrawer-paperTemporary`]:
+                    {
+                      position: "fixed",
+                      left: 0,
+                      right: 0,
+                      height: "100%",
+                      zIndex: (theme) => theme.zIndex.drawer + 2,
+                    },
+                  }),
               },
             }}
             open={isLargeScreen || (sideBarVisible && isLoginPage)}
@@ -167,12 +173,15 @@ export default function AdminPannel() {
             <Route path="/orders" element={<AllOrder />}></Route>
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             <Route path="/customers" element={<Customers />}></Route>
+            <Route path="/discount" element={<AllDiscount />}></Route>
+            <Route path="/discount/create" element={<CreateDiscount />}></Route>
+            <Route path="/supplier" element={<AllSupplier />}></Route>
+            <Route path="/supplier/create" element={<CreateSupplier />}></Route>
+            <Route path="/supplier/update/:id" element={<UpdateSupplier />}></Route>
             <Route path="/staff" element={<AllStaff />}></Route>
             <Route path="/staff/profile" element={<StaffProfile />}></Route>
-            <Route
-              path="/staff/create"
-              element={<CreateStaffAccount />}
-            ></Route>
+            <Route path="/staff/create" element={<CreateStaffAccount />}></Route>
+            <Route path="/product/create" element={<CreateProduct />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/demo" element={<SideBar />} />
           </Routes>

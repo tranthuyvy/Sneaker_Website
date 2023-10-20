@@ -17,7 +17,6 @@ import { deepOrange } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
 import api from "../../../config/api";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
-import { useNavigate } from "react-router-dom";
 
 const AllUser = () => {
   const [users, setUsers] = useState([]);

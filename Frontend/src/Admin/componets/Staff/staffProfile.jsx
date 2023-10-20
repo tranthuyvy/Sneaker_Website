@@ -185,13 +185,13 @@ const StaffProfile = () => {
               name: "phone",
               value: editedStaff.phone,
             },
-            {
-              label: "Birthday",
-              name: "date_of_birth",
-              type: Date,
-              value: editedStaff.date_of_birth
-              // value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
-            },
+            // {
+            //   label: "Birthday",
+            //   name: "date_of_birth",
+            //   type: Date,
+            //   // value: editedStaff.date_of_birth
+            //   value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
+            // },
             {
               label: "Sex",
               name: "sex",

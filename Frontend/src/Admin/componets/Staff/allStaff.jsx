@@ -21,7 +21,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 const AllStaff = () => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const [staffs, setStaffs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
