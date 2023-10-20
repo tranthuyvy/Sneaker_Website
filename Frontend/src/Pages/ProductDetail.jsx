@@ -1,20 +1,23 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+
 import { RadioGroup } from "@headlessui/react";
 import { Button, Rating } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "../config/axios";
-import { getImage } from "../config/common";
+import { getImage, setCart } from "../config/common";
 export default function ProductDetails(props) {
   const location = useLocation();
-  const lang = useSelector((state) => state.lang);
+  const { lang, cart } = useSelector((state) => {
+    return { lang: state.lang, cart: state.cart };
+  });
+  const dispatch = useDispatch();
   const [product, setProduct] = useState();
   const [listSize, setListSize] = useState([]);
   const [discountedPrice, setDiscountedPrice] = useState(0);
   const [discountPersent, setDiscountedPresent] = useState(10);
   const id = location.search.match(/id=(.+)/)[1];
-  const call = 1;
   useEffect(() => {
     (async () => {
       const data = (await axios.get(`/api/v1/product/get?id=${id}`)).data;
@@ -170,7 +173,9 @@ export default function ProductDetails(props) {
                               key={item.id}
                               value={item.value}
                               className={`cursor-pointer text-gray-900 shadow-sm ring-1 ring-indigo-500 font-medium uppercase min-h-[40px] min-w-[40px] justify-content: center align-items: center
-                                ${item.isChecked ? "bg-blue-400" : "bg-white"} `}
+                                ${
+                                  item.isChecked ? "bg-blue-400" : "bg-white"
+                                } `}
                             >
                               <RadioGroup.Label
                                 as="p"
@@ -178,8 +183,11 @@ export default function ProductDetails(props) {
                                   setListSize([
                                     ...listSize.map((i) => {
                                       if (i.id.localeCompare(item.id) == 0)
-                                        return { ...item, isChecked: !item.isChecked };
-                                      return i
+                                        return {
+                                          ...item,
+                                          isChecked: !item.isChecked,
+                                        };
+                                      return i;
                                     }),
                                   ]);
                                 }}
@@ -197,7 +205,7 @@ export default function ProductDetails(props) {
                 </div>
                 <Button
                   variant="contained"
-                  type="submit"
+                  onClick={addCart}
                   sx={{ padding: ".8rem 2rem", marginTop: "2rem" }}
                 >
                   Add To Cart
@@ -234,4 +242,18 @@ export default function ProductDetails(props) {
       </div>
     </div>
   );
+  function addCart() {
+    let listCart = [];
+    listSize.forEach((item) => {
+      if (item.isChecked && !checkInCart(item.id)) listCart.push({ ...item, quantity: 1 });
+    });
+    dispatch({ type: "SET_CART", data: [...cart,...listCart] });
+    setCart([...cart,...listCart]);
+  }
+  function checkInCart(id){
+    for(let i of cart){
+       if (i.id.localeCompare(id)==0) return true
+    }
+    return false
+  }
 }
