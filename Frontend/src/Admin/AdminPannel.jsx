@@ -25,6 +25,7 @@ import AllOrder from "./componets/Order/allOrder";
 // import OrderDetail from "./componets/Orders/OrderDetail";
 import Customers from "./componets/User/allUser";
 // import ProductReview from "./componets/productReview/ProductReview";
+import AllDiscount from "./componets/Discount/allDiscount";
 import AllStaff from "./componets/Staff/allStaff";
 import AllSupplier from "./componets/Supplier/allSupplier";
 import CreateSupplier from "./componets/Supplier/createSupplier";
@@ -44,6 +45,7 @@ const menu = [
   { name: "Staff", path: "/admin/staff" },
   { name: "Orders", path: "/admin/orders" },
   { name: "Supplier", path: "/admin/supplier" },
+  { name: "Discount", path: "/admin/discount" },
   // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
@@ -169,6 +171,7 @@ export default function AdminPannel() {
             <Route path="/orders" element={<AllOrder />}></Route>
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             <Route path="/customers" element={<Customers />}></Route>
+            <Route path="/discount" element={<AllDiscount />}></Route>
             <Route path="/supplier" element={<AllSupplier />}></Route>
             <Route path="/supplier/create" element={<CreateSupplier />}></Route>
             <Route path="/supplier/update/:id" element={<UpdateSupplier />}></Route>

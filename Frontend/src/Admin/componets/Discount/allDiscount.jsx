@@ -17,8 +17,9 @@ import { deepOrange } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
 import api from "../../../config/api";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import { useNavigate } from "react-router-dom";
 
-const AllUser = () => {
+const AllDiscount = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -169,4 +170,4 @@ const AllUser = () => {
   );
 };
 
-export default AllUser;
+export default AllDiscount;
