@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import ItemProduct from "../Components/ProductCard";
 import axios from "../config/axios";
 import { getImage } from "../config/common";
+import Filter from "../Components/Filter";
 const Homepage = (props) => {
   const lang = useSelector((state) => state.lang)
   const [listProduct, setListProduct] = useState([]);
@@ -28,7 +29,7 @@ const Homepage = (props) => {
         </div>
         <div className="grid grid-cols-10">
           <div className="flex-none col-span-2 border h-100">
-            FILTER
+            <Filter/>
           </div>
           <div className="grow col-span-7">
             <div className="grid grid-cols-3 gap-3 ">
