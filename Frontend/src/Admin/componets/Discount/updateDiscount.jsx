@@ -1,81 +1,76 @@
-import React, { useState } from "react";
-import { Grid, TextField, Button, InputLabel } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import api from "../../../config/api";
+import React, { useState, useEffect } from "react";
+import { Grid, TextField, Button } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
-import { useSelector } from "react-redux";
+import api from "../../../config/api";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { Select, MenuItem } from "@mui/material";
 
-function CreateDiscount() {
+function UpdateDiscount() {
+  const { id } = useParams();
   const [value, setValue] = useState("");
   const [type, setType] = useState("");
   const [expirationDate, setExpirationDate] = useState(null);
-
   const navigate = useNavigate();
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
-  console.log(expirationDate)
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    if (name === "value") {
-      setValue(value);
-    } else if (name === "type") {
-      setType(value);
-    }
-  };
+  useEffect(() => {
+    const fetchDiscountData = async () => {
+      try {
+        const response = await api.get(`/api/v1/discount/get/${id}`);
+        const discountData = response.data;
 
-  const handleDateChange = (date) => {
-    setExpirationDate(date);
-  };
+        setValue(discountData.value);
+        setType(discountData.type);
+        setExpirationDate(new Date(discountData.expiration_date));
+      } catch (error) {
+        
+      }
+    };
 
-  const handleSubmit = async (event) => {
+    fetchDiscountData();
+  }, [id]);
+
+  const handleUpdate = async (event) => {
     event.preventDefault();
 
     if (!value || !type || !expirationDate || value < 0 || value > 100 || expirationDate < new Date()) {
       if (!value) {
-        toast.error(errorMessages["114"], {
-          autoClose: 1000,
-        });
-      } else if (!type) {
-        toast.error(errorMessages["115"], {
-          autoClose: 1000,
-        });
-      } else if (!expirationDate) {
-        toast.error(errorMessages["116"], {
-          autoClose: 1000,
-        });
-      } else if (value < 0 || value > 100) {
-          toast.error(errorMessages["117"], {
-          autoClose: 1000,
-        });
-      } else if (expirationDate < new Date()) {
-          toast.error(errorMessages["118"], {
-          autoClose: 1000,
-        });
+        toast.error(errorMessages["114"], { autoClose: 1000 });
+      }
+      if (!type) {
+        toast.error(errorMessages["115"], { autoClose: 1000 });
+      }
+      if (!expirationDate) {
+        toast.error(errorMessages["116"], { autoClose: 1000 });
+      }
+      if (value < 0 || value > 100) {
+        toast.error(errorMessages["117"], { autoClose: 1000 });
+      }
+      if (expirationDate < new Date()) {
+        toast.error(errorMessages["118"], { autoClose: 1000 });
       }
       return;
-  }
+    }
 
     try {
-      const response = await api.post("/api/v1/discount/create", {
+      const response = await api.put(`/api/v1/discount/update?id=${id}`, {
         value,
         type,
         expiration_date: expirationDate,
       });
 
       if (response.status === 200) {
-        toast.success(errorMessages["008"], {
-          autoClose: 1000,
+        toast.success(errorMessages["013"], {
+          autoClose: 900,
         });
         navigate("/admin/discount");
-        return;
-      } else {
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
@@ -83,7 +78,7 @@ function CreateDiscount() {
           autoClose: 1000,
         });
       } else {
-        toast.success(errorMessages["006"], {
+        toast.error(errorMessages["006"], {
           autoClose: 1000,
         });
       }
@@ -92,7 +87,10 @@ function CreateDiscount() {
 
   return (
     <React.Fragment>
-      <form style={{ width: "50%" }} onSubmit={handleSubmit}>
+      <Grid container spacing={3}>
+        <Grid item xs={12}></Grid>
+      </Grid>
+      <form style={{ width: "50%" }} onSubmit={handleUpdate}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
@@ -101,7 +99,7 @@ function CreateDiscount() {
               fullWidth
               autoComplete="off"
               value={value}
-              onChange={handleInputChange}
+              onChange={(e) => setValue(e.target.value)}
             />
           </Grid>
           <Grid item xs={6}>
@@ -110,7 +108,7 @@ function CreateDiscount() {
               label="Type"
               fullWidth
               value={type}
-              onChange={handleInputChange}
+              onChange={(e) => setValue(e.target.type)}
             >
               <MenuItem value={1}>Discount $</MenuItem>
               <MenuItem value={2}>Discount %</MenuItem>
@@ -120,7 +118,7 @@ function CreateDiscount() {
             <DatePicker
               name="expirationDate"
               selected={expirationDate}
-              onChange={handleDateChange}
+              onChange={(date) => setExpirationDate(date)}
               dateFormat="dd/MM/yyyy"
               customInput={
                 <TextField
@@ -145,7 +143,7 @@ function CreateDiscount() {
               size="large"
               sx={{ padding: ".8rem 0" }}
             >
-              Create Discount
+              {lang === "vi" ? "Cập nhật" : "Update"}
             </Button>
           </Grid>
         </Grid>
@@ -155,4 +153,4 @@ function CreateDiscount() {
   );
 }
 
-export default CreateDiscount;
+export default UpdateDiscount;

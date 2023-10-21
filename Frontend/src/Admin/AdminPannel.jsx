@@ -21,23 +21,24 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "./Views/sideBar";
 import "./AdminPannel.css";
 import ProductsTable from "./componets/Products/ProductsTable";
+import CreateProduct from "./componets/Products/CreateProduct";
+import UpdateProduct from "./componets/Products/UpdateProduct";
 import AllOrder from "./componets/Order/allOrder";
 // import OrderDetail from "./componets/Orders/OrderDetail";
 import Customers from "./componets/User/allUser";
 // import ProductReview from "./componets/productReview/ProductReview";
 import AllDiscount from "./componets/Discount/allDiscount";
 import CreateDiscount from "./componets/Discount/createDiscount";
-import AllStaff from "./componets/Staff/allStaff";
+import UpdateDiscount from "./componets/Discount/updateDiscount";
 import AllSupplier from "./componets/Supplier/allSupplier";
 import CreateSupplier from "./componets/Supplier/createSupplier";
 import UpdateSupplier from "./componets/Supplier/updateSupplier";
 import StaffProfile from "./componets/Staff/staffProfile";
+import AllStaff from "./componets/Staff/allStaff";
 import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
-import CreateProduct from "./componets/Products/CreateProduct";
-import UpdateProduct from "./componets/Products/UpdateProduct";
 
 const drawerWidth = 240;
 
@@ -178,6 +179,7 @@ export default function AdminPannel() {
             <Route path="/customers" element={<Customers />}></Route>
             <Route path="/discount" element={<AllDiscount />}></Route>
             <Route path="/discount/create" element={<CreateDiscount />}></Route>
+            <Route path="/discount/update/:id" element={<UpdateDiscount />}></Route>
             <Route path="/supplier" element={<AllSupplier />}></Route>
             <Route path="/supplier/create" element={<CreateSupplier />}></Route>
             <Route path="/supplier/update/:id" element={<UpdateSupplier />}></Route>

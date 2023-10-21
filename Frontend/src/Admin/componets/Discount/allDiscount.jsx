@@ -13,8 +13,8 @@ import {
   Pagination,
   Button,
 } from "@mui/material";
-import { deepOrange } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../config/axios";
@@ -137,6 +137,13 @@ const AllDiscount = () => {
                   </TableCell>
 
                   <TableCell sx={{ textAlign: "center" }}>
+                  <Button
+                      onClick={() => navigate(`/admin/discount/update/${discount.id}`)}
+                      variant="text"
+                      color="warning"
+                    >
+                      <EditIcon />
+                    </Button>
                     <Button
                       onClick={() => handleDeleteDiscount(discount.id)}
                       variant="text"
