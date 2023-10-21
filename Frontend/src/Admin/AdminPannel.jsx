@@ -29,7 +29,6 @@ import Customers from "./componets/User/allUser";
 // import ProductReview from "./componets/productReview/ProductReview";
 import AllDiscount from "./componets/Discount/allDiscount";
 import CreateDiscount from "./componets/Discount/createDiscount";
-import UpdateDiscount from "./componets/Discount/updateDiscount";
 import AllSupplier from "./componets/Supplier/allSupplier";
 import CreateSupplier from "./componets/Supplier/createSupplier";
 import UpdateSupplier from "./componets/Supplier/updateSupplier";
@@ -179,7 +178,6 @@ export default function AdminPannel() {
             <Route path="/customers" element={<Customers />}></Route>
             <Route path="/discount" element={<AllDiscount />}></Route>
             <Route path="/discount/create" element={<CreateDiscount />}></Route>
-            <Route path="/discount/update/:id" element={<UpdateDiscount />}></Route>
             <Route path="/supplier" element={<AllSupplier />}></Route>
             <Route path="/supplier/create" element={<CreateSupplier />}></Route>
             <Route path="/supplier/update/:id" element={<UpdateSupplier />}></Route>

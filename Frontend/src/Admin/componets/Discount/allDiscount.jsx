@@ -137,13 +137,13 @@ const AllDiscount = () => {
                   </TableCell>
 
                   <TableCell sx={{ textAlign: "center" }}>
-                  <Button
+                  {/* <Button
                       onClick={() => navigate(`/admin/discount/update/${discount.id}`)}
                       variant="text"
                       color="warning"
                     >
                       <EditIcon />
-                    </Button>
+                    </Button> */}
                     <Button
                       onClick={() => handleDeleteDiscount(discount.id)}
                       variant="text"
