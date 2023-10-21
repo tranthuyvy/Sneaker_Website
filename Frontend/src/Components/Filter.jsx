@@ -46,7 +46,6 @@ const handleFilter = (value, sectionId) => {
 };
 
 function ProductFilter() {
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
     <form className="hidden lg:block border rounded-md p-5">
