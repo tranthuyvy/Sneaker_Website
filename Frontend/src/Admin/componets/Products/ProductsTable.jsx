@@ -24,9 +24,15 @@ import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import Barcode from "react-barcode";
 import api from "../../../config/api";
+import DisableProduct from "./DisableProduct";
 
 const ProductsTable = () => {
   const navigate = useNavigate();
+  //  
+  const [open, setOpen] = useState(false);
+  const [idProductDelete, setIdProductDelete] = useState('')
+  const [nameProductDelete, setNameProductDelete] = useState('')
+  //
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -56,10 +62,13 @@ const ProductsTable = () => {
     fetchProducts(page);
   };
 
-  // const handleDeleteProduct = (productId) => {
-  //   console.log("delete product ", productId);
-  //   dispatch(deleteProduct(productId));
-  // };
+  const handleDeleteProduct = (productId, productName) => {
+    console.log("delete product ", productId, productName);
+    setOpen(true)
+    setIdProductDelete(productId)
+    setNameProductDelete(productName)
+    // dispatch(deleteProduct(productId));
+  };
 
   return (
     <Box width={"100%"}>
@@ -143,6 +152,7 @@ const ProductsTable = () => {
           title={
             <div style={{ display: "flex", alignItems: "center" }}>
               <span style={{ flex: 1 }}>All Products</span>
+
               <Button
                 onClick={() => navigate("/admin/product/create")}
                 variant="contained"
@@ -245,7 +255,7 @@ const ProductsTable = () => {
 
                     <Button
                       variant="text"
-                      // onClick={() => handleDeleteProduct(item.id)}
+                      onClick={() => handleDeleteProduct(product.id, product.name)}
                       color="secondary"
                     >
                       <DeleteIcon />
@@ -262,12 +272,19 @@ const ProductsTable = () => {
                       <VisibilityIcon />
                     </Button>
                   </TableCell>
+
                 </TableRow>
+
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
+      <DisableProduct open={open} setOpen={setOpen}
+        id={idProductDelete} name={nameProductDelete}
+        fetchProducts={(page) => fetchProducts(page)}
+        currentPage={currentPage}
+      />
       <Card className="mt-2 border">
         <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
           <Pagination
@@ -281,6 +298,7 @@ const ProductsTable = () => {
           />
         </div>
       </Card>
+
     </Box>
   );
 };

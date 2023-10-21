@@ -160,8 +160,18 @@ class product_controller {
     let checkIdProduct = await product.findOne({ where: { id } });
     if (checkIdProduct && checkIdProduct.dataValues && checkIdProduct.dataValues.id) {
       try {
-        await checkIdProduct.update({ status: 2 });
-        return res.status(200).send({ code: "013" });
+        let id_account = auth.tokenData(req)?.id;
+        if (id_account) {
+          let update_by = 1;
+          let dataStaff = await staff.findOne({ where: { id_account } });
+          if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
+            update_by = dataStaff.dataValues.id;
+          }
+          await checkIdProduct.update({ status: 2, update_by });
+          return res.status(200).send({ code: "013" });
+        }
+        return res.status(200).send({ code: "014" });
+
       } catch (e) {
         console.log(e);
         return res.status(500).send({ code: "006" });
@@ -207,6 +217,7 @@ class product_controller {
         let startIndex = (page - 1) * pageSize;
         let endIndex = startIndex + pageSize;
         let data = await product.findAll({
+          where: { status: 1 },
           include: option
         });
         const paginatedProducts = data.slice(startIndex, endIndex);
