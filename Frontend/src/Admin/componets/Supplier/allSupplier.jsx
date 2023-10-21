@@ -26,22 +26,22 @@ const AllSupplier = () => {
   const navigate = useNavigate();
   const [suppliers, setSuppliers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  //   const [totalPages, setTotalPages] = useState(1);
-  //   const pageSize = 8;
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 8;
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
   const fetchSuppliers = (page) => {
     axios
-      .get(`/api/v1/supplier/get`)
+      .get(`/api/v1/supplier/get?page=${page}&pageSize=${pageSize}`)
       .then((response) => {
         const suppliersArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
         setSuppliers(suppliersArray);
-        // setCurrentPage(page);
-        // setTotalPages(response.data.totalPage);
+        setCurrentPage(page);
+        setTotalPages(response.data.totalPage);
         toast.success(errorMessages["002"], {
           autoClose: 900,
         });
@@ -57,9 +57,9 @@ const AllSupplier = () => {
     fetchSuppliers(currentPage);
   }, []);
 
-  //   const handlePaginationChange = (event, page) => {
-  //     fetchStaffs(page);
-  //   };
+    const handlePaginationChange = (event, page) => {
+      fetchSuppliers(page);
+    };
 
   const handleDeleteSupplier = (id) => {
     axios
@@ -162,7 +162,7 @@ const AllSupplier = () => {
       </Card>
       <Card className="mt-2 border">
         <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
-          {/* <Pagination
+          <Pagination
             count={totalPages}
             size="medium"
             page={currentPage}
@@ -170,7 +170,7 @@ const AllSupplier = () => {
             onChange={handlePaginationChange}
             showFirstButton
             showLastButton
-          /> */}
+          />
         </div>
       </Card>
     </Box>
