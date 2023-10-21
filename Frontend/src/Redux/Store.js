@@ -1,6 +1,7 @@
 import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
 import thunk from "redux-thunk";
 import langReducer from "./langReducer";
+import cartReducer from "./Customers/cartReducer";
 // import authReducer from "./Auth/Reducer";
 // import customerProductReducer from "./Customers/Product/Reducer";
 // import productReducer from "./Admin/Product/Reducer";
@@ -11,7 +12,8 @@ import langReducer from "./langReducer";
 // import ReviewReducer from "./Customers/Review/Reducer";
 
 const rootReducers = combineReducers({
-  lang: langReducer
+  lang: langReducer,
+  cart: cartReducer
   // auth: authReducer,
   // customersProduct: customerProductReducer,
   // cart: cartReducer,
