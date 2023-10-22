@@ -8,11 +8,14 @@ import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
 
 function CreateStaffAccount() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [nameStaff, setNameStaff] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [nameStaff, setNameStaff] = useState("");
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [nameStaffError, setNameStaffError] = useState("");
+  const [userNameError, setUserNameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
@@ -21,34 +24,28 @@ function CreateStaffAccount() {
     const { name, value } = event.target;
     if (name === "nameStaff") {
       setNameStaff(value);
-    } else if (name === "email") {
-      setEmail(value);
+      setNameStaffError("");
+    } else if (name === "userName") {
+      setUserName(value);
+      setUserNameError("");
     } else if (name === "password") {
       setPassword(value);
+      setPasswordError("");
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    if (!nameStaff || !email || !password) {
+    if (!nameStaff || !userName || !password) {
       if (!nameStaff) {
-        const accountErrorCode = "102";
-        toast.error(errorMessages[accountErrorCode], {
-          autoClose: 1000,
-        });
+        setNameStaffError(errorMessages["102"]);
       }
-      else if (!email) {
-        const accountErrorCode = "100";
-        toast.error(errorMessages[accountErrorCode], {
-          autoClose: 1000,
-        });
+      if (!userName) {
+        setUserNameError(errorMessages["100"]);
       }
-      else if (!password) {
-        const accountErrorCode = "101";
-        toast.error(errorMessages[accountErrorCode], {
-          autoClose: 1000,
-        });
+      if (!password) {
+        setPasswordError(errorMessages["101"]);
       }
       return;
     }
@@ -56,13 +53,12 @@ function CreateStaffAccount() {
     try {
       const response = await api.post("/api/v1/admin/create-staff", {
         nameStaff,
-        email,
+        userName,
         password,
       });
   
-      if (response.data.code === "008") {
-        const accountErrorCode = "008";
-        toast.success(errorMessages[accountErrorCode], {
+      if (response.status === 200) {
+        toast.success(errorMessages["008"], {
           autoClose: 1000,
         });
         dispatch({ type: 'LANG_ENG' });
@@ -72,13 +68,13 @@ function CreateStaffAccount() {
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
-          toast.error(errorMessages[error.response.data.code], 
-            {autoClose: 1000})
+        toast.error(errorMessages[error.response.data.code], 
+          { autoClose: 1000 });
       } else {
         const accountErrorCode = "103";
-          toast.error(errorMessages[accountErrorCode], {
-            autoClose: 1000,
-          });
+        toast.error(errorMessages[accountErrorCode], {
+          autoClose: 1000,
+        });
       }
     }
   }
@@ -95,16 +91,20 @@ function CreateStaffAccount() {
               autoComplete="given-name"
               value={nameStaff}
               onChange={handleInputChange}
+              error={!!nameStaffError}
+              helperText={nameStaffError}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="email"
+              name="userName"
               label="User Name"
               fullWidth
-              autoComplete="email"
-              value={email}
+              autoComplete="userName"
+              value={userName}
               onChange={handleInputChange}
+              error={!!userNameError}
+              helperText={userNameError}
             />
           </Grid>
           <Grid item xs={12}>
@@ -116,6 +116,8 @@ function CreateStaffAccount() {
               type="password"
               value={password}
               onChange={handleInputChange}
+              error={!!passwordError}
+              helperText={passwordError}
             />
           </Grid>
 
