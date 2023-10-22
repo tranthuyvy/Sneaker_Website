@@ -67,7 +67,6 @@ const ProductsTable = () => {
     setOpen(true)
     setIdProductDelete(productId)
     setNameProductDelete(productName)
-    // dispatch(deleteProduct(productId));
   };
 
   return (
