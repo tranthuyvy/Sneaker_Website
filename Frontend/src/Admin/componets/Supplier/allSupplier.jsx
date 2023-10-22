@@ -42,9 +42,9 @@ const AllSupplier = () => {
         setSuppliers(suppliersArray);
         setCurrentPage(page);
         setTotalPages(response.data.totalPage);
-        toast.success(errorMessages["002"], {
-          autoClose: 900,
-        });
+        // toast.success(errorMessages["002"], {
+        //   autoClose: 900,
+        // });
       })
       .catch((error) => {
         toast.error(errorMessages["006"], {

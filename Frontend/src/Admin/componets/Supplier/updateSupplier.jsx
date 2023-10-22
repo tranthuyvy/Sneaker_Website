@@ -9,12 +9,15 @@ import errorMessagesVi from "../../../Lang/vi.json";
 import axios from "../../../config/axios";
 
 function UpdateSupplier() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [nameError, setNameError] = useState("");
+  const [addressError, setAddressError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
@@ -43,19 +46,23 @@ function UpdateSupplier() {
   const handleUpdate = async (event) => {
     event.preventDefault();
 
+    setNameError("");
+    setAddressError("");
+    setPhoneError("");
+
     if (!name || !address || !phone || !phoneRegex.test(phone)) {
       
       if (!name) {
-        toast.error(errorMessages["111"], { autoClose: 1000 });
+        setNameError(errorMessages["111"]);
       }
       if (!address) {
-        toast.error(errorMessages["112"], { autoClose: 1000 });
+        setAddressError(errorMessages["112"]);
       }
       if (!phone) {
-        toast.error(errorMessages["113"], { autoClose: 1000 });
+        setPhoneError(errorMessages["113"]);
       }
       if (!phoneRegex.test(phone)) {
-        toast.error(errorMessages["107"], { autoClose: 1000 });
+        setPhoneError(errorMessages["107"]);
       }
       return;
     }
@@ -106,6 +113,8 @@ function UpdateSupplier() {
               autoComplete="given-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              error={!!nameError}
+              helperText={nameError}
             />
           </Grid>
           <Grid item xs={12}>
@@ -116,6 +125,8 @@ function UpdateSupplier() {
               autoComplete="given-address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
+              error={!!addressError}
+              helperText={addressError}
             />
           </Grid>
           <Grid item xs={12}>
@@ -126,6 +137,8 @@ function UpdateSupplier() {
               autoComplete="given-phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              error={!!phoneError}
+              helperText={phoneError}
             />
           </Grid>
 

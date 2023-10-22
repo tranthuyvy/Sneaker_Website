@@ -8,11 +8,14 @@ import errorMessagesVi from "../../../Lang/vi.json";
 import axios from "../../../config/axios";
 
 function CreateSupplier() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [nameError, setNameError] = useState("");
+  const [addressError, setAddressError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
@@ -22,34 +25,33 @@ function CreateSupplier() {
     const { name, value } = event.target;
     if (name === "name") {
       setName(value);
+      setNameError("");
     } else if (name === "address") {
       setAddress(value);
+      setAddressError("");
     } else if (name === "phone") {
       setPhone(value);
+      setPhoneError("");
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!name || !address || !phone) {
+    if (!name || !address || !phone || !phoneRegex.test(phone)) {
       if (!name) {
-        toast.error(errorMessages["111"], {
-          autoClose: 1000,
-        });
-      } else if (!address) {
-        toast.error(errorMessages["112"], {
-          autoClose: 1000,
-        });
-      } else if (!phone) {
-        toast.error(errorMessages["113"], {
-          autoClose: 1000,
-        });
+        setNameError(errorMessages["111"]);
       }
-    } else if (!phoneRegex.test(phone)) {
-      toast.error(errorMessages["107"], {
-        autoClose: 1000,
-      });
+
+      if (!address) {
+        setAddressError(errorMessages["112"]);
+      }
+
+      if (!phone) {
+        setPhoneError(errorMessages["113"]);
+      } else if (!phoneRegex.test(phone)) {
+        setPhoneError(errorMessages["107"]);
+      }
     } else {
       try {
         const response = await axios.post("/api/v1/supplier/create", {
@@ -92,6 +94,8 @@ function CreateSupplier() {
               autoComplete="given-name"
               value={name}
               onChange={handleInputChange}
+              error={!!nameError}
+              helperText={nameError}
             />
           </Grid>
           <Grid item xs={12}>
@@ -102,6 +106,8 @@ function CreateSupplier() {
               autoComplete="given-address"
               value={address}
               onChange={handleInputChange}
+              error={!!addressError}
+              helperText={addressError}
             />
           </Grid>
           <Grid item xs={12}>
@@ -112,6 +118,8 @@ function CreateSupplier() {
               autoComplete="given-phone"
               value={phone}
               onChange={handleInputChange}
+              error={!!phoneError}
+              helperText={phoneError}
             />
           </Grid>
 
