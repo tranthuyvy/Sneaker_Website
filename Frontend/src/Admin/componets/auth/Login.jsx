@@ -11,6 +11,8 @@ function LoginForm() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const dispatch = useDispatch();
 
   const lang = useSelector((state) => state);
@@ -19,8 +21,10 @@ function LoginForm() {
   const handleInputChange = (event) => {
     if (event.target.name === "username") {
       setUsername(event.target.value);
+      setUsernameError("");
     } else if (event.target.name === "password") {
       setPassword(event.target.value);
+      setPasswordError("");
     }
   };
 
@@ -29,15 +33,9 @@ function LoginForm() {
 
     if (!username || !password) {
       if (!username) {
-        const accountErrorCode = "100";
-        toast.error(errorMessages[accountErrorCode], {
-          autoClose: 1000,
-        });
+        setUsernameError(errorMessages["100"]);
       } else if (!password) {
-        const passwordErrorCode = "101";
-        toast.error(errorMessages[passwordErrorCode], {
-          autoClose: 1000,
-        });
+        setPasswordError(errorMessages["101"]);
       }
       return;
     }
@@ -128,6 +126,8 @@ function LoginForm() {
                 autoComplete="given-name"
                 value={username}
                 onChange={handleInputChange}
+                error={!!usernameError}
+                helperText={usernameError}
               />
             </Grid>
             <Grid item xs={12}>
@@ -139,6 +139,8 @@ function LoginForm() {
                 type="password"
                 value={password}
                 onChange={handleInputChange}
+                error={!!passwordError}
+                helperText={passwordError}
               />
             </Grid>
 

@@ -40,9 +40,17 @@ const listBrand = [
 
 ]
 
-
-
 const CreateProduct = () => {
+    const lang = useSelector((state) => state);
+    const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
+    const [errors, setErrors] = useState({
+        name: "",
+        brand: "", 
+        category: "",
+        price: "",
+    });
+    
+
     const [productData, setProductData] = useState({
         image: "",
         brand: "",
@@ -53,8 +61,6 @@ const CreateProduct = () => {
         size: initialSizes,
         description: "",
     });
-    const lang = useSelector((state) => state);
-    const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [listCategory, setListCategory] = useState([]);
@@ -140,11 +146,35 @@ const CreateProduct = () => {
     //     size: sizes,
     //   }));
     // };
+    const validateInput = () => {
+        const newErrors = {};
+    
+        if (!productData.name) {
+            newErrors.name = errorMessages["119"];
+        }
+
+        if (!productData.brand) {
+            console.log(productData.brand)
+            newErrors.brand = errorMessages["120"];
+        }
+        if (!productData.category) {
+            newErrors.category = errorMessages["121"];
+        }
+        if (!productData.price) {
+            newErrors.price = errorMessages["122"];
+        }
+        
+    
+        setErrors(newErrors);
+    
+        return Object.keys(newErrors).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         // dispatch(createProduct({ data: productData, jwt }))
         // navigate("/admin/products")
+        if (validateInput()) {
 
 
         console.log("product Data ne", productData);
@@ -159,11 +189,12 @@ const CreateProduct = () => {
                 formData.append(`file${i + 1}`, productData.image[i]);
             }
         }
+        
 
         try {
             let res = await api.post("/api/v1/product/create", formData
             );
-
+            
             toast.success(errorMessages[res.data.code], {
                 autoClose: 1000,
             });
@@ -173,13 +204,14 @@ const CreateProduct = () => {
                 toast.error(errorMessages[error.response.data.code],
                     { autoClose: 1000 })
             } else {
-                const accountErrorCode = "103";
-                toast.error(errorMessages[accountErrorCode], {
-                    autoClose: 1000,
-                });
+            //     const accountErrorCode = "103";
+            //     toast.error(errorMessages[accountErrorCode], {
+            //         autoClose: 1000,
+            //     });
             }
         }
-    };
+    }
+};
 
     const [imageToShow, setImageToShow] = useState("");
 
@@ -235,17 +267,7 @@ const CreateProduct = () => {
             >
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        {/* <TextField
-                            fullWidth
-                            label="Image URL"
-                            name="imageUrl"
-                            // value={productData.image}
-                            // onChange={handleImageLinkChange}
-                            multiple
-                            onChange={handleOnChangeImage}
-                            type="file"
-                        /> */}
-                        <div>
+                        
                             <input
                                 type="file"
                                 accept="image/*"
@@ -266,7 +288,7 @@ const CreateProduct = () => {
                                 ))}
 
                             </div>
-                        </div>
+                        
                     </Grid>
                     {selectedImage && (
                         <Grid item xs={12} style={{ textAlign: 'center' }}>
@@ -278,16 +300,19 @@ const CreateProduct = () => {
                             <div onClick={() => setSelectedImage(null)}>x</div>
                         </Grid>
                     )}
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={6} sm={6}>
                         <TextField
                             fullWidth
                             label="Name"
                             name="name"
                             value={productData.name}
                             onChange={handleChange}
+                            error={Boolean(errors.name)}
+                            helperText={errors.name}
                         />
+                        
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={6} sm={6}>
                         <FormControl fullWidth>
                             <InputLabel>Brand</InputLabel>
                             <Select
@@ -295,6 +320,8 @@ const CreateProduct = () => {
                                 value={productData.brand}
                                 onChange={handleChange}
                                 label="Brand"
+                                error={Boolean(errors.brand)}
+                                helperText={errors.brand}
                             >
                                 {listBrand && listBrand.map((item, index) => {
                                     return (
@@ -302,11 +329,10 @@ const CreateProduct = () => {
                                     )
                                 })}
 
-                                {/* <MenuItem value="women">Women</MenuItem> */}
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={6} sm={6}>
                         <FormControl fullWidth>
                             <InputLabel>Category</InputLabel>
                             <Select
@@ -314,6 +340,8 @@ const CreateProduct = () => {
                                 value={productData.category}
                                 onChange={handleChange}
                                 label="Category"
+                                error={Boolean(errors.category)}
+                                helperText={errors.category}
                             >
                                 {listCategory && listCategory.map((item, index) => {
                                     return (
@@ -321,119 +349,22 @@ const CreateProduct = () => {
                                     )
                                 })}
 
-                                {/* <MenuItem value="women">Women</MenuItem> */}
                             </Select>
                         </FormControl>
                     </Grid>
 
-
-
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={6} sm={6}>
                         <TextField
                             fullWidth
                             label="Price"
                             name="price"
                             value={productData.price}
                             onChange={handleChangeNumber}
+                            error={Boolean(errors.price)}
+                            helperText={errors.price}
                         />
                     </Grid>
 
-                    {/* <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            label="Discounted Price"
-                            name="discountedPrice"
-                            value={productData.discountedPrice}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            label="Discount Percentage"
-                            name="discountPersent"
-                            value={productData.discountPersent}
-                            onChange={handleChange}
-                            type="number"
-                        />
-                    </Grid> */}
-
-                    {/*
-                    <Grid item xs={6} sm={4}>
-                        <FormControl fullWidth>
-                            <InputLabel>Second Level Category</InputLabel>
-                            <Select
-                                name="secondLavelCategory"
-                                value={productData.secondLavelCategory}
-                                onChange={handleChange}
-                                label="Second Level Category"
-                            >
-                                <MenuItem value="adidas">Adidas</MenuItem>
-                                <MenuItem value="converse">Converse</MenuItem>
-                                <MenuItem value="nike">Nike</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6} sm={4}>
-                        <FormControl fullWidth>
-                            <InputLabel>Third Level Category</InputLabel>
-                            <Select
-                                name="thirdLavelCategory"
-                                value={productData.thirdLavelCategory}
-                                onChange={handleChange}
-                                label="Third Level Category"
-                            >
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="air_force_1">Air Force 1</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="air_max">Air Max</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="basketball">Basketball</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "converse" && (
-                                    <MenuItem value="chuck_70">Chuck 70</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "converse" && (
-                                    <MenuItem value="classic_chuck">Classic Chuck</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="jordan">Jordan</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "nike" && (
-                                    <MenuItem value="life_style">Lifestyle</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="hiking">Hiking</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="golf">Golf</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="gym">Gym</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="running">Running</MenuItem>
-                                )}
-
-                                {productData.secondLavelCategory === "adidas" && (
-                                    <MenuItem value="soccer">Soccer</MenuItem>
-                                )}
-                            </Select>
-                        </FormControl>
-                    </Grid> */}
                     <Grid item xs={12}>
                         <TextField
                             fullWidth
@@ -446,30 +377,7 @@ const CreateProduct = () => {
                             value={productData.description}
                         />
                     </Grid>
-                    {/* {productData.size.map((size, index) => (
-                        <Grid container item spacing={3}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Size Name"
-                                    name="name"
-                                    value={size.name}
-                                    onChange={(event) => handleSizeChange(event, index)}
-                                    required
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Quantity"
-                                    name="size_quantity"
-                                    type="number"
-                                    onChange={(event) => handleSizeChange(event, index)}
-                                    required
-                                    fullWidth
-                                />
-                            </Grid>{" "}
-                        </Grid>
-                    ))} */}
+    
                     <Grid item xs={12}>
                         <Button
                             variant="contained"
@@ -478,17 +386,9 @@ const CreateProduct = () => {
                             size="large"
                             type="submit"
                         >
-                            Add New Product
+                            Add Product
                         </Button>
-                        {/* <Button
-              variant="contained"
-              sx={{ p: 1.8 }}
-              className="py-20 ml-10"
-              size="large"
-              onClick={()=>handleAddProducts(dressPage1)}
-            >
-              Add Products By Loop
-            </Button> */}
+                        
                     </Grid>
                 </Grid>
             </form>
