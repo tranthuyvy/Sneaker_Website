@@ -40,7 +40,7 @@ class discount_controller {
     //Nếu type=1 thì là khuyến mãi theo tiền
     //Nếu type=2 thì khuyến mãi theo phần trăm
     if (type === 2) {
-      value = value / 100;
+      // value = value / 100;/
       console.log("value sau khi km: ", value);
     }
     try {

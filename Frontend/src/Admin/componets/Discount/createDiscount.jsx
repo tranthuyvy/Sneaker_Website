@@ -11,56 +11,65 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Select, MenuItem } from "@mui/material";
 
 function CreateDiscount() {
+  const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [type, setType] = useState("");
   const [expirationDate, setExpirationDate] = useState(null);
-
-  const navigate = useNavigate();
+  const [valueError, setValueError] = useState("");
+  const [typeError, setTypeError] = useState("");
+  const [expirationDateError, setExpirationDateError] = useState("");
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
-  console.log(expirationDate)
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "value") {
       setValue(value);
+      setValueError("");
     } else if (name === "type") {
       setType(value);
+      setTypeError("");
     }
   };
 
   const handleDateChange = (date) => {
     setExpirationDate(date);
+    setExpirationDateError("");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    let valid = true;
 
-    if (!value || !type || !expirationDate || value < 0 || value > 100 || expirationDate < new Date()) {
-      if (!value) {
-        toast.error(errorMessages["114"], {
-          autoClose: 1000,
-        });
-      } else if (!type) {
-        toast.error(errorMessages["115"], {
-          autoClose: 1000,
-        });
-      } else if (!expirationDate) {
-        toast.error(errorMessages["116"], {
-          autoClose: 1000,
-        });
-      } else if (value < 0 || value > 100) {
-          toast.error(errorMessages["117"], {
-          autoClose: 1000,
-        });
-      } else if (expirationDate < new Date()) {
-          toast.error(errorMessages["118"], {
-          autoClose: 1000,
-        });
-      }
+    if (!value) {
+      setValueError(errorMessages["114"]);
+      valid = false;
+    }
+
+    if (!type) {
+      setTypeError(errorMessages["115"]);
+      valid = false;
+    }
+
+    if (!expirationDate) {
+      setExpirationDateError(errorMessages["116"]);
+      valid = false;
+    }
+
+    if (value < 0 || value > 100) {
+      setValueError(errorMessages["117"]);
+      valid = false;
+    }
+
+    if (expirationDate < new Date()) {
+      setExpirationDateError(errorMessages["118"]);
+      valid = false;
+    }
+
+    if (!valid) {
       return;
-  }
+    }
 
     try {
       const response = await api.post("/api/v1/discount/create", {
@@ -100,8 +109,11 @@ function CreateDiscount() {
               label="Value"
               fullWidth
               autoComplete="off"
+              type="number"
               value={value}
               onChange={handleInputChange}
+              error={!!valueError}
+              helperText={valueError}
             />
           </Grid>
           <Grid item xs={6}>
@@ -111,6 +123,8 @@ function CreateDiscount() {
               fullWidth
               value={type}
               onChange={handleInputChange}
+              error={!!typeError}
+              helperText={typeError}
             >
               <MenuItem value={1}>Discount $</MenuItem>
               <MenuItem value={2}>Discount %</MenuItem>
@@ -132,6 +146,8 @@ function CreateDiscount() {
                       ? expirationDate.toLocaleDateString("en-GB")
                       : ""
                   }
+                  error={!!expirationDateError}
+                  helperText={expirationDateError}
                 />
               }
             />
