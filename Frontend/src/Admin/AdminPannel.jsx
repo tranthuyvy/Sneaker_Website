@@ -42,7 +42,8 @@ import AllCategory from "./componets/Category/allCategory";
 import CreateCategory from "./componets/Category/createCategory";
 import UpdateCategory from "./componets/Category/updateCategory";
 import AllBrand from "./componets/Brand/allBrand";
-
+import CreateBrand from "./componets/Brand/createBrand";
+import UpdateBrand from "./componets/Brand/updateBrand";
 
 const drawerWidth = 240;
 
@@ -185,6 +186,8 @@ export default function AdminPannel() {
             <Route path="/customers" element={<Customers />}></Route>
 
             <Route path="/brand" element={<AllBrand />}></Route>
+            <Route path="/brand/create" element={<CreateBrand />}></Route>
+            <Route path="/brand/update/:id" element={<UpdateBrand />}></Route>
 
             <Route path="/category" element={<AllCategory />}></Route>
             <Route path="/category/create" element={<CreateCategory />}></Route>

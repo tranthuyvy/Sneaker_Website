@@ -6,4 +6,5 @@ brand_router.post("/create", brand_controller.createBrand);
 brand_router.put("/update", brand_controller.updateBrand);
 brand_router.put("/disable", brand_controller.disableBrand);
 brand_router.get("/get", brand_controller.getAllBrand);
+brand_router.get("/get/:id", brand_controller.getBrandById);
 export default brand_router;

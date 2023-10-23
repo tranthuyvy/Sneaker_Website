@@ -60,7 +60,7 @@ const AllCategory = () => {
 
   const handleDeleteBrand = (id) => {
     axios
-      .put(`/api/v1/category/disable/?id=${id}`)
+      .put(`/api/v1/brand/disable/?id=${id}`)
       .then((response) => {
 
         fetchBrands(currentPage);
@@ -137,7 +137,7 @@ const AllCategory = () => {
 
                   <TableCell style={{}} sx={{ textAlign: "center" }}>
                     <Button
-                    //   onClick={() => navigate(`/admin/brand/update/${brand.id}`)}
+                      onClick={() => navigate(`/admin/brand/update/${brand.id}`)}
                       variant="text"
                       color="warning"
                     >
