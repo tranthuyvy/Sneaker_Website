@@ -8,6 +8,7 @@ import AdminPannel from "../Admin/AdminPannel";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import Cart from "../Pages/Cart";
+import OrderSummary from "../Pages/Order";
 const Routers = () => {
   return (
     <div className="">
@@ -24,6 +25,7 @@ const Routers = () => {
         <Route path="/cart" element={<Cart/>}></Route>
         <Route path="/admin" element={<AdminPannel />}></Route>
         <Route path="/demo" element={<SideBar />}></Route>
+        <Route path="/order" element={<OrderSummary />}></Route>
       </Routes>
       <Footer></Footer>
     </div>
