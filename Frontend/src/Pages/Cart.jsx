@@ -20,7 +20,6 @@ const Cart = () => {
         );
       }
       const listTmp = [];
-
       const data = (await Promise.all(listPromise)).map((item) => {
         let quantity = findQuantity(item.data.data.id);
         return { ...item.data.data, quantity: quantity };
@@ -28,7 +27,6 @@ const Cart = () => {
       for (let a of data) {
         listTmp.push({ ...a });
       }
-
       setListCart([...listTmp]);
     })();
   }, []);
@@ -42,13 +40,9 @@ const Cart = () => {
           <div className="lg:col-span-2 lg:px-5 bg-white">
             <div className=" space-y-3">
               {listCart.length > 0
-                ? listCart.map((item) => (
+                ? listCart.map((item, index) => (
                     <>
-                      <CartItem
-                        key={item && item.productId}
-                        detail={item}
-                        showButton={true}
-                      />
+                      <CartItem key={index} detail={item} showButton={true} />
                     </>
                   ))
                 : null}
@@ -80,7 +74,7 @@ const Cart = () => {
               </div>
 
               <Button
-                onClick={() => navigate("/checkout?step=2")}
+                onClick={() => navigate("/order")}
                 variant="contained"
                 type="submit"
                 sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}

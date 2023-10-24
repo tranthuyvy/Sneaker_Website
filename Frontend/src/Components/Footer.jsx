@@ -85,7 +85,7 @@ const Footer = () => {
               style={{ border: "0", marginLeft: "30px" }}
               allowFullScreen=""
               loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
+              referrerPolicy="no-referrer-when-downgrade"
               title="Google Maps"
             ></iframe>
           </Typography>

@@ -55,9 +55,21 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    address: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+    id_address: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'address',
+        key: 'id'
+      }
+    },
+    payment_method: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'payment_method',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -84,6 +96,20 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "update_by" },
+        ]
+      },
+      {
+        name: "FK_order_address",
+        using: "BTREE",
+        fields: [
+          { name: "id_address" },
+        ]
+      },
+      {
+        name: "FK_order_payment_idx",
+        using: "BTREE",
+        fields: [
+          { name: "payment_method" },
         ]
       },
     ]
