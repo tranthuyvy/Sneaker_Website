@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Badge, Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
@@ -108,8 +107,8 @@ const OrderSummary = (order) => {
                 <span className="text-green-700">${total - discount}</span>
               </div>
               <div className="flex justify-around font-bold text-lg">
-                <button className="h-10 min-w-30 border">Cash</button>
-                <button className="h-10 min-w-30 border">PayPal</button>
+                <button className="h-10 w-40 border" style={{backgroundColor:'#9155FD',borderRadius:10,color:'white'}}>Cash</button>
+                <button className="h-10 w-40 border" style={{backgroundColor:'#c9db34d4',borderRadius:10,color:'white'}}>Digital Wallets</button>
               </div>
             </div>
             {/* <PayPalScriptProvider
