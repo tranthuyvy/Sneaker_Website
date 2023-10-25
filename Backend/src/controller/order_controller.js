@@ -91,15 +91,13 @@ class order_controller {
             console.log(error)
             res.status(500).send({ code: '005' })
         }
-
-
     }
     async checkInventory(req, res) {
         try {
             // const id_user = auth.tokenData(req).id;
             const { listDetail } = req.body;
             let { flag, listProduct } = await checkInventory(listDetail)
-            res.status(200).send({ code: '002', flag,listProduct })
+            res.status(200).send({ code: '002', flag, listProduct })
         } catch (error) {
             console.log(error)
             res.status(500).send({ code: '005' })

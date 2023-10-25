@@ -17,16 +17,25 @@ const CartItem = ({ detail, showButton }) => {
     // window.location.reload();
   };
   const handleUpdateCartItem = (num) => {
-    dispatch({type:'SET_CART',data:cart.map(item=>{
-      return item.id.localeCompare(detail.id)==0 ? {...item,quantity: item.quantity+num}: item
-    })})
-    setCart(cart.map(item=>{
-      return item.id.localeCompare(detail.id)==0 ? {...item,quantity: item.quantity+num}: item
-    }))
+    dispatch({
+      type: "SET_CART",
+      data: cart.map((item) => {
+        return item.id.localeCompare(detail.id) == 0
+          ? { ...item, quantity: item.quantity + num }
+          : item;
+      }),
+    });
+    setCart(
+      cart.map((item) => {
+        return item.id.localeCompare(detail.id) == 0
+          ? { ...item, quantity: item.quantity + num }
+          : item;
+      })
+    );
     // window.location.reload();
   };
   return (
-    <div className="p-5 shadow-lg border rounded-md">
+    <div className={`p-5 shadow-lg border rounded-md ${detail.isValid? 'border-neutral-200': 'border-red-500'}`}>
       <div className="flex items-center">
         <div className="w-[5rem] h-[5rem] lg:w-[9rem] lg:h-[9rem] ">
           <img
@@ -44,9 +53,9 @@ const CartItem = ({ detail, showButton }) => {
           <p className="opacity-70 mt-5 text-sm">
             Brand: {detail?.id_product_product?.id_branch_branch.name}
           </p>
-          {!showButton ? ( <p className="opacity-70 mt-5 text-sm">
-            x{detail?.quantity}
-          </p>): null}
+          {!showButton ? (
+            <p className="opacity-70 mt-5 text-sm">x{detail?.quantity}</p>
+          ) : null}
           <div className="flex space-x-2 items-center pt-3">
             <p className="text-red-600 font-semibold text-lg">
               ${discountedPrice != 0 ? discountedPrice : null}
@@ -71,16 +80,21 @@ const CartItem = ({ detail, showButton }) => {
           <div className="flex items-center space-x-2 ">
             <IconButton
               onClick={() => handleUpdateCartItem(-1)}
-              disabled={findQuantity(detail.id)<= 1}
+              disabled={findQuantity(detail.id) <= 1}
               color="primary"
               aria-label="add an alarm"
             >
               <RemoveCircleOutlineIcon />
             </IconButton>
 
-            <span className="py-1 px-7 border rounded-sm">
-              {findQuantity(detail.id)}
-            </span>
+            <input
+              type={"number"}
+              className="py-1 px-7 border rounded-sm"
+              step={null}
+              value={findQuantity(detail.id)}
+              min={1}
+              onChange={(e) => handleUpdateCartItem(e.target.value-findQuantity(detail.id))}
+            ></input>
             <IconButton
               onClick={() => handleUpdateCartItem(1)}
               color="primary"
