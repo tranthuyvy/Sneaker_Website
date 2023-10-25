@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     total_discounted_price: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     status_payment: {
       type: DataTypes.INTEGER,
@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     update_by: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'staff',
         key: 'id'
@@ -41,11 +41,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     update_at: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     delivery_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: true
     },
     id_user: {
       type: DataTypes.INTEGER,

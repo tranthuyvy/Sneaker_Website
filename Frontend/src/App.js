@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Routers from "./Routers/Routers_Public";
-
 import AdminPannel from "./Admin/AdminPannel";
 
 function App(props) {
