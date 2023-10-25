@@ -9,6 +9,7 @@ import auth from '../middleware/authenJWT'
 const branch = Model.branch;
 const productImage = Model.image;
 const staff = Model.staff
+const { Op } = require('sequelize');
 class product_controller {
   createProduct = async (req, res) => {
     let {
@@ -47,8 +48,6 @@ class product_controller {
         let id = '';
         if (nameBranch && nameBranch.dataValues && nameBranch.dataValues.id) {
           id = generateProductId(name, nameBranch.dataValues.name);
-          console.log("name, nameBranch: ", name, nameBranch.dataValues.name);
-          console.log("Check id: ", generateProductId(name, nameBranch.dataValues.name));
         }
         let dataProduct = await product.create({
           id,
@@ -133,7 +132,23 @@ class product_controller {
         }
         if (dataProduct && dataProduct.dataValues && dataProduct.dataValues.id) {
           if (updataData.name) {
-            dataProduct.name = updataData.name;
+            let name = updataData.name.trim();
+            console.log("name: ", name);
+            console.log("name2: ", updataData.name);
+            let checkName = await product.findOne({
+              where: {
+                name,
+                id: { [Op.ne]: id }
+              }
+            });
+            console.log(checkName);
+
+            if (checkName && checkName.dataValues && checkName.dataValues.id) {
+              return res.status(500).send({ code: "011" });
+            }
+            dataProduct.name = name;
+
+
           }
           if (updataData.id_branch) {
             dataProduct.id_branch = updataData.id_branch;
@@ -142,6 +157,7 @@ class product_controller {
             dataProduct.id_category = updataData.id_category;
           }
           if (updataData.product_price) {
+            // isText(updataData.product_price)
             dataProduct.product_price = Number(updataData.product_price);
           }
           if (updataData.description) {
