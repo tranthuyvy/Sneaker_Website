@@ -25,12 +25,16 @@ class brand_controller {
       return res.status(500).send({ code: "009" });
     }
     try {
+      let checkName = await brand.findOne({ where: { name } });
+      if (checkName?.dataValues) {
+        return res.status(500).send({ code: "011" });
+      }
       await brand.create({ name, info, link_page, status: 1 });
       console.log("Thành công rồi bro");
       return res.status(200).send({ code: "004" });
     } catch (e) {
       console.log(e);
-      return res.status(500).send({ code: "006" });
+      return res.status(500).send({ code: "005" });
     }
   };
 
@@ -57,7 +61,7 @@ class brand_controller {
         }
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "201" });
       }
     }
   };
@@ -71,7 +75,7 @@ class brand_controller {
         return res.status(200).send({ code: "013" });
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "202" });
       }
     } else {
       return res.status(404).send({ code: "014" });
@@ -92,7 +96,7 @@ class brand_controller {
         .send({ code: "002", data: paginatedProducts, totalPage });
     } catch (e) {
       console.log(e);
-      return res.status(500).send({ code: "006" });
+      return res.status(500).send({ code: "003" });
     }
   };
 }

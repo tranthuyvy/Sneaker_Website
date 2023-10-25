@@ -41,7 +41,7 @@ const UpdateProduct = () => {
     const [price, setPrice] = useState('')
     const [description, setDescription] = useState('')
     const [listImage, setListImage] = useState('')
-
+    const [listBrand, setListBrand] = useState([]);
 
     const lang = useSelector((state) => state);
     const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
@@ -58,9 +58,18 @@ const UpdateProduct = () => {
     console.log(">>> Check id: ", id);
 
     useEffect(() => {
+        fetchApiBrand();
         fetchApi();
         fetchApiCategory();
+
     }, []);
+
+    const fetchApiBrand = async () => {
+        let res = await axios.get("/api/v1/brand/get");
+        console.log("Check list brand: ", res.data.data);
+        setListBrand(res.data.data);
+    };
+
 
     const fetchApi = async () => {
         let res = await api.get(`/api/v1/product/get?id=${id}`);
@@ -83,64 +92,6 @@ const UpdateProduct = () => {
         console.log("Check category: ", res.data.data);
         setListCategory(res.data.data);
     }
-
-    const handleOnChangeImage = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            // setProductData((prevState) => ({
-            //     ...prevState,
-            //     image: file,
-            // }));
-            setSelectedImage(URL.createObjectURL(file));
-        } else {
-            // setProductData((prevState) => ({
-            //     ...prevState,
-            //     image: null,
-            // }));
-            setSelectedImage(null);
-        }
-    };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        // setProductData((prevState) => ({
-        //     ...prevState,
-        //     [name]: value,
-        // }));
-    };
-
-    const handleChangeNumber = (e) => {
-        const { name, value } = e.target;
-        if (isNaN(value) || value.includes('.') || value.includes(' ')) {
-            return;
-        }
-
-        // setProductData((prevState) => ({
-        //     ...prevState,
-        //     [name]: value,
-        // }));
-    };
-
-
-
-    // const handleAddSize = () => {
-    //   const sizes = [...size];
-    //   sizes.push({ name: "", quantity: "" });
-    //   setProductData((prevState) => ({
-    //     ...prevState,
-    //     size: sizes,
-    //   }));
-    // };
-
-    // const handleRemoveSize = (index) => {
-    //   const sizes = [...size];
-    //   sizes.splice(index, 1);
-    //   setProductData((prevState) => ({
-    //     ...prevState,
-    //     size: sizes,
-    //   }));
-    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -236,20 +187,14 @@ const UpdateProduct = () => {
         }
     };
 
-    const handleImageLinkChange = (e) => {
-        const imageUrl = e.target.value;
-        // setProductData((prevState) => ({
-        //     ...prevState,
-        //     imageUrl: imageUrl,
-        // }));
-
-        setImageToShow(imageUrl);
-    };
 
     const handleRemoveImage = (index) => {
         const filteredImages = image.filter((image, i) => i !== index);
         console.log("filteredImages: ", filteredImages);
+
         setImage(filteredImages)
+
+
         // setProductData((prevState) => ({
         //     ...prevState,
         //     image: filteredImages,
@@ -307,16 +252,7 @@ const UpdateProduct = () => {
                             </div>
                         </div>
                     </Grid>
-                    {selectedImage && (
-                        <Grid item xs={12} style={{ textAlign: 'center' }}>
-                            <img
-                                src={selectedImage}
-                                alt="Product"
-                                style={{ maxWidth: "50%", height: "auto", objectFit: "contain" }}
-                            />
-                            <div onClick={() => setSelectedImage(null)}>x</div>
-                        </Grid>
-                    )}
+
                     <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth

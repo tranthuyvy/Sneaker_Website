@@ -63,7 +63,7 @@ class category_controller {
       return res.status(200).send({ code: "004" });
     } catch (e) {
       console.log(e);
-      return res.status(500).send({ code: "006" });
+      return res.status(500).send({ code: "005" });
     }
   };
 
@@ -92,7 +92,7 @@ class category_controller {
         }
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "201" });
       }
     }
   };
@@ -120,7 +120,7 @@ class category_controller {
         .send({ code: "002", data: paginatedProducts, totalPage });
     } catch (e) {
       console.log(e);
-      return res.status(500).send({ code: "006" });
+      return res.status(500).send({ code: "003" });
     }
   };
 
@@ -147,7 +147,7 @@ class category_controller {
         return res.status(200).send({ code: "013" });
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "202" });
       }
     } else {
       return res.status(404).send({ code: "014" });

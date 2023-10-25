@@ -1,15 +1,12 @@
-function generateProductDetailId(productId, size, color) {
+function generateProductDetailId(productId, size) {
     // Lấy 2 chữ cái đầu tiên của ID sản phẩm
     const brand = productId.slice(0, 2);
 
     // Chuyển đổi size thành số
     const sizeNumber = parseInt(size);
 
-    // Tạo mã màu
-    const colorCode = color.toUpperCase();
-
     // Tạo ID sản phẩm
-    const productIdWithSizeAndColor = `${brand}${colorCode}${sizeNumber}`;
+    const productIdWithSizeAndColor = `${brand}${sizeNumber}`;
 
     return productIdWithSizeAndColor;
 }

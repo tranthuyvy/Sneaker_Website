@@ -62,6 +62,7 @@ const CreateProduct = () => {
     description: "",
   });
 
+  const [listBrand, setListBrand] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [listCategory, setListCategory] = useState([]);
   const [images, setImages] = useState([]);
@@ -71,12 +72,19 @@ const CreateProduct = () => {
 
   useEffect(() => {
     fetchApi(listCategory);
+    fetchApiBrand();
   }, []);
 
   const fetchApi = async (listCategory) => {
     let res = await axios.get("/api/v1/category/get");
     console.log("Check category: ", res.data.data);
     setListCategory(res.data.data);
+  };
+
+  const fetchApiBrand = async () => {
+    let res = await axios.get("/api/v1/brand/get");
+    console.log("Check list brand: ", res.data.data);
+    setListBrand(res.data.data);
   };
 
   const handleOnChangeImage = (e) => {
@@ -127,35 +135,6 @@ const CreateProduct = () => {
     }));
   };
 
-  // const handleSizeChange = (e, index) => {
-  //     let { name, value } = e.target;
-  //     name === "size_quantity" ? (name = "quantity") : (name = e.target.name);
-
-  //     const sizes = [...productData.size];
-  //     sizes[index][name] = value;
-  //     setProductData((prevState) => ({
-  //         ...prevState,
-  //         size: sizes,
-  //     }));
-  // };
-
-  // const handleAddSize = () => {
-  //   const sizes = [...productData.size];
-  //   sizes.push({ name: "", quantity: "" });
-  //   setProductData((prevState) => ({
-  //     ...prevState,
-  //     size: sizes,
-  //   }));
-  // };
-
-  // const handleRemoveSize = (index) => {
-  //   const sizes = [...productData.size];
-  //   sizes.splice(index, 1);
-  //   setProductData((prevState) => ({
-  //     ...prevState,
-  //     size: sizes,
-  //   }));
-  // };
   const validateInput = () => {
     const newErrors = {};
 
@@ -368,9 +347,9 @@ const CreateProduct = () => {
                 name="brand"
                 value={productData.brand}
                 onChange={(e) => {
-                    handleChange(e);
-                    setIsBrandSelected(false);
-                  }}
+                  handleChange(e);
+                  setIsBrandSelected(false);
+                }}
                 label="Brand"
                 error={Boolean(errors.brand)}
                 helperText={errors.brand}
@@ -394,9 +373,9 @@ const CreateProduct = () => {
                 name="category"
                 value={productData.category}
                 onChange={(e) => {
-                    handleChange(e);
-                    setIsCategorySelected(false);
-                  }}
+                  handleChange(e);
+                  setIsCategorySelected(false);
+                }}
                 label="Category"
                 error={Boolean(errors.category)}
                 helperText={errors.category}

@@ -32,5 +32,7 @@
     "114": "Vui lòng nhập giảm giá",
     "115": "Vui lòng chọn giảm giá theo % hoặc $",
     "116": "Vui lòng chọn ngày kết thúc giảm giá",
-    "117": "Giá trị discount không hợp lệ"
+    "117": "Giá trị discount không hợp lệ",
+    "201": "Cập nhật thất bại",
+    "202": "Vô hiệu hóa thất bại"
 }

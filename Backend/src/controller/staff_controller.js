@@ -66,7 +66,7 @@ class StaffController {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ code: "006" });
+      res.status(500).json({ code: "202" });
     }
   }
 }
