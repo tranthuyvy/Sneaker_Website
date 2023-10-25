@@ -48,5 +48,8 @@
     "128": "Please fill Brand Link Page",
     "129": "Password must be at least 6 characters",
     "130": "Please fill characters",
-    "131": "Username cannot contain spaces"
+    "131": "Username cannot contain spaces",
+
+    "201": "Updated failed",
+    "202": "Disable failed"
 }
