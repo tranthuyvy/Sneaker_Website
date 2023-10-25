@@ -45,5 +45,8 @@
     "125": "Please select Category Parent",
     "126": "Please fill Brand Name",
     "127": "Please fill Brand Info",
-    "128": "Please fill Brand Link Page"
+    "128": "Please fill Brand Link Page",
+    "129": "Password must be at least 6 characters",
+    "130": "Please fill characters",
+    "131": "Username cannot contain spaces"
 }

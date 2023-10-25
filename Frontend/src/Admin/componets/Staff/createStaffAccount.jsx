@@ -23,14 +23,27 @@ function CreateStaffAccount() {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "nameStaff") {
+      if (!/^[a-zA-Z\s]*$/.test(value)) {
+        setNameStaffError(errorMessages["130"]);
+      }else{
+        setNameStaffError("");
+      }
       setNameStaff(value);
-      setNameStaffError("");
     } else if (name === "userName") {
       setUserName(value);
-      setUserNameError("");
+      if (/\s/.test(value)) {
+        setUserNameError(errorMessages["131"]);
+      } else {
+        setUserNameError("");
+      }
+
     } else if (name === "password") {
       setPassword(value);
-      setPasswordError("");
+      if (value.length < 6) {
+        setPasswordError(errorMessages["129"]);
+      } else {
+        setPasswordError("");
+      }
     }
   };
 
@@ -49,6 +62,11 @@ function CreateStaffAccount() {
       }
       return;
     }
+
+    // if (password.length < 6) {
+    //   setPasswordError(errorMessages["129"]);
+    //   return;
+    // }
 
     try {
       const response = await api.post("/api/v1/admin/create-staff", {
@@ -93,6 +111,7 @@ function CreateStaffAccount() {
               onChange={handleInputChange}
               error={!!nameStaffError}
               helperText={nameStaffError}
+              type="text"
             />
           </Grid>
           <Grid item xs={12}>
