@@ -45,7 +45,7 @@ function UpdateCategory() {
     const fetchCategoryData = async () => {
       try {
         const response = await axios.get(`/api/v1/category/get/${id}`);
-        const categoryData = response.data;
+        const categoryData = response.data.data;
 
         setName(categoryData.name);
         setIdParent(categoryData.id_parent);

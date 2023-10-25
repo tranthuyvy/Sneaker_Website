@@ -32,13 +32,13 @@ class category_controller {
       const foundCategory = await category.findOne({ where: { id } });
 
       if (foundCategory) {
-        return res.status(200).json(foundCategory);
+        return res.status(200).send({ code: "002", data: foundCategory });
       } else {
-        return res.status(404).json({ error: "Category not found" });
+        return res.status(404).send({ code: "014" });
       }
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: "Internal server error" });
+      return res.status(500).send({ code: "006" });
     }
   };
 

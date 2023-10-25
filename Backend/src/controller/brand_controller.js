@@ -7,15 +7,14 @@ class brand_controller {
 
     try {
       const foundBrand = await brand.findOne({ where: { id } });
-
       if (foundBrand) {
-        return res.status(200).json(foundBrand);
+        return res.status(200).send({ code: "002", data: foundBrand });
       } else {
-        return res.status(404).json({ error: "Brand not found" });
+        return res.status(404).send({ code: "014" });
       }
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: "Internal server error" });
+      return res.status(500).send({ code: "006" });
     }
   };
 
