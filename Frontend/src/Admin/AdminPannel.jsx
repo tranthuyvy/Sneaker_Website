@@ -39,6 +39,7 @@ import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
 import AllCategory from "./componets/Category/allCategory";
+import DetailProduct from "./componets/DetailProduct/DetailProduct";
 
 const drawerWidth = 240;
 
@@ -175,6 +176,7 @@ export default function AdminPannel() {
             <Route path="/products" element={<ProductsTable />}></Route>
             <Route path="/product/create" element={<CreateProduct />}></Route>
             <Route path="/product/update/:id" element={<UpdateProduct />}></Route>
+            <Route path="/product/detail/:id" element={<DetailProduct />}></Route>
             <Route path="/orders" element={<AllOrder />}></Route>
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             <Route path="/customers" element={<Customers />}></Route>

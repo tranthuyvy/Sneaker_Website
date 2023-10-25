@@ -208,13 +208,21 @@ const ProductsTable = () => {
 
                   <TableCell>
                     {" "}
-                    <Avatar
-                      // alt={product.name}
-                      // src={product.imageUrl}
-                      style={{ width: "50px", height: "50px" }}
-                    />{" "}
-                  </TableCell>
+                    {
+                      product && product.images && product.images.length > 0 && product.images.map((item, index) => {
+                        return (
+                          <Avatar
+                            // alt={product.name}
+                            src={item.link}
+                            style={{ width: "50px", height: "50px" }}
+                          />
+                        )
 
+                      })
+                    }
+                    {" "}
+                  </TableCell>
+                  {console.log("Product: ", product)}
                   <TableCell
                     sx={{ py: (theme) => `${theme.spacing(0.5)} !important` }}
                   >
@@ -236,10 +244,10 @@ const ProductsTable = () => {
                     {product.product_price}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {product.id_branch}
+                    {product.id_branch_branch.name}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {product.id_category}
+                    {product.id_category_category.name}
                   </TableCell>
                   <TableCell style={{}} sx={{ textAlign: "center" }}>
                     <Button
@@ -262,9 +270,9 @@ const ProductsTable = () => {
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     <Button
-                      // onClick={() =>
-                      //   navigate(`/admin/product/reviews/${item.id}`)
-                      // }
+                      onClick={() =>
+                        navigate(`/admin/product/detail/${product.id}`)
+                      }
                       variant="text"
                       color="success"
                     >
