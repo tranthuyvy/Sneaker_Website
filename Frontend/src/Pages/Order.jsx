@@ -4,8 +4,9 @@ import { useEffect } from "react";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-modal";
+import { toast } from "react-toastify";
 // import { getOrderById, updatePaymentStatus } from "../../../Redux/Customers/Order/Action";
-import { findQuantity } from "../config/common";
+import { findQuantity, getCart } from "../config/common";
 import CartItem from "../Components/CartItem";
 import axios from "../config/axios";
 import AddressCard from "../Components/AddressCart";
@@ -20,28 +21,15 @@ const OrderSummary = (order) => {
   const [discount, setDisCount] = useState(0);
   const [listCart, setListCart] = useState([]);
   const cart = useSelector((store) => store.cart);
+  const lang = useSelector((state) => state.lang);
   useEffect(() => {
-    (async () => {
-      const listPromise = [];
-      for (let i of cart) {
-        listPromise.push(
-          await axios.get(`/api/v1/product_detail/get?id=${i.id}`)
-        );
-      }
-      const listTmp = [];
-      const data = (await Promise.all(listPromise)).map((item) => {
-        let quantity = findQuantity(item.data.data.id, cart);
-        return { ...item.data.data, quantity: quantity };
-      });
-      for (let a of data) {
-        listTmp.push({ ...a });
-      }
-      setListCart([...listTmp]);
-    })();
+    getData()
+      .catch((err) => {
+        console.error(err);
+        toast(lang["003"]);
+      })
+      .finally(() => {});
   }, []);
-  useEffect(() => {
-    getTotal();
-  });
 
   // const handleCreatePayment=()=>{
   //   const data={orderId:order.order?.id,jwt}
@@ -107,8 +95,26 @@ const OrderSummary = (order) => {
                 <span className="text-green-700">${total - discount}</span>
               </div>
               <div className="flex justify-around font-bold text-lg">
-                <button className="h-10 w-40 border" style={{backgroundColor:'#9155FD',borderRadius:10,color:'white'}}>Cash</button>
-                <button className="h-10 w-40 border" style={{backgroundColor:'#c9db34d4',borderRadius:10,color:'white'}}>Digital Wallets</button>
+                <button
+                  className="h-10 w-40 border"
+                  style={{
+                    backgroundColor: "#9155FD",
+                    borderRadius: 10,
+                    color: "white",
+                  }}
+                >
+                  Cash
+                </button>
+                <button
+                  className="h-10 w-40 border"
+                  style={{
+                    backgroundColor: "#c9db34d4",
+                    borderRadius: 10,
+                    color: "white",
+                  }}
+                >
+                  Digital Wallets
+                </button>
               </div>
             </div>
             {/* <PayPalScriptProvider
@@ -165,7 +171,7 @@ const OrderSummary = (order) => {
               sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}
             >
               PAYMENT HI
-            </Button> */} 
+            </Button> */}
           </div>
         </div>
       </div>
@@ -178,6 +184,30 @@ const OrderSummary = (order) => {
         findQuantity(item.id, cart) * item.id_product_product.product_price;
     });
     setTotal(totalTmp);
+  }
+  async function getData() {
+    console.log("call");
+    const listPromise = [];
+    for (let i of cart) {
+      listPromise.push(
+        await axios.get(`/api/v1/product_detail/get?id=${i.id}`)
+      );
+    }
+    const listTmp = [];
+    const data = (await Promise.all(listPromise)).map((item) => {
+      let quantity = findQuantity(item.data.data.id, cart);
+      return { ...item.data.data, quantity: quantity };
+    });
+    for (let a of data) {
+      listTmp.push({ ...a });
+    }
+    let totalTmp = 0;
+    listTmp.forEach((item) => {
+      totalTmp +=
+        findQuantity(item.id, cart) * item.id_product_product.product_price;
+    });
+    setTotal(totalTmp);
+    setListCart([...listTmp]);
   }
 };
 

@@ -33,20 +33,20 @@ function App(props) {
     }
     toast(lang[data.code]);
   };
-  const handleFailure = (error) => {
+  const handleFailure = (error) => { 
     // Xử lý khi đăng nhập thất bại
     console.error("Login failed:", error);
   };
   return (
     <div className="">
       <ToastContainer />
-      {/* <div
+      <div
         useOneTap={useGoogleOneTapLogin({
           onSuccess: handleSuccess,
           onFailure: handleFailure,
           disabled: isLogin,
         })}
-      /> */}
+      />
       <Routes>
         <Route path="/*" element={<Routers />} />
         <Route path="/admin/*" element={<AdminPannel />} />
