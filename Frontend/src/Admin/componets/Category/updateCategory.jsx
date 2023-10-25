@@ -1,77 +1,83 @@
 import React, { useState, useEffect } from "react";
-import { Grid, TextField, Button, Typography } from "@mui/material";
+import { Grid, TextField, Button, Typography, Select, MenuItem } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import CSS của react-toastify
+import "react-toastify/dist/ReactToastify.css";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
 import axios from "../../../config/axios";
 
-function UpdateSupplier() {
+function UpdateCategory() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
+  const [idParent, setIdParent] = useState("");
   const [nameError, setNameError] = useState("");
-  const [addressError, setAddressError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
+  const [idParentError, setIdParentError] = useState("");
+  const [categorys, setCategorys] = useState([]);
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
-  const phoneRegex = /^0\d{9}$/;
+
+  const fetchCategorys = () => {
+    axios
+      .get(`/api/v1/category/get`)
+      .then((response) => {
+        const CategorysArray = Array.isArray(response.data.data)
+          ? response.data.data
+          : [];
+        setCategorys(CategorysArray);
+      })
+      .catch((error) => {
+        toast.error(errorMessages["006"], {
+          autoClose: 900,
+        });
+      });
+  };
 
   useEffect(() => {
-    const fetchSupplierData = async () => {
+    fetchCategorys();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategoryData = async () => {
       try {
-        const response = await axios.get(`/api/v1/supplier/get/${id}`);
-        const supplierData = response.data;
-  
-        setName(supplierData.name);
-        setAddress(supplierData.address);
-        setPhone(supplierData.phone);
+        const response = await axios.get(`/api/v1/category/get/${id}`);
+        const categoryData = response.data.data;
+
+        setName(categoryData.name);
+        setIdParent(categoryData.id_parent);
       } catch (error) {
-        // toast.error(errorMessages["006"], {
-        //   autoClose: 1000,
-        // });
+        toast.error(errorMessages["006"], {
+          autoClose: 1000,
+        });
       }
     };
-  
-    fetchSupplierData();
+
+    fetchCategoryData();
   }, [id]);
-  
 
   const handleUpdate = async (event) => {
     event.preventDefault();
 
     setNameError("");
-    setAddressError("");
-    setPhoneError("");
+    setIdParentError("");
 
-    if (!name || !address || !phone || !phoneRegex.test(phone)) {
-      
-      if (!name) {
-        setNameError(errorMessages["111"]);
-      }
-      if (!address) {
-        setAddressError(errorMessages["112"]);
-      }
-      if (!phone) {
-        setPhoneError(errorMessages["113"]);
-      }
-      if (!phoneRegex.test(phone)) {
-        setPhoneError(errorMessages["107"]);
-      }
+    if (!name) {
+      setNameError(errorMessages["124"]);
       return;
     }
+    if (!idParent) {
+        setIdParentError(errorMessages["125"]);
+        return;
+      }
 
     try {
-      const response = await axios.put(`/api/v1/supplier/update?id=${id}`, {
+      const response = await axios.put(`/api/v1/category/update?id=${id}`, {
         name,
-        address,
-        phone,
+        id_parent:idParent,
       });
 
       if (response.status === 200) {
@@ -79,7 +85,7 @@ function UpdateSupplier() {
           autoClose: 900,
         });
         dispatch({ type: "LANG_ENG" });
-        navigate("/admin/supplier");
+        navigate("/admin/category");
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
@@ -99,7 +105,7 @@ function UpdateSupplier() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           {/* <Typography variant="h5">
-            {lang === "vi" ? "Cập nhật Nhà cung cấp" : "Update Supplier"}
+            {lang === "vi" ? "Cập nhật Danh mục" : "Update Category"}
           </Typography> */}
         </Grid>
       </Grid>
@@ -108,7 +114,7 @@ function UpdateSupplier() {
           <Grid item xs={12}>
             <TextField
               name="name"
-              label="Supplier Name"
+              label="Category Name"
               fullWidth
               autoComplete="given-name"
               value={name}
@@ -117,29 +123,25 @@ function UpdateSupplier() {
               helperText={nameError}
             />
           </Grid>
+
           <Grid item xs={12}>
-            <TextField
-              name="address"
-              label="Supplier Address"
+            <Select
+              name="idParent"
+              label="Parent Category"
               fullWidth
-              autoComplete="given-address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              error={!!addressError}
-              helperText={addressError}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              name="phone"
-              label="Supplier Phone"
-              fullWidth
-              autoComplete="given-phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              error={!!phoneError}
-              helperText={phoneError}
-            />
+              value={idParent}
+              onChange={(e) => setIdParent(e.target.value)}
+              error={!!idParentError}
+              helperText={idParentError}
+            >
+              <MenuItem value={1}>None</MenuItem>
+              {categorys.map((category) => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
+                </MenuItem>
+            
+              ))}
+            </Select>
           </Grid>
 
           <Grid item xs={12}>
@@ -160,4 +162,4 @@ function UpdateSupplier() {
   );
 }
 
-export default UpdateSupplier;
+export default UpdateCategory;

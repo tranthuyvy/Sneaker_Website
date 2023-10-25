@@ -40,7 +40,7 @@ class discount_controller {
     //Nếu type=1 thì là khuyến mãi theo tiền
     //Nếu type=2 thì khuyến mãi theo phần trăm
     if (type === 2) {
-      value = value / 100;
+      // value = value / 100;/
       console.log("value sau khi km: ", value);
     }
     try {
@@ -55,7 +55,7 @@ class discount_controller {
       return res.status(200).send({ code: "004" });
     } catch (e) {
       console.log(e);
-      return res.status(500).send({ code: "006" });
+      return res.status(500).send({ code: "005" });
     }
 
     return res.status(200).send("create");
@@ -75,7 +75,7 @@ class discount_controller {
         .send({ code: "002", data: paginatedProducts, totalPage });
     } catch (e) {
       console.log(e);
-      return res.status(500).send({ code: "006" });
+      return res.status(500).send({ code: "003" });
     }
   };
 
@@ -92,7 +92,7 @@ class discount_controller {
         return res.status(200).send({ code: "013" });
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "202" });
       }
     } else {
       return res.status(404).send({ code: "014" });

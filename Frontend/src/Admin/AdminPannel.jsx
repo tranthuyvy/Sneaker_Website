@@ -21,23 +21,30 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "./Views/sideBar";
 import "./AdminPannel.css";
 import ProductsTable from "./componets/Products/ProductsTable";
+import CreateProduct from "./componets/Products/CreateProduct";
+import UpdateProduct from "./componets/Products/UpdateProduct";
 import AllOrder from "./componets/Order/allOrder";
 // import OrderDetail from "./componets/Orders/OrderDetail";
 import Customers from "./componets/User/allUser";
 // import ProductReview from "./componets/productReview/ProductReview";
 import AllDiscount from "./componets/Discount/allDiscount";
 import CreateDiscount from "./componets/Discount/createDiscount";
-import AllStaff from "./componets/Staff/allStaff";
 import AllSupplier from "./componets/Supplier/allSupplier";
 import CreateSupplier from "./componets/Supplier/createSupplier";
 import UpdateSupplier from "./componets/Supplier/updateSupplier";
 import StaffProfile from "./componets/Staff/staffProfile";
+import AllStaff from "./componets/Staff/allStaff";
 import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
-import CreateProduct from "./componets/Products/CreateProduct";
-import UpdateProduct from "./componets/Products/UpdateProduct";
+import AllCategory from "./componets/Category/allCategory";
+import CreateCategory from "./componets/Category/createCategory";
+import UpdateCategory from "./componets/Category/updateCategory";
+import AllBrand from "./componets/Brand/allBrand";
+import CreateBrand from "./componets/Brand/createBrand";
+import UpdateBrand from "./componets/Brand/updateBrand";
+import DetailProduct from "./componets/DetailProduct/DetailProduct";
 
 const drawerWidth = 240;
 
@@ -49,6 +56,8 @@ const menu = [
   { name: "Orders", path: "/admin/orders" },
   { name: "Supplier", path: "/admin/supplier" },
   { name: "Discount", path: "/admin/discount" },
+  { name: "Category", path: "/admin/category" },
+  { name: "Brand", path: "/admin/brand" },
   // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
@@ -173,14 +182,26 @@ export default function AdminPannel() {
             <Route path="/products" element={<ProductsTable />}></Route>
             <Route path="/product/create" element={<CreateProduct />}></Route>
             <Route path="/product/update/:id" element={<UpdateProduct />}></Route>
+            <Route path="/product/detail/:id" element={<DetailProduct />}></Route>
             <Route path="/orders" element={<AllOrder />}></Route>
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             <Route path="/customers" element={<Customers />}></Route>
+
+            <Route path="/brand" element={<AllBrand />}></Route>
+            <Route path="/brand/create" element={<CreateBrand />}></Route>
+            <Route path="/brand/update/:id" element={<UpdateBrand />}></Route>
+
+            <Route path="/category" element={<AllCategory />}></Route>
+            <Route path="/category/create" element={<CreateCategory />}></Route>
+            <Route path="/category/update/:id" element={<UpdateCategory />}></Route>
+
             <Route path="/discount" element={<AllDiscount />}></Route>
             <Route path="/discount/create" element={<CreateDiscount />}></Route>
+
             <Route path="/supplier" element={<AllSupplier />}></Route>
             <Route path="/supplier/create" element={<CreateSupplier />}></Route>
             <Route path="/supplier/update/:id" element={<UpdateSupplier />}></Route>
+
             <Route path="/staff" element={<AllStaff />}></Route>
             <Route path="/staff/profile" element={<StaffProfile />}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount />}></Route>

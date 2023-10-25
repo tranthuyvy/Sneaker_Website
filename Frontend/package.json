@@ -23,6 +23,7 @@
     "react-alice-carousel": "^2.7.1",
     "react-apexcharts": "^1.4.1",
     "react-barcode": "^1.4.6",
+    "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
     "react-modal": "^3.16.1",
     "react-qr-code": "^2.0.12",

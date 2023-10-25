@@ -30,6 +30,7 @@ class product_controller {
     // Check xem thằng name có trong db chưa
     let checkName = await product.findOne({ where: { name } });
     console.log(checkName);
+
     if (checkName?.dataValues) {
       return res.status(500).send({ code: "011" });
     } else {
@@ -40,12 +41,14 @@ class product_controller {
         if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
           create_by = dataStaff.dataValues.id;
         }
-        let nameBranch = await branch.findOne({ id: id_branch });
-        console.log(nameBranch.dataValues.id);
+        console.log("Check id branch: ", id_branch, id_category);
+        let nameBranch = await branch.findOne({ where: { id: id_branch } });
+        console.log("nameBranch: ", nameBranch.dataValues.id);
         let id = '';
         if (nameBranch && nameBranch.dataValues && nameBranch.dataValues.id) {
           id = generateProductId(name, nameBranch.dataValues.name);
-          // console.log(generateProductId(name, nameBranch));
+          console.log("name, nameBranch: ", name, nameBranch.dataValues.name);
+          console.log("Check id: ", generateProductId(name, nameBranch.dataValues.name));
         }
         let dataProduct = await product.create({
           id,
@@ -71,7 +74,7 @@ class product_controller {
         return res.status(200).send({ code: "012" });
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "005" });
       }
     }
   };
@@ -80,9 +83,17 @@ class product_controller {
     let { id } = req.query;
     let updataData = req.body;
     //Ảnh
-
+    let update_by = 1;
     if (id) {
       try {
+        let id_account = auth.tokenData(req)?.id;
+        if (id_account) {
+
+          let dataStaff = await staff.findOne({ where: { id_account } });
+          if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
+            update_by = dataStaff.dataValues.id;
+          }
+        }
         let dataProduct = await product.findOne({ where: { id } });
         const listImageName = saveImg(req, res);
         console.log("listImageName: ", listImageName);
@@ -136,12 +147,7 @@ class product_controller {
           if (updataData.description) {
             dataProduct.description = updataData.description;
           }
-          // if (updataData.image) {
-          //   dataProduct.image = updataData.image;
-          // }
-          // await dataProduct.update({
-          //     name, address, phone
-          // })
+          dataProduct.update_by = update_by;
           await dataProduct.save();
           return res.status(200).send({ code: "013" });
         }
@@ -150,7 +156,7 @@ class product_controller {
         }
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "201" });
       }
     }
   }
@@ -160,11 +166,21 @@ class product_controller {
     let checkIdProduct = await product.findOne({ where: { id } });
     if (checkIdProduct && checkIdProduct.dataValues && checkIdProduct.dataValues.id) {
       try {
-        await checkIdProduct.update({ status: 2 });
-        return res.status(200).send({ code: "013" });
+        let id_account = auth.tokenData(req)?.id;
+        if (id_account) {
+          let update_by = 1;
+          let dataStaff = await staff.findOne({ where: { id_account } });
+          if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
+            update_by = dataStaff.dataValues.id;
+          }
+          await checkIdProduct.update({ status: 2, update_by });
+          return res.status(200).send({ code: "013" });
+        }
+        return res.status(200).send({ code: "014" });
+
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "202" });
       }
     }
     else {
@@ -195,6 +211,14 @@ class product_controller {
       {
         model: Model.image,
         as: "images"
+      },
+      {
+        model: Model.category,
+        as: "id_category_category"
+      },
+      {
+        model: Model.review,
+        as: "reviews"
       }
     ]
 
@@ -207,6 +231,7 @@ class product_controller {
         let startIndex = (page - 1) * pageSize;
         let endIndex = startIndex + pageSize;
         let data = await product.findAll({
+          where: { status: 1 },
           include: option
         });
         const paginatedProducts = data.slice(startIndex, endIndex);

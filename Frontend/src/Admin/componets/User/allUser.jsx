@@ -71,7 +71,7 @@ const AllUser = () => {
                 <TableCell style={{ textAlign: "center" }}>Platform</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Point</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Rank</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Action</TableCell>
+                {/* <TableCell style={{ textAlign: "center" }}>Action</TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -136,7 +136,7 @@ const AllUser = () => {
                         {user.point >= 600 && <span>DIAMOND</span>}
                       </TableCell>
 
-                      <TableCell sx={{ textAlign: "center" }}>
+                      {/* <TableCell sx={{ textAlign: "center" }}>
                         <Button
                           // onClick={() => handleDeleteProduct(item.id)}
                           variant="text"
@@ -144,7 +144,7 @@ const AllUser = () => {
                         >
                           <DeleteIcon />
                         </Button>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   )
               )}

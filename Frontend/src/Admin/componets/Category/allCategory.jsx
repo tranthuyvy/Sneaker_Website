@@ -22,9 +22,9 @@ import errorMessagesVi from "../../../Lang/vi.json";
 import { useSelector } from "react-redux";
 import axios from "../../../config/axios";
 
-const AllSupplier = () => {
+const AllCategory = () => {
   const navigate = useNavigate();
-  const [suppliers, setSuppliers] = useState([]);
+  const [categorys, setCategorys] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 8;
@@ -32,19 +32,16 @@ const AllSupplier = () => {
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
-  const fetchSuppliers = (page) => {
+  const fetchCategorys = (page) => {
     axios
-      .get(`/api/v1/supplier/get?page=${page}&pageSize=${pageSize}`)
+      .get(`/api/v1/category/get?page=${page}&pageSize=${pageSize}`)
       .then((response) => {
-        const suppliersArray = Array.isArray(response.data.data)
+        const CategorysArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
-        setSuppliers(suppliersArray);
+        setCategorys(CategorysArray);
         setCurrentPage(page);
         setTotalPages(response.data.totalPage);
-        // toast.success(errorMessages["002"], {
-        //   autoClose: 900,
-        // });
       })
       .catch((error) => {
         toast.error(errorMessages["006"], {
@@ -54,19 +51,18 @@ const AllSupplier = () => {
   };
 
   useEffect(() => {
-    fetchSuppliers(currentPage);
+    fetchCategorys(currentPage);
   }, []);
 
-    const handlePaginationChange = (event, page) => {
-      fetchSuppliers(page);
-    };
+  const handlePaginationChange = (event, page) => {
+    fetchCategorys(page);
+  };
 
-  const handleDeleteSupplier = (id) => {
+  const handleDeleteCategory = (id) => {
     axios
-      .put(`/api/v1/supplier/disable/?id=${id}`)
+      .put(`/api/v1/category/disable/?id=${id}`)
       .then((response) => {
-
-        fetchSuppliers(currentPage);
+        fetchCategorys(currentPage);
       })
       .catch((error) => {
         toast.error(errorMessages["006"], {
@@ -81,13 +77,13 @@ const AllSupplier = () => {
         <CardHeader
           title={
             <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ flex: 1 }}>All Suppliers</span>
+              <span style={{ flex: 1 }}>All Categorys</span>
               <Button
-                onClick={() => navigate("/admin/supplier/create")}
+                onClick={() => navigate("/admin/category/create")}
                 variant="contained"
                 color="primary"
               >
-                Create Supplier
+                Create Category
               </Button>
             </div>
           }
@@ -99,17 +95,15 @@ const AllSupplier = () => {
               <TableRow>
                 <TableCell style={{ textAlign: "center" }}>STT</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Name</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Address</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Phone</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Status</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {suppliers.map((supplier, index) => (
+              {categorys.map((category, index) => (
                 <TableRow
                   hover
-                  key={supplier.id}
+                  key={category.id}
                   sx={{
                     "&:last-of-type td, &:last-of-type th": { border: 0 },
                   }}
@@ -119,27 +113,19 @@ const AllSupplier = () => {
                   </TableCell>
 
                   <TableCell style={{ textAlign: "center" }}>
-                    {supplier.name}
-                  </TableCell>
-
-                  <TableCell style={{ textAlign: "center" }}>
-                    {supplier.address}
-                  </TableCell>
-
-                  <TableCell style={{ textAlign: "center" }}>
-                    {supplier.phone}
+                    {category.name}
                   </TableCell>
 
                   <TableCell style={{ textAlign: "center" }}>
                     <FiberManualRecordIcon
                       style={{
-                        color: supplier.status === 0 ? "red" : "green",
+                        color: category.status === 0 ? "red" : "green",
                       }}
                     />
                   </TableCell>
                   <TableCell style={{}} sx={{ textAlign: "center" }}>
                     <Button
-                      onClick={() => navigate(`/admin/supplier/update/${supplier.id}`)}
+                      onClick={() => navigate(`/admin/category/update/${category.id}`)}
                       variant="text"
                       color="warning"
                     >
@@ -147,7 +133,7 @@ const AllSupplier = () => {
                     </Button>
 
                     <Button
-                      onClick={() => handleDeleteSupplier(supplier.id)}
+                      onClick={() => handleDeleteCategory(category.id)}
                       variant="text"
                       color="secondary"
                     >
@@ -173,8 +159,9 @@ const AllSupplier = () => {
           />
         </div>
       </Card>
+      <ToastContainer/>
     </Box>
   );
 };
 
-export default AllSupplier;
+export default AllCategory;

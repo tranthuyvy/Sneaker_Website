@@ -24,9 +24,15 @@ import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import Barcode from "react-barcode";
 import api from "../../../config/api";
+import DisableProduct from "./DisableProduct";
 
 const ProductsTable = () => {
   const navigate = useNavigate();
+  //  
+  const [open, setOpen] = useState(false);
+  const [idProductDelete, setIdProductDelete] = useState('')
+  const [nameProductDelete, setNameProductDelete] = useState('')
+  //
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -56,10 +62,12 @@ const ProductsTable = () => {
     fetchProducts(page);
   };
 
-  // const handleDeleteProduct = (productId) => {
-  //   console.log("delete product ", productId);
-  //   dispatch(deleteProduct(productId));
-  // };
+  const handleDeleteProduct = (productId, productName) => {
+    console.log("delete product ", productId, productName);
+    setOpen(true)
+    setIdProductDelete(productId)
+    setNameProductDelete(productName)
+  };
 
   return (
     <Box width={"100%"}>
@@ -143,6 +151,7 @@ const ProductsTable = () => {
           title={
             <div style={{ display: "flex", alignItems: "center" }}>
               <span style={{ flex: 1 }}>All Products</span>
+
               <Button
                 onClick={() => navigate("/admin/product/create")}
                 variant="contained"
@@ -199,13 +208,21 @@ const ProductsTable = () => {
 
                   <TableCell>
                     {" "}
-                    <Avatar
-                      // alt={product.name}
-                      // src={product.imageUrl}
-                      style={{ width: "50px", height: "50px" }}
-                    />{" "}
-                  </TableCell>
+                    {
+                      product && product.images && product.images.length > 0 && product.images.map((item, index) => {
+                        return (
+                          <Avatar
+                            // alt={product.name}
+                            src={item.link}
+                            style={{ width: "50px", height: "50px" }}
+                          />
+                        )
 
+                      })
+                    }
+                    {" "}
+                  </TableCell>
+                  {console.log("Product: ", product)}
                   <TableCell
                     sx={{ py: (theme) => `${theme.spacing(0.5)} !important` }}
                   >
@@ -227,10 +244,10 @@ const ProductsTable = () => {
                     {product.product_price}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {product.id_branch}
+                    {product.id_branch_branch.name}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {product.id_category}
+                    {product.id_category_category.name}
                   </TableCell>
                   <TableCell style={{}} sx={{ textAlign: "center" }}>
                     <Button
@@ -245,7 +262,7 @@ const ProductsTable = () => {
 
                     <Button
                       variant="text"
-                      // onClick={() => handleDeleteProduct(item.id)}
+                      onClick={() => handleDeleteProduct(product.id, product.name)}
                       color="secondary"
                     >
                       <DeleteIcon />
@@ -253,21 +270,28 @@ const ProductsTable = () => {
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     <Button
-                      // onClick={() =>
-                      //   navigate(`/admin/product/reviews/${item.id}`)
-                      // }
+                      onClick={() =>
+                        navigate(`/admin/product/detail/${product.id}`)
+                      }
                       variant="text"
                       color="success"
                     >
                       <VisibilityIcon />
                     </Button>
                   </TableCell>
+
                 </TableRow>
+
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
+      <DisableProduct open={open} setOpen={setOpen}
+        id={idProductDelete} name={nameProductDelete}
+        fetchProducts={(page) => fetchProducts(page)}
+        currentPage={currentPage}
+      />
       <Card className="mt-2 border">
         <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
           <Pagination
@@ -281,6 +305,7 @@ const ProductsTable = () => {
           />
         </div>
       </Card>
+
     </Box>
   );
 };

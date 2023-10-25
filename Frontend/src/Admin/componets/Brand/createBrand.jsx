@@ -7,57 +7,58 @@ import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
 import axios from "../../../config/axios";
 
-function CreateSupplier() {
+function CreateBrand() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
+  const [info, setInfo] = useState("");
+  const [linkPage, setLinkPage] = useState("");
   const [nameError, setNameError] = useState("");
-  const [addressError, setAddressError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
+  const [infoError, setInfoError] = useState("");
+  const [linkPageError, setLinkPageError] = useState("");
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
-  const phoneRegex = /^0\d{9}$/;
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "name") {
       setName(value);
       setNameError("");
-    } else if (name === "address") {
-      setAddress(value);
-      setAddressError("");
-    } else if (name === "phone") {
-      setPhone(value);
-      setPhoneError("");
+    } else if (name === "info") {
+      setInfo(value);
+      setInfoError("");
+    } else if (name === "linkPage") {
+      setLinkPage(value);
+      setLinkPageError("");
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!name || !address || !phone || !phoneRegex.test(phone)) {
+    setNameError("");
+    setInfoError("");
+    setLinkPageError("");
+
+    if (!name || !info || !linkPage) {
       if (!name) {
-        setNameError(errorMessages["111"]);
+        setNameError(errorMessages["126"]);
       }
 
-      if (!address) {
-        setAddressError(errorMessages["112"]);
+      if (!info) {
+        setInfoError(errorMessages["127"]);
       }
 
-      if (!phone) {
-        setPhoneError(errorMessages["113"]);
-      } else if (!phoneRegex.test(phone)) {
-        setPhoneError(errorMessages["107"]);
+      if (!linkPage) {
+        setLinkPageError(errorMessages["128"]);
       }
     } else {
       try {
-        const response = await axios.post("/api/v1/supplier/create", {
+        const response = await axios.post("/api/v1/brand/create", {
           name,
-          address,
-          phone,
+          info,
+          link_page: linkPage,
         });
 
         if (response.status === 200) {
@@ -65,8 +66,11 @@ function CreateSupplier() {
             autoClose: 1000,
           });
           dispatch({ type: "LANG_ENG" });
-          navigate("/admin/supplier");
+          navigate("/admin/brand");
         } else {
+          toast.error(errorMessages["103"], {
+            autoClose: 1000,
+          });
         }
       } catch (error) {
         if (error.response && error.response.status === 500) {
@@ -74,7 +78,7 @@ function CreateSupplier() {
             autoClose: 1000,
           });
         } else {
-          toast.error(errorMessages["103"], {
+          toast.error(errorMessages["006"], {
             autoClose: 1000,
           });
         }
@@ -89,9 +93,10 @@ function CreateSupplier() {
           <Grid item xs={12}>
             <TextField
               name="name"
-              label="Supplier Name"
+              label="Brand Name"
               fullWidth
-              autoComplete="given-name"
+              autoComplete="brand-name"
+              placeholder="Enter brand name"
               value={name}
               onChange={handleInputChange}
               error={!!nameError}
@@ -100,26 +105,28 @@ function CreateSupplier() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="address"
-              label="Supplier Address"
+              name="info"
+              label="Brand Info"
               fullWidth
-              autoComplete="given-address"
-              value={address}
+              autoComplete="brand-info"
+              placeholder="Enter brand info"
+              value={info}
               onChange={handleInputChange}
-              error={!!addressError}
-              helperText={addressError}
+              error={!!infoError}
+              helperText={infoError}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="phone"
-              label="Suppiler Phone"
+              name="linkPage"
+              label="Brand Link Page"
               fullWidth
-              autoComplete="given-phone"
-              value={phone}
+              autoComplete="brand-link-page"
+              placeholder="Enter brand link page"
+              value={linkPage}
               onChange={handleInputChange}
-              error={!!phoneError}
-              helperText={phoneError}
+              error={!!linkPageError}
+              helperText={linkPageError}
             />
           </Grid>
 
@@ -131,7 +138,7 @@ function CreateSupplier() {
               size="large"
               sx={{ padding: ".8rem 0" }}
             >
-              {lang === "vi" ? "Tạo Mới" : "Create Supplier"}
+              {lang === "vi" ? "Tạo Mới" : "Create Brand"}
             </Button>
           </Grid>
         </Grid>
@@ -141,4 +148,4 @@ function CreateSupplier() {
   );
 }
 
-export default CreateSupplier;
+export default CreateBrand;

@@ -3,75 +3,72 @@ import { Grid, TextField, Button, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import CSS của react-toastify
+import "react-toastify/dist/ReactToastify.css";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
 import axios from "../../../config/axios";
 
-function UpdateSupplier() {
+function UpdateBrand() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
+  const [info, setInfo] = useState("");
+  const [linkPage, setLinkPage] = useState("");
   const [nameError, setNameError] = useState("");
-  const [addressError, setAddressError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
+  const [infoError, setInfoError] = useState("");
+  const [linkPageError, setLinkPageError] = useState("");
 
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
-  const phoneRegex = /^0\d{9}$/;
 
   useEffect(() => {
-    const fetchSupplierData = async () => {
+    const fetchBrandData = async () => {
       try {
-        const response = await axios.get(`/api/v1/supplier/get/${id}`);
-        const supplierData = response.data;
-  
-        setName(supplierData.name);
-        setAddress(supplierData.address);
-        setPhone(supplierData.phone);
+        const response = await axios.get(`/api/v1/brand/get/${id}`);
+        const brandData = response.data.data;
+
+        setName(brandData.name);
+        setInfo(brandData.info);
+        setLinkPage(brandData.link_page);
       } catch (error) {
-        // toast.error(errorMessages["006"], {
-        //   autoClose: 1000,
-        // });
+        toast.error(errorMessages["006"], {
+          autoClose: 1000,
+        });
       }
     };
-  
-    fetchSupplierData();
+
+    fetchBrandData();
   }, [id]);
-  
 
   const handleUpdate = async (event) => {
     event.preventDefault();
 
     setNameError("");
-    setAddressError("");
-    setPhoneError("");
+    setInfoError("");
+    setLinkPageError("");
 
-    if (!name || !address || !phone || !phoneRegex.test(phone)) {
-      
+    if (!name || !info || !linkPage) {
       if (!name) {
-        setNameError(errorMessages["111"]);
+        setNameError(errorMessages["126"]);
       }
-      if (!address) {
-        setAddressError(errorMessages["112"]);
+
+      if (!info) {
+        setInfoError(errorMessages["127"]);
       }
-      if (!phone) {
-        setPhoneError(errorMessages["113"]);
+
+      if (!linkPage) {
+        setLinkPageError(errorMessages["128"]);
       }
-      if (!phoneRegex.test(phone)) {
-        setPhoneError(errorMessages["107"]);
-      }
+
       return;
     }
 
     try {
-      const response = await axios.put(`/api/v1/supplier/update?id=${id}`, {
+      const response = await axios.put(`/api/v1/brand/update?id=${id}`, {
         name,
-        address,
-        phone,
+        info,
+        link_page:linkPage,
       });
 
       if (response.status === 200) {
@@ -79,7 +76,7 @@ function UpdateSupplier() {
           autoClose: 900,
         });
         dispatch({ type: "LANG_ENG" });
-        navigate("/admin/supplier");
+        navigate("/admin/brand");
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
@@ -99,7 +96,7 @@ function UpdateSupplier() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           {/* <Typography variant="h5">
-            {lang === "vi" ? "Cập nhật Nhà cung cấp" : "Update Supplier"}
+            {lang === "vi" ? "Cập nhật Thương hiệu" : "Update Brand"}
           </Typography> */}
         </Grid>
       </Grid>
@@ -108,7 +105,7 @@ function UpdateSupplier() {
           <Grid item xs={12}>
             <TextField
               name="name"
-              label="Supplier Name"
+              label="Brand Name"
               fullWidth
               autoComplete="given-name"
               value={name}
@@ -119,26 +116,26 @@ function UpdateSupplier() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="address"
-              label="Supplier Address"
+              name="info"
+              label="Brand Info"
               fullWidth
-              autoComplete="given-address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              error={!!addressError}
-              helperText={addressError}
+              autoComplete="given-info"
+              value={info}
+              onChange={(e) => setInfo(e.target.value)}
+              error={!!infoError}
+              helperText={infoError}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="phone"
-              label="Supplier Phone"
+              name="linkPage"
+              label="Brand Link Page"
               fullWidth
-              autoComplete="given-phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              error={!!phoneError}
-              helperText={phoneError}
+              autoComplete="given-link-page"
+              value={linkPage}
+              onChange={(e) => setLinkPage(e.target.value)}
+              error={!!linkPageError}
+              helperText={linkPageError}
             />
           </Grid>
 
@@ -160,4 +157,4 @@ function UpdateSupplier() {
   );
 }
 
-export default UpdateSupplier;
+export default UpdateBrand;
