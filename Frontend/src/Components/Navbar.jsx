@@ -20,7 +20,6 @@ function Navbar() {
       alert("Loi");
     });
   }, []);
-  useEffect(() => {}, []);
   return (
     <Fragment>
       {/* Navigation bar */}

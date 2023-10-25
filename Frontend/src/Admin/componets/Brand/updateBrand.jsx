@@ -26,7 +26,7 @@ function UpdateBrand() {
     const fetchBrandData = async () => {
       try {
         const response = await axios.get(`/api/v1/brand/get/${id}`);
-        const brandData = response.data;
+        const brandData = response.data.data;
 
         setName(brandData.name);
         setInfo(brandData.info);

@@ -16,23 +16,20 @@ const StaffProfile = () => {
   const [staff, setStaff] = useState(null);
   const [editedStaff, setEditedStaff] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
-  // const token = localStorage.getItem("accessToken");
-  //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmFtZSI6InR0di50aHV5dnlAZ21haWwuY29tIiwiaWRfcm9sZSI6MSwiY3JlYXRlX2F0IjoiMjAyMy0xMC0xM1QwNjo0NTo1MS4wMDBaIiwiaWF0IjoxNjk3MjA3OTUwLCJleHAiOjE2OTcyMjU5NTB9.guJFU90JxRcak0YWz4egfp9gTt_yECKd3RyWXadMLzE";
 
-  const validatePhoneNumber = (phone) => {
-    return /^\d{10}$/.test(phone);
+  const validateCCCD = (cccd) => {
+    return /^\d{12}$/.test(cccd);
   };
 
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const validateCCCD = (cccd) => {
-    return /^\d{12}$/.test(cccd);
+  const validatePhoneNumber = (phone) => {
+    return /^0\d{9}$/.test(phone);
   };
 
   const validateGender = (sex) => {
@@ -40,14 +37,13 @@ const StaffProfile = () => {
   };
 
   useEffect(() => {
-    api.get("api/v1/staff", {
-
-    })
+    api
+      .get("api/v1/staff", {})
       .then((response) => {
         const staffData = response.data;
-        toast.success(errorMessages["002"], {
-          autoClose: 900,
-        });
+        // toast.success(errorMessages["002"], {
+        //   autoClose: 900,
+        // });
         setStaff(staffData);
 
         setEditedStaff({
@@ -55,7 +51,6 @@ const StaffProfile = () => {
         });
 
         setIsEditing(false);
-        // setUpdateSuccess(false);
       })
       .catch((error) => {
         toast.error(errorMessages["006"], {
@@ -75,26 +70,45 @@ const StaffProfile = () => {
   };
 
   const handleSaveEdit = () => {
-    api.put("/api/v1/staff", editedStaff)
-      .then((response) => {
-        setStaff(response.data);
-        setIsEditing(false);
-        setUpdateSuccess(true);
-        if (response.data.code === "013") {
-          toast.success(errorMessages["013"], {
+    if (!validateCCCD(editedStaff.id_card)) {
+      toast.error(errorMessages["108"], {
+        autoClose: 900,
+      });
+    } else if (!validateEmail(editedStaff.email)) {
+      toast.error(errorMessages["010"], {
+        autoClose: 900,
+      });
+    } else if (!validatePhoneNumber(editedStaff.phone)) {
+      toast.error(errorMessages["107"], {
+        autoClose: 900,
+      });
+    } else if (!validateGender(editedStaff.sex)) {
+      toast.error(errorMessages["109"], {
+        autoClose: 900,
+      });
+    } else {
+      api
+        .put("/api/v1/staff", editedStaff)
+        .then((response) => {
+          setStaff(response.data);
+          setIsEditing(false);
+          if (response.data.code === "013") {
+            toast.success(errorMessages["013"], {
+              autoClose: 900,
+            });
+          }
+        })
+        .catch((error) => {
+          toast.error(errorMessages["006"], {
             autoClose: 900,
           });
-        }
-      })
-      .catch((error) => {
-        toast.error(errorMessages["006"], {
-          autoClose: 900,
         });
-      });
+    }
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
     setEditedStaff((prevData) => ({
       ...prevData,
       [name]: value,
