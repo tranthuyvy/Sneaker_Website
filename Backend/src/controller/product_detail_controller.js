@@ -8,10 +8,11 @@ class product_detail_controller {
         try {
             // const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
             const { idProduct, size } = req.body;
-            const id = generateProductDetailId(idProduct, size, color)
+            const id = generateProductDetailId(idProduct, size)
             const product_detail = await Model.product_detail.create({ id, size, id_product: idProduct })
             // const img = await Model.product_image.create({ id_product_detail: product_detail.dataValues.id, image })
             res.status(200).send({ code: "004" })
+
         } catch (error) {
             console.log(error)
             res.status(500).send({ code: "005" })
@@ -50,7 +51,7 @@ class product_detail_controller {
             });
             let batch_quantity = detail.dataValues.product_batch_items[0]?.dataValues.product_batch_item_quantity
             let order_quantity = detail.dataValues.order_details[0]?.dataValues.order_quantity
-            const data = { ...detail.dataValues, quantity: batch_quantity - order_quantity}
+            const data = { ...detail.dataValues, quantity: batch_quantity - order_quantity }
             delete data.product_batch_items
             delete data.order_details
             res.status(200).send({

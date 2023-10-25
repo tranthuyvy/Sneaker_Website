@@ -74,7 +74,7 @@ class product_controller {
         return res.status(200).send({ code: "012" });
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "005" });
       }
     }
   };
@@ -156,7 +156,7 @@ class product_controller {
         }
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "201" });
       }
     }
   }
@@ -180,7 +180,7 @@ class product_controller {
 
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "202" });
       }
     }
     else {

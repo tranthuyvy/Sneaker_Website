@@ -25,15 +25,15 @@ const CartItem = ({ detail, showButton }) => {
     }))
     // window.location.reload();
   };
-  console.log(detail)
   return (
     <div className="p-5 shadow-lg border rounded-md">
       <div className="flex items-center">
         <div className="w-[5rem] h-[5rem] lg:w-[9rem] lg:h-[9rem] ">
           <img
             className="w-full h-full object-cover object-top"
-            src={detail?.id_product_product?.images?.link || null}
-            alt=""
+            src={getImage(detail)}
+            alt="Product image"
+            loading="lazy"
           />
         </div>
         <div className="ml-5 space-y-1">
@@ -44,6 +44,9 @@ const CartItem = ({ detail, showButton }) => {
           <p className="opacity-70 mt-5 text-sm">
             Brand: {detail?.id_product_product?.id_branch_branch.name}
           </p>
+          {!showButton ? ( <p className="opacity-70 mt-5 text-sm">
+            x{detail?.quantity}
+          </p>): null}
           <div className="flex space-x-2 items-center pt-3">
             <p className="text-red-600 font-semibold text-lg">
               ${discountedPrice != 0 ? discountedPrice : null}
@@ -68,7 +71,7 @@ const CartItem = ({ detail, showButton }) => {
           <div className="flex items-center space-x-2 ">
             <IconButton
               onClick={() => handleUpdateCartItem(-1)}
-              disabled={detail?.quantity <= 1}
+              disabled={findQuantity(detail.id)<= 1}
               color="primary"
               aria-label="add an alarm"
             >

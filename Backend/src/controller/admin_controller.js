@@ -73,7 +73,7 @@ class admin_controller {
         }
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "006" });
+        return res.status(500).send({ code: "005" });
       }
     }
 
@@ -112,7 +112,7 @@ class admin_controller {
           // console.log(data);
         } catch (error) {
           console.log(error);
-          return res.status(500).send({ code: "006" });
+          return res.status(500).send({ code: "003" });
         }
       } else if (id_role == 2) {
         //2 Khách hàng
@@ -121,7 +121,7 @@ class admin_controller {
           // console.log(data);
         } catch (e) {
           console.log(e);
-          return res.status(500).send({ code: "006" });
+          return res.status(500).send({ code: "003" });
         }
       }
       const paginatedProducts = data.slice(startIndex, endIndex);

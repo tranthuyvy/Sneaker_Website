@@ -39,6 +39,11 @@ import Login from "./componets/auth/Login";
 import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
 import AllCategory from "./componets/Category/allCategory";
+import CreateCategory from "./componets/Category/createCategory";
+import UpdateCategory from "./componets/Category/updateCategory";
+import AllBrand from "./componets/Brand/allBrand";
+import CreateBrand from "./componets/Brand/createBrand";
+import UpdateBrand from "./componets/Brand/updateBrand";
 import DetailProduct from "./componets/DetailProduct/DetailProduct";
 
 const drawerWidth = 240;
@@ -52,6 +57,7 @@ const menu = [
   { name: "Supplier", path: "/admin/supplier" },
   { name: "Discount", path: "/admin/discount" },
   { name: "Category", path: "/admin/category" },
+  { name: "Brand", path: "/admin/brand" },
   // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
@@ -181,7 +187,13 @@ export default function AdminPannel() {
             {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
             <Route path="/customers" element={<Customers />}></Route>
 
+            <Route path="/brand" element={<AllBrand />}></Route>
+            <Route path="/brand/create" element={<CreateBrand />}></Route>
+            <Route path="/brand/update/:id" element={<UpdateBrand />}></Route>
+
             <Route path="/category" element={<AllCategory />}></Route>
+            <Route path="/category/create" element={<CreateCategory />}></Route>
+            <Route path="/category/update/:id" element={<UpdateCategory />}></Route>
 
             <Route path="/discount" element={<AllDiscount />}></Route>
             <Route path="/discount/create" element={<CreateDiscount />}></Route>
