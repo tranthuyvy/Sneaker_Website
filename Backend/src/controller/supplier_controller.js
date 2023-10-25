@@ -1,6 +1,6 @@
 import Model from "../config/sequelize";
 const supplier = Model.supplier;
-
+const { Op } = require('sequelize');
 class supplier_controller {
   hello = (req, res) => {
     return res.send("Hello");
@@ -48,7 +48,7 @@ class supplier_controller {
 
   updateSupplier = async (req, res) => {
     let { id } = req.query;
-    let updataDta = req.body;
+    let updateData = req.body;
     // if (!name || !address || !phone || !id) {
     //     return res.status(500).send({ code: "009" });
     // }
@@ -60,14 +60,24 @@ class supplier_controller {
           dataSupplier.dataValues &&
           dataSupplier.dataValues.id
         ) {
-          if (updataDta.name) {
-            dataSupplier.name = updataDta.name;
+          if (updateData.name) {
+            let name = updateData.name.trim();
+            let checkName = await supplier.findOne({
+              where: {
+                name,
+                id: { [Op.ne]: id }
+              }
+            });
+            if (checkName?.dataValues) {
+              return res.status(500).send({ code: "011" });
+            }
+            dataSupplier.name = name;
           }
-          if (updataDta.address) {
-            dataSupplier.address = updataDta.address;
+          if (updateData.address) {
+            dataSupplier.address = updateData.address;
           }
-          if (updataDta.phone) {
-            dataSupplier.phone = updataDta.phone;
+          if (updateData.phone) {
+            dataSupplier.phone = updateData.phone;
           }
           // await dataSupplier.update({
           //     name, address, phone

@@ -1,6 +1,6 @@
 import Model from "../config/sequelize";
 const brand = Model.branch;
-
+const { Op } = require('sequelize');
 class brand_controller {
   getBrandById = async (req, res) => {
     const { id } = req.params;
@@ -23,6 +23,7 @@ class brand_controller {
     if (!name || !info || !link_page) {
       return res.status(500).send({ code: "009" });
     }
+    name = name.trim();
     try {
       let checkName = await brand.findOne({ where: { name } });
       if (checkName?.dataValues) {
@@ -45,7 +46,17 @@ class brand_controller {
         let dataBrand = await brand.findOne({ where: { id } });
         if (dataBrand && dataBrand.dataValues && dataBrand.dataValues.id) {
           if (updateData.name) {
-            dataBrand.name = updateData.name;
+            let name = updateData.name.trim();
+            let checkName = await brand.findOne({
+              where: {
+                name,
+                id: { [Op.ne]: id }
+              }
+            });
+            if (checkName?.dataValues) {
+              return res.status(500).send({ code: "011" });
+            }
+            dataBrand.name = name;
           }
           if (updateData.info) {
             dataBrand.info = updateData.info;
