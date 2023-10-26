@@ -21,6 +21,11 @@ class admin_controller {
     if (!nameStaff || !userName || !password) {
       return res.status(500).send({ code: "009" });
     }
+    userName = userName.trim();
+    password = password.trim();
+    if (password.length < 6) {
+      return res.status(500).send({ code: "129" });
+    }
     //Check định dạng email
     // let emailPattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
     // let check = emailPattern.test(email);
@@ -36,6 +41,7 @@ class admin_controller {
     const checkUsernameExist = await admin.findOne({
       where: { name: userName },
     });
+
     //1. Email này cũng là của nhân viên
     //2. Từ cái id_account vừa thêm thì thêm 1 thằng nhân viên có id_account đó và thêm tên cho nó
     // console.log(">>> Check email exist: ", checkEmailExist?.dataValues);
