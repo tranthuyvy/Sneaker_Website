@@ -276,7 +276,7 @@ const OrderSummary = (order) => {
     const data = (await axiosApiInstance.get("/api/v1/address/get")).data.data;
     setListAddress([...data.address]);
     setAddress(data.address[0].id);
-    setUser(data.user?.name|| null)
+    setName(data.user?.name|| null)
     setPhone(data.user?.phone || '0123456786')
   }
   function handleOrder() {
