@@ -13,7 +13,6 @@ function isEmpty(obj) {
   return true;
 }
 function setCart(list) {
-
   localStorage.setItem(localStorageKey, JSON.stringify([...list]));
 }
 function getCart() {

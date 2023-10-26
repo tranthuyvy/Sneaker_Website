@@ -11,12 +11,14 @@ import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
+import { Select, MenuItem } from "@mui/material";
 
 const StaffProfile = () => {
   const [staff, setStaff] = useState(null);
   const [editedStaff, setEditedStaff] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
+  const [gender, setGender] = useState(editedStaff ? editedStaff.sex : "");
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
@@ -32,19 +34,13 @@ const StaffProfile = () => {
     return /^0\d{9}$/.test(phone);
   };
 
-  const validateGender = (sex) => {
-    return sex === "Nam" || sex === "Nữ";
-  };
-
   useEffect(() => {
     api
       .get("api/v1/staff", {})
       .then((response) => {
         const staffData = response.data;
-        // toast.success(errorMessages["002"], {
-        //   autoClose: 900,
-        // });
         setStaff(staffData);
+        setGender(staffData.sex);
 
         setEditedStaff({
           ...staffData,
@@ -82,11 +78,8 @@ const StaffProfile = () => {
       toast.error(errorMessages["107"], {
         autoClose: 900,
       });
-    } else if (!validateGender(editedStaff.sex)) {
-      toast.error(errorMessages["109"], {
-        autoClose: 900,
-      });
     } else {
+      editedStaff.sex = gender;
       api
         .put("/api/v1/staff", editedStaff)
         .then((response) => {
@@ -113,6 +106,10 @@ const StaffProfile = () => {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
   };
 
   if (staff === null) {
@@ -207,11 +204,6 @@ const StaffProfile = () => {
             //   value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
             // },
             {
-              label: "Sex",
-              name: "sex",
-              value: editedStaff.sex,
-            },
-            {
               label: "Bank Number",
               name: "bank_account_number",
               value: editedStaff.bank_account_number,
@@ -261,6 +253,20 @@ const StaffProfile = () => {
               />
             </Grid>
           ))}
+          <Grid item xs={12} sm={4}>
+            <Select
+              fullWidth
+              label="Gender"
+              name="sex"
+              value={gender}
+              onChange={handleGenderChange}
+              disabled={!isEditing}
+            >
+              <MenuItem value="Nam">Nam</MenuItem>
+              <MenuItem value="Nữ">Nữ</MenuItem>
+            </Select>
+          </Grid>
+
           <Grid item xs={12}>
             {isEditing ? (
               <>

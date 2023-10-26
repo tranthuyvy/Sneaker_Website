@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CartItem from "../Components/CartItem";
 import { Badge, Button, cardActionAreaClasses, ListItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "../config/axios";
@@ -11,6 +12,7 @@ const Cart = () => {
   const [total, setTotal] = useState(0);
   const [listCart, setListCart] = useState([]);
   const cart = useSelector((store) => store.cart);
+  const lang = useSelector((state) => state.lang);
   useEffect(() => {
     (async () => {
       const listPromise = [];
@@ -22,7 +24,7 @@ const Cart = () => {
       const listTmp = [];
       const data = (await Promise.all(listPromise)).map((item) => {
         let quantity = findQuantity(item.data.data.id);
-        return { ...item.data.data, quantity: quantity };
+        return { ...item.data.data, quantity: quantity, isValid: true };
       });
       for (let a of data) {
         listTmp.push({ ...a });
@@ -74,7 +76,7 @@ const Cart = () => {
               </div>
 
               <Button
-                onClick={() => navigate("/order")}
+                onClick={handleCheckOut}
                 variant="contained"
                 type="submit"
                 sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}
@@ -100,6 +102,34 @@ const Cart = () => {
       if (i.id.localeCompare(id) == 0) quantity = i.quantity;
     }
     return quantity;
+  }
+  function isIdInList(id, list) {
+    return list.some((item) => item.id === id);
+  };
+  function handleCheckOut() {
+    (async () => {
+      let data = (
+        await axios.post("/api/v1/order/checkInventory", {
+          listDetail: cart.map((item) => {
+            return { id_product_detail: item.id, quantity: item.quantity };
+          }),
+        })
+      ).data;
+      if (!data.flag) {
+        const li = listCart;
+        
+        setListCart(li.map((item) => {
+            return { ...item, isValid: !isIdInList(item.id, data.listProduct) };
+          })
+        );
+        toast(lang["017"]);
+      } else {
+        navigate("/order");
+      }
+    })().catch((err) => {
+      console.error(err);
+      toast(lang["006"]);
+    });
   }
 };
 

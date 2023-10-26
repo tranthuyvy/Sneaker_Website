@@ -9,8 +9,10 @@ import multer from "multer";
 dotenv.config();
 const PORT = process.env.PORT || 8080;
 export default function run(app) {
+  const storage = multer.memoryStorage()
   const upload = multer({
     storage: multer.memoryStorage(),
+    fieldSize: 4 * 1024 * 1024
   });
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,6 +22,6 @@ export default function run(app) {
   const httpServer = createServer(app);
   router(app);
   httpServer.listen(PORT, () => {
-    console.log("dang chay");
+    console.log("");
   });
 }
