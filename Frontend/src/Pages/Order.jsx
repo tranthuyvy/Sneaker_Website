@@ -11,6 +11,8 @@ import CartItem from "../Components/CartItem";
 import axios from "../config/axios";
 import AddressCard from "../Components/AddressCart";
 import OrderTraker from "../Components/OrderTracker";
+import ModalLogin from "../Components/ModalLogin";
+import axiosApiInstance from "../config/api";
 const OrderSummary = (order) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,8 +22,10 @@ const OrderSummary = (order) => {
   const [total, setTotal] = useState(0);
   const [discount, setDisCount] = useState(0);
   const [listCart, setListCart] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const cart = useSelector((store) => store.cart);
   const lang = useSelector((state) => state.lang);
+  const [listAddress,setListAddress] = useState([])
   useEffect(() => {
     getData()
       .catch((err) => {
@@ -29,6 +33,12 @@ const OrderSummary = (order) => {
         toast(lang["003"]);
       })
       .finally(() => {});
+    getAddress().catch((err) => {
+      console.error(err);
+      toast(lang["003"]);
+    })
+    .finally(() => {});
+   
   }, []);
 
   // const handleCreatePayment=()=>{
@@ -48,14 +58,41 @@ const OrderSummary = (order) => {
   const handlePaymentFailed = () => {
     setErrorMessage("Payment Failed");
   };
-
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+    },
+  };
   return (
     <div className="space-y-5">
+      <Modal
+        isOpen={modalIsOpen}
+        // onAfterOpen={afterOpenModal}
+        onRequestClose={()=>setModalIsOpen(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <ul>
+          {
+            listAddress.length>0 ? listAddress.map(item=>{
+              return  <li key={item.id}><AddressCard address={item.name} /> </li>
+            }) : null
+          }
+        </ul>
+      </Modal>
+
       <OrderTraker activeStep={0}></OrderTraker>
 
       <div className="lg:grid grid-cols-3 relative justify-between">
         <div className="p-5 shadow-lg rounded-md border ">
-          <AddressCard address={order?.order?.shippingAddress} />
+          <button onClick={()=>{
+            setModalIsOpen(true)
+          }}>Select address</button>
         </div>
 
         <div className="lg:col-span-2 ">
@@ -103,7 +140,7 @@ const OrderSummary = (order) => {
                     color: "white",
                   }}
                 >
-                  Cash
+                  CONFIRM
                 </button>
                 <button
                   className="h-10 w-40 border"
@@ -186,7 +223,6 @@ const OrderSummary = (order) => {
     setTotal(totalTmp);
   }
   async function getData() {
-    console.log("call");
     const listPromise = [];
     for (let i of cart) {
       listPromise.push(
@@ -208,6 +244,10 @@ const OrderSummary = (order) => {
     });
     setTotal(totalTmp);
     setListCart([...listTmp]);
+  }
+  async function getAddress(){
+    const data= (await axiosApiInstance.get('/api/v1/address/get')).data
+    setListAddress([...data.data])
   }
 };
 

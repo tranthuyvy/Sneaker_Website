@@ -20,9 +20,8 @@ const AddressCard = ({ address }) => {
       {/* <h1 className="text-lg font-semibold py-4">Delivery Adress</h1> */}
       <div className="space-y-3">
         <p className="font-semibold">{`Đức Mạnh`}</p>
-
         <p>
-          {`97 Man Thiện, Tăng Nhơn Phú B,TP Thủ Đức, Tp.HCM`}
+          {address}
         </p>
         <div className="space-y-1">
           <p className="font-semibold">Phone Number</p>
