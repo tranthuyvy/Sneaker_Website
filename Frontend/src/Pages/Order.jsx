@@ -23,6 +23,7 @@ const OrderSummary = (order) => {
   const cart = useSelector((store) => store.cart);
   const lang = useSelector((state) => state.lang);
   const [listAddress, setListAddress] = useState([]);
+  const [addressSelect, setAddressSelect] = useState("");
   const [address, setAddress] = useState("");
   const [name, setName] = useState();
   const [phone, setPhone] = useState();
@@ -66,23 +67,87 @@ const OrderSummary = (order) => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
+      // minHeight: "40%",
+      // minWidth: "60%",
+      height: "30%",
+      width: "40%",
+      padding: 0,
     },
   };
   return (
     <div className="space-y-5">
-      {/* <Modal
+      <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         style={customStyles}
         contentLabel="Example Modal"
-      ></Modal> */}
+      >
+        <div className="flex-column min-h-full">
+          <div className="grow h-40">
+            <div>
+              Name:{" "}
+              <input
+                className="w-full"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+              ></input>
+            </div>
+            <div>
+              Phone:{" "}
+              <input
+                className="w-full"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                }}
+              ></input>
+            </div>
+            <div>
+              Address:{" "}
+              <input
+                className="w-full"
+                value={address}
+                onChange={(e) => {
+                  setAddress(e.target.value);
+                }}
+              ></input>
+            </div>
+          </div>
+          <div className="grid justify-items-center flex-row">
+            <div
+              className="h-10 w-40 border"
+              style={{
+                backgroundColor: "#c9db34d4",
+                borderRadius: 10,
+                color: "white",
+                
+              }}
+            >
+              Save
+            </div>
+            <div
+              className="h-10 w-40 border"
+              style={{
+                backgroundColor: "red",
+                borderRadius: 10,
+                color: "white",
+                right:0
+              }}
+            >
+              Close
+            </div>
+          </div>
+        </div>
+      </Modal>
       <OrderTraker activeStep={0}></OrderTraker>
       <div className="lg:grid grid-cols-3 relative justify-between">
         <div className="p-5 shadow-lg rounded-md border ">
           <div>Thông tin giao hàng</div>
           <select
             className="w-full"
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) => setAddressSelect(e.target.value)}
           >
             {listAddress.length > 0
               ? listAddress.map((item) => {
@@ -103,24 +168,11 @@ const OrderSummary = (order) => {
               borderRadius: 10,
               color: "white",
             }}
+            onClick={() => setModalIsOpen(true)}
           >
             Add address
           </button>
-          {/* <button
-            onClick={() => {
-              setModalIsOpen(true);
-            }}
-            className="h-10 w-40 border"
-            style={{
-              backgroundColor: "#c9db34d4",
-              borderRadius: 10,
-              color: "white",
-            }}
-          >
-            Select address
-          </button> */}
         </div>
-
         <div className="lg:col-span-2 ">
           <div className=" space-y-3">
             {listCart.length > 0
@@ -132,13 +184,9 @@ const OrderSummary = (order) => {
               : null}
           </div>
         </div>
-
         <div className="sticky top-0 h-[100vh] mt-5 lg:mt-0 ml-5">
           <div className="border p-5 bg-white shadow-lg rounded-md">
             <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
-
-            <hr />
-
             <div className="space-y-3 font-semibold">
               <div className="flex justify-between pt-3 text-black ">
                 <span>Price ({listCart?.length || 0} item)</span>
@@ -275,9 +323,9 @@ const OrderSummary = (order) => {
   async function getAddress() {
     const data = (await axiosApiInstance.get("/api/v1/address/get")).data.data;
     setListAddress([...data.address]);
-    setAddress(data.address[0].id);
-    setName(data.user?.name|| null)
-    setPhone(data.user?.phone || '0123456786')
+    setAddressSelect(data.address[0].id);
+    setName(data.user?.name || null);
+    setPhone(data.user?.phone || "0123456786");
   }
   function handleOrder() {
     toast(address);
