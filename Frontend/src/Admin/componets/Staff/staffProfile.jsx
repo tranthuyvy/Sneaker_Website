@@ -11,51 +11,42 @@ import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
+import { Select, MenuItem } from "@mui/material";
 
 const StaffProfile = () => {
   const [staff, setStaff] = useState(null);
   const [editedStaff, setEditedStaff] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [avatarImage, setAvatarImage] = useState(null);
+  const [gender, setGender] = useState(editedStaff ? editedStaff.sex : "");
   const lang = useSelector((state) => state);
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
-  // const token = localStorage.getItem("accessToken");
-  //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwibmFtZSI6InR0di50aHV5dnlAZ21haWwuY29tIiwiaWRfcm9sZSI6MSwiY3JlYXRlX2F0IjoiMjAyMy0xMC0xM1QwNjo0NTo1MS4wMDBaIiwiaWF0IjoxNjk3MjA3OTUwLCJleHAiOjE2OTcyMjU5NTB9.guJFU90JxRcak0YWz4egfp9gTt_yECKd3RyWXadMLzE";
 
-  const validatePhoneNumber = (phone) => {
-    return /^\d{10}$/.test(phone);
+  const validateCCCD = (cccd) => {
+    return /^\d{12}$/.test(cccd);
   };
 
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const validateCCCD = (cccd) => {
-    return /^\d{12}$/.test(cccd);
-  };
-
-  const validateGender = (sex) => {
-    return sex === "Nam" || sex === "Nữ";
+  const validatePhoneNumber = (phone) => {
+    return /^0\d{9}$/.test(phone);
   };
 
   useEffect(() => {
-    api.get("api/v1/staff", {
-
-    })
+    api
+      .get("api/v1/staff", {})
       .then((response) => {
         const staffData = response.data;
-        toast.success(errorMessages["002"], {
-          autoClose: 900,
-        });
         setStaff(staffData);
+        setGender(staffData.sex);
 
         setEditedStaff({
           ...staffData,
         });
 
         setIsEditing(false);
-        // setUpdateSuccess(false);
       })
       .catch((error) => {
         toast.error(errorMessages["006"], {
@@ -75,30 +66,50 @@ const StaffProfile = () => {
   };
 
   const handleSaveEdit = () => {
-    api.put("/api/v1/staff", editedStaff)
-      .then((response) => {
-        setStaff(response.data);
-        setIsEditing(false);
-        setUpdateSuccess(true);
-        if (response.data.code === "013") {
-          toast.success(errorMessages["013"], {
+    if (!validateCCCD(editedStaff.id_card)) {
+      toast.error(errorMessages["108"], {
+        autoClose: 900,
+      });
+    } else if (!validateEmail(editedStaff.email)) {
+      toast.error(errorMessages["010"], {
+        autoClose: 900,
+      });
+    } else if (!validatePhoneNumber(editedStaff.phone)) {
+      toast.error(errorMessages["107"], {
+        autoClose: 900,
+      });
+    } else {
+      editedStaff.sex = gender;
+      api
+        .put("/api/v1/staff", editedStaff)
+        .then((response) => {
+          setStaff(response.data);
+          setIsEditing(false);
+          if (response.data.code === "013") {
+            toast.success(errorMessages["013"], {
+              autoClose: 900,
+            });
+          }
+        })
+        .catch((error) => {
+          toast.error(errorMessages["006"], {
             autoClose: 900,
           });
-        }
-      })
-      .catch((error) => {
-        toast.error(errorMessages["006"], {
-          autoClose: 900,
         });
-      });
+    }
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
     setEditedStaff((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
   };
 
   if (staff === null) {
@@ -193,11 +204,6 @@ const StaffProfile = () => {
             //   value: format(new Date(editedStaff.date_of_birth), "dd/MM/yyyy")
             // },
             {
-              label: "Sex",
-              name: "sex",
-              value: editedStaff.sex,
-            },
-            {
               label: "Bank Number",
               name: "bank_account_number",
               value: editedStaff.bank_account_number,
@@ -247,6 +253,20 @@ const StaffProfile = () => {
               />
             </Grid>
           ))}
+          <Grid item xs={12} sm={4}>
+            <Select
+              fullWidth
+              label="Gender"
+              name="sex"
+              value={gender}
+              onChange={handleGenderChange}
+              disabled={!isEditing}
+            >
+              <MenuItem value="Nam">Nam</MenuItem>
+              <MenuItem value="Nữ">Nữ</MenuItem>
+            </Select>
+          </Grid>
+
           <Grid item xs={12}>
             {isEditing ? (
               <>

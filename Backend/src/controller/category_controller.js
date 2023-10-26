@@ -2,6 +2,7 @@ import Model from "../config/sequelize";
 const CateforyModel = Model.category;
 const category = Model.category;
 const staff = Model.staff;
+const { Op } = require('sequelize');
 import auth from "../middleware/authenJWT";
 class category_controller {
   async get(req, res) {
@@ -47,6 +48,7 @@ class category_controller {
     if (!name) {
       return res.status(500).send({ code: "009" });
     }
+    name = name.trim();
     let checkName = await category.findOne({ where: { name } });
     if (checkName?.dataValues) {
       return res.status(500).send({ code: "011" });
@@ -79,7 +81,17 @@ class category_controller {
           dataCategory.dataValues.id
         ) {
           if (updateData.name) {
-            dataCategory.name = updateData.name;
+            let name = updateData.name.trim();
+            let checkName = await category.findOne({
+              where: {
+                name: name,
+                id: { [Op.ne]: id }
+              }
+            });
+            if (checkName?.dataValues) {
+              return res.status(500).send({ code: "011" });
+            }
+            dataCategory.name = name;
           }
           if (updateData.id_parent) {
             dataCategory.id_parent = updateData.id_parent;
