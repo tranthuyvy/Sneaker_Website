@@ -49,25 +49,27 @@ class product_controller {
         if (nameBranch && nameBranch.dataValues && nameBranch.dataValues.id) {
           id = generateProductId(name, nameBranch.dataValues.name);
         }
-        let dataProduct = await product.create({
-          id,
-          name,
-          id_branch,
-          id_category,
-          create_by,
-          product_price,
-          description,
-          status: 1,
-        });
+        // let dataProduct = await product.create({
+        //   id,
+        //   name,
+        //   id_branch,
+        //   id_category,
+        //   create_by,
+        //   product_price,
+        //   description,
+        //   status: 1,
+        // });
+
         const listImageName = saveImg(req, res);
-        if (listImageName.length < 1) {
-          return res.status(500).send({ code: "009" });
-        }
         console.log("listImageName: ", listImageName);
-        const image = req.files.length == 0 ? [] : listImageName.map(item => {
-          return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
-        });
-        const img = image.length == 0 ? null : await productImage.bulkCreate(image);
+        // if (listImageName.length < 1) {
+        //   return res.status(500).send({ code: "009" });
+        // }
+        // console.log("listImageName: ", listImageName);
+        // const image = req.files.length == 0 ? [] : listImageName.map(item => {
+        //   return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
+        // });
+        // const img = image.length == 0 ? null : await productImage.bulkCreate(image);
         console.log("Check data product: ", dataProduct.dataValues);
         console.log("Thêm thành công");
         return res.status(200).send({ code: "012" });
@@ -215,10 +217,6 @@ class product_controller {
       {
         model: Model.product_detail,
         as: "product_details",
-      },
-      {
-        model: Model.discount,
-        as: 'id_discount_discount'
       },
       {
         model: Model.branch,

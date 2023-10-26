@@ -33,7 +33,7 @@ function App(props) {
     }
     toast(lang[data.code]);
   };
-  const handleFailure = (error) => { 
+  const handleFailure = (error) => {
     // Xử lý khi đăng nhập thất bại
     console.error("Login failed:", error);
   };
