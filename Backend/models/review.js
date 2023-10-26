@@ -1,39 +1,44 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('product_batch_item', {
+  return sequelize.define('review', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    quantity: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    id_product_detail: {
+    id_product: {
       type: DataTypes.STRING(15),
-      allowNull: false,
+      allowNull: true,
       references: {
-        model: 'product_detail',
+        model: 'product',
         key: 'id'
       }
     },
-    import_price: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+    comment: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     },
-    id_product_batch: {
+    star: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true
+    },
+    id_user: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
       references: {
-        model: 'product_batch',
+        model: 'user',
         key: 'id'
       }
+    },
+    create_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }, {
     sequelize,
-    tableName: 'product_batch_item',
+    tableName: 'review',
     timestamps: false,
     indexes: [
       {
@@ -45,17 +50,17 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_productBatchItem_productBatch",
+        name: "FK_review_product",
         using: "BTREE",
         fields: [
-          { name: "id_product_batch" },
+          { name: "id_product" },
         ]
       },
       {
-        name: "FK_productBatchItem_productDetail",
+        name: "FK_review_user",
         using: "BTREE",
         fields: [
-          { name: "id_product_detail" },
+          { name: "id_user" },
         ]
       },
     ]

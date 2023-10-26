@@ -10,8 +10,8 @@ auth.tokenData = (req, res) => {
     let result = null;
     jwt.verify(token, process.env.ACCESS_KEY, (err, data) => {
         if (err) {
-            return res.sendStatus(403);
             console.log(err);
+            return res.sendStatus(403);
         } else {
             result = data;
         }

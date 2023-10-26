@@ -1,39 +1,39 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('order_detail', {
+  return sequelize.define('product_batch_item', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     id_product_detail: {
       type: DataTypes.STRING(15),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'product_detail',
         key: 'id'
       }
     },
-    id_order: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'order',
-        key: 'id'
-      }
-    },
-    price: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    quantity: {
+    import_price: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    id_product_batch: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'product_batch',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
-    tableName: 'order_detail',
+    tableName: 'product_batch_item',
     timestamps: false,
     indexes: [
       {
@@ -45,14 +45,14 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_orderdetail_order",
+        name: "FK_productBatchItem_productBatch",
         using: "BTREE",
         fields: [
-          { name: "id_order" },
+          { name: "id_product_batch" },
         ]
       },
       {
-        name: "FK_orderdetail_productdetail",
+        name: "FK_productBatchItem_productDetail",
         using: "BTREE",
         fields: [
           { name: "id_product_detail" },

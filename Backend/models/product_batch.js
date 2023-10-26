@@ -1,42 +1,22 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('discount', {
+  return sequelize.define('product_batch', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    value: {
-      type: DataTypes.FLOAT,
-      allowNull: false
-    },
-    type: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    expiration_date: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    status: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     },
     create_at: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     },
     create_by: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'staff',
-        key: 'id'
-      }
-    },
-    update_by: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -44,14 +24,17 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    update_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    id_supplier: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'supplier',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
-    tableName: 'discount',
+    tableName: 'product_batch',
     timestamps: false,
     indexes: [
       {
@@ -63,17 +46,17 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_discount_staff",
+        name: "FK_productBatch_Supplier",
         using: "BTREE",
         fields: [
-          { name: "create_by" },
+          { name: "id_supplier" },
         ]
       },
       {
-        name: "FK_discount_staff_update",
+        name: "FK_product_batch_staff",
         using: "BTREE",
         fields: [
-          { name: "update_by" },
+          { name: "create_by" },
         ]
       },
     ]

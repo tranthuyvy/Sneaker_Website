@@ -9,31 +9,32 @@ module.exports = function(sequelize, DataTypes) {
     },
     total_price: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     total_item: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     total_discounted_price: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     status_payment: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     status: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     create_at: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true,
+      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     },
     update_by: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'staff',
         key: 'id'
@@ -41,15 +42,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     update_at: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     delivery_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: true
     },
     id_user: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'user',
         key: 'id'
