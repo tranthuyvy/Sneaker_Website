@@ -1,27 +1,27 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('address', {
+  return sequelize.define('discount_product', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    name: {
-      type: DataTypes.STRING(500),
+    id_product: {
+      type: DataTypes.STRING(15),
       allowNull: true
     },
-    id_user: {
+    id_discount: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
-        model: 'user',
+        model: 'discount',
         key: 'id'
       }
     }
   }, {
     sequelize,
-    tableName: 'address',
+    tableName: 'discount_product',
     timestamps: false,
     indexes: [
       {
@@ -33,10 +33,10 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_address_user",
+        name: "FK_discount_product_discount",
         using: "BTREE",
         fields: [
-          { name: "id_user" },
+          { name: "id_discount" },
         ]
       },
     ]

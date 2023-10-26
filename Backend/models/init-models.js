@@ -4,6 +4,7 @@ var _address = require("./address");
 var _branch = require("./branch");
 var _category = require("./category");
 var _discount = require("./discount");
+var _discount_product = require("./discount_product");
 var _discount_user = require("./discount_user");
 var _history_change_point = require("./history_change_point");
 var _image = require("./image");
@@ -28,6 +29,7 @@ function initModels(sequelize) {
   var branch = _branch(sequelize, DataTypes);
   var category = _category(sequelize, DataTypes);
   var discount = _discount(sequelize, DataTypes);
+  var discount_product = _discount_product(sequelize, DataTypes);
   var discount_user = _discount_user(sequelize, DataTypes);
   var history_change_point = _history_change_point(sequelize, DataTypes);
   var image = _image(sequelize, DataTypes);
@@ -56,8 +58,8 @@ function initModels(sequelize) {
   category.hasMany(category, { as: "categories", foreignKey: "id_parent"});
   product.belongsTo(category, { as: "id_category_category", foreignKey: "id_category"});
   category.hasMany(product, { as: "products", foreignKey: "id_category"});
-  product.belongsTo(discount, { as: "id_discount_discount", foreignKey: "id_discount"});
-  discount.hasMany(product, { as: "products", foreignKey: "id_discount"});
+  discount_product.belongsTo(discount, { as: "id_discount_discount", foreignKey: "id_discount"});
+  discount.hasMany(discount_product, { as: "discount_products", foreignKey: "id_discount"});
   history_change_point.belongsTo(discount_user, { as: "id_discount_user_discount_user", foreignKey: "id_discount_user"});
   discount_user.hasMany(history_change_point, { as: "history_change_points", foreignKey: "id_discount_user"});
   history_change_point.belongsTo(order, { as: "id_order_order", foreignKey: "id_order"});
@@ -117,6 +119,7 @@ function initModels(sequelize) {
     branch,
     category,
     discount,
+    discount_product,
     discount_user,
     history_change_point,
     image,

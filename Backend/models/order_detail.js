@@ -1,44 +1,39 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('review', {
+  return sequelize.define('order_detail', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    id_product: {
+    id_product_detail: {
       type: DataTypes.STRING(15),
-      allowNull: false,
+      allowNull: true,
       references: {
-        model: 'product',
+        model: 'product_detail',
         key: 'id'
       }
     },
-    comment: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    star: {
+    id_order: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    id_user: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
-        model: 'user',
+        model: 'order',
         key: 'id'
       }
     },
-    create_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    price: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'review',
+    tableName: 'order_detail',
     timestamps: false,
     indexes: [
       {
@@ -50,17 +45,17 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_review_product",
+        name: "FK_orderdetail_order",
         using: "BTREE",
         fields: [
-          { name: "id_product" },
+          { name: "id_order" },
         ]
       },
       {
-        name: "FK_review_user",
+        name: "FK_orderdetail_productdetail",
         using: "BTREE",
         fields: [
-          { name: "id_user" },
+          { name: "id_product_detail" },
         ]
       },
     ]

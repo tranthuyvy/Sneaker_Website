@@ -1,14 +1,26 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('product_batch', {
+  return sequelize.define('discount', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    name: {
-      type: DataTypes.STRING(255),
+    value: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    expiration_date: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     create_at: {
@@ -24,17 +36,26 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    id_supplier: {
+    update_by: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
-        model: 'supplier',
+        model: 'staff',
         key: 'id'
       }
+    },
+    update_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    start_date: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'product_batch',
+    tableName: 'discount',
     timestamps: false,
     indexes: [
       {
@@ -46,17 +67,17 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_productBatch_Supplier",
-        using: "BTREE",
-        fields: [
-          { name: "id_supplier" },
-        ]
-      },
-      {
-        name: "FK_product_batch_staff",
+        name: "FK_discount_staff",
         using: "BTREE",
         fields: [
           { name: "create_by" },
+        ]
+      },
+      {
+        name: "FK_discount_staff_update",
+        using: "BTREE",
+        fields: [
+          { name: "update_by" },
         ]
       },
     ]

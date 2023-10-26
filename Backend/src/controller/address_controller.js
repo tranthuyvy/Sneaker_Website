@@ -12,7 +12,13 @@ class address_controller {
             const data = await Model.address.findAll({
                 where: { id_user: account.dataValues.id }
             })
-            res.send({data})
+            res.send({
+                data: {
+                    address: data,
+                    user: account
+                },
+                code: '002'
+            })
         } catch (error) {
             res.send(error)
         }
