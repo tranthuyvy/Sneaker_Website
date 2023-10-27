@@ -1,17 +1,29 @@
 import { useEffect, useState } from "react";
-import { Card, Pagination } from "@mui/material";
+import { Button, Card, Pagination, Menu, MenuItem } from "@mui/material";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import ItemProduct from "../Components/ProductCard";
 import axios from "../config/axios";
 import { getImage } from "../config/common";
 import Filter from "../Components/Filter";
+import { sortOptions } from "../Components/FilterData";
+
 const Homepage = (props) => {
   const lang = useSelector((state) => state.lang);
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
-  const pageSize = 9;
+  const pageSize = 12;
+  const [sortMenuOpen, setSortMenuOpen] = useState(null);
+
+  const handleSortMenuOpen = (event) => {
+    setSortMenuOpen(event.currentTarget);
+  };
+
+  const handleSortMenuClose = () => {
+    setSortMenuOpen(null);
+  };
+
   // useEffect(() => {
 
   //   getProduct().catch(err => {
@@ -45,17 +57,40 @@ const Homepage = (props) => {
   };
 
   return (
-    <div className="">
-      <div className="">
-        <div className="relative h-9">
-          <button className="right-10 absolute top-0">SORT</button>
+    <div className="flex">
+      <div className="flex-grow">
+        <div
+          className="grid grid-cols-10"
+          style={{ display: "grid", placeItems: "center" }}
+        >
+          <div className="flex-none col-span-9 border h-100"></div>
+          <div className="flex-none col-span-1 border h-100">
+            <Card className="">
+              <Button onClick={handleSortMenuOpen} className="absolute top-0">
+                SORT
+              </Button>
+              <Menu
+                anchorEl={sortMenuOpen}
+                keepMounted
+                open={Boolean(sortMenuOpen)}
+                onClose={handleSortMenuClose}
+              >
+                {sortOptions.map((option) => (
+                  <MenuItem key={option.name} onClick={handleSortMenuClose}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Card>
+          </div>
         </div>
+
         <div className="grid grid-cols-10">
           <div className="flex-none col-span-2 border h-100">
             <Filter />
           </div>
-          <div className="grow col-span-7">
-            <div className="grid grid-cols-3 gap-3 ">
+          <div className="grow col-span-8">
+            <div className="grid grid-cols-4 gap-4 ">
               {listProduct.length > 0
                 ? listProduct.map((item, index) => {
                     let product = {

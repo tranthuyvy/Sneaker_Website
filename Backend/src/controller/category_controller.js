@@ -2,7 +2,7 @@ import Model from "../config/sequelize";
 const CateforyModel = Model.category;
 const category = Model.category;
 const staff = Model.staff;
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 import auth from "../middleware/authenJWT";
 class category_controller {
   async get(req, res) {
@@ -85,8 +85,8 @@ class category_controller {
             let checkName = await category.findOne({
               where: {
                 name: name,
-                id: { [Op.ne]: id }
-              }
+                id: { [Op.ne]: id },
+              },
             });
             if (checkName?.dataValues) {
               return res.status(500).send({ code: "011" });
@@ -114,7 +114,7 @@ class category_controller {
       let { id_parent } = req.query;
 
       const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
-      const pageSize = parseInt(req.query.pageSize) || 10; // bao nhiêu nhà cung cấp trong 1 trang
+      const pageSize = parseInt(req.query.pageSize) || 20; // bao nhiêu nhà cung cấp trong 1 trang
       let startIndex = (page - 1) * pageSize;
       let endIndex = startIndex + pageSize;
 
