@@ -16,14 +16,6 @@ const Homepage = (props) => {
   const pageSize = 12;
   const [sortMenuOpen, setSortMenuOpen] = useState(null);
 
-  const handleSortMenuOpen = (event) => {
-    setSortMenuOpen(event.currentTarget);
-  };
-
-  const handleSortMenuClose = () => {
-    setSortMenuOpen(null);
-  };
-
   // useEffect(() => {
 
   //   getProduct().catch(err => {
@@ -54,6 +46,14 @@ const Homepage = (props) => {
 
   const handlePaginationChange = (event, page) => {
     fetchProducts(page);
+  };
+
+  const handleSortMenuOpen = (event) => {
+    setSortMenuOpen(event.currentTarget); 
+  };
+
+  const handleSortMenuClose = () => { 
+    setSortMenuOpen(null);
   };
 
   return (
