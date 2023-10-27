@@ -17,7 +17,6 @@ function Navbar() {
         setListCategory([...data.data]);
       }
     })().catch((err) => {
-      alert("Loi");
     });
   }, []);
   return (

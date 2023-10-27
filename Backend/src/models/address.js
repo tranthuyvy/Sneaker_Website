@@ -26,6 +26,22 @@ module.exports = function(sequelize, DataTypes) {
     phone: {
       type: DataTypes.STRING(10),
       allowNull: true
+    },
+    province: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    district: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    ward: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    street: {
+      type: DataTypes.STRING(45),
+      allowNull: true
     }
   }, {
     sequelize,
