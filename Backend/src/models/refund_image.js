@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_refund: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'refund',
         key: 'id'
@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     image: {
       type: DataTypes.STRING(500),
-      allowNull: false
+      allowNull: true
     }
   }, {
     sequelize,

@@ -48,6 +48,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    start_date: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     sequelize,

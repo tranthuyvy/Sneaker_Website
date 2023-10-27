@@ -18,6 +18,14 @@ module.exports = function(sequelize, DataTypes) {
         model: 'user',
         key: 'id'
       }
+    },
+    address: {
+      type: DataTypes.STRING(500),
+      allowNull: true
+    },
+    phone: {
+      type: DataTypes.STRING(10),
+      allowNull: true
     }
   }, {
     sequelize,

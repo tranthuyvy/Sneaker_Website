@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_product: {
       type: DataTypes.STRING(15),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'product',
         key: 'id'
@@ -17,15 +17,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     comment: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
     star: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     id_user: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'user',
         key: 'id'
@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     create_at: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }, {

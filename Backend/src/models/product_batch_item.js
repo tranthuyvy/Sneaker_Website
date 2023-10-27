@@ -9,11 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     id_product_detail: {
       type: DataTypes.STRING(15),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'product_detail',
         key: 'id'
@@ -21,11 +21,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     import_price: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     id_product_batch: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'product_batch',
         key: 'id'

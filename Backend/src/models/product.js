@@ -43,14 +43,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    id_discount: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'discount',
-        key: 'id'
-      }
-    },
     description: {
       type: DataTypes.STRING(255),
       allowNull: false
@@ -97,13 +89,6 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id_category" },
-        ]
-      },
-      {
-        name: "FK_product_discount",
-        using: "BTREE",
-        fields: [
-          { name: "id_discount" },
         ]
       },
       {
