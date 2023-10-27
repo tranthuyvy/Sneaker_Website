@@ -16,7 +16,8 @@
     "014": "Không tìm thấy ID",
     "015": "Mật khẩu không đúng định dạng",
     "016": "Vui lòng nhập Username",
-    "017": "Sản phẩm đã hết hàng, vui lòng giảm số lượng hoặc chọn sản phẩm khác",
+
+
     "100": "Vui lòng nhập email",
     "101": "Vui lòng nhập mật khẩu",
     "102": "Vui lòng nhập tên nhân viên",
@@ -49,7 +50,7 @@
     "129": "Mật khẩu phải nhiều hơn 6 kí tự",
     "130": "Vui lòng nhập chữ",
     "131": "Username không thể chứa khoảng trắng",
-
     "201": "Cập nhật thất bại",
-    "202": "Vô hiệu hóa thất bại"
+    "202": "Vô hiệu hóa thất bại",
+    "203": "Thời gian khuyến mãi không hợp lệ"
 }

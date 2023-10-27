@@ -16,7 +16,7 @@
     "014": "ID Not Found",
     "015": "Password is not in correct format",
     "016": "Please fill in Username fields",
-    "017": "The product is out of stock, please reduce the quantity or choose another product",
+
     "100": "Please fill in Email fields",
     "101": "Please fill in Password fields",
     "102": "Please fill in Staff Name fields",
@@ -49,7 +49,7 @@
     "129": "Password must be at least 6 characters",
     "130": "Please fill characters",
     "131": "Username cannot contain spaces",
-
     "201": "Updated failed",
-    "202": "Disable failed"
+    "202": "Disable failed",
+    "203": "Promotion period is not valid"
 }
