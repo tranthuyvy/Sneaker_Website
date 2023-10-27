@@ -110,6 +110,7 @@ class discount_controller {
     }
   };
 
+
   disableDiscount = async (req, res) => {
     let id = req.query.id;
     let checkIdDiscount = await discount.findOne({ where: { id } });
