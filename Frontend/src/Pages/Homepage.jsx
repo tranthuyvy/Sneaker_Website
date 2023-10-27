@@ -13,7 +13,9 @@ const Homepage = (props) => {
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
-  const pageSize = 9;
+  const pageSize = 12;
+  const [sortMenuOpen, setSortMenuOpen] = useState(null);
+
   // useEffect(() => {
 
   //   getProduct().catch(err => {
@@ -39,12 +41,21 @@ const Homepage = (props) => {
   };
 
   useEffect(() => {
-   
-    getProduct().catch(err => {
-      toast(lang['003']);
-      console.error(err)
-    })
-  }, [])
+    fetchProducts(currentPage);
+  }, []);
+
+  const handlePaginationChange = (event, page) => {
+    fetchProducts(page);
+  };
+
+  const handleSortMenuOpen = (event) => {
+    setSortMenuOpen(event.currentTarget); 
+  };
+
+  const handleSortMenuClose = () => { 
+    setSortMenuOpen(null);
+  };
+
   return (
     <div className="flex">
       <div className="flex-grow">
