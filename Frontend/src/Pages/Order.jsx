@@ -10,6 +10,7 @@ import CartItem from "../Components/CartItem";
 import axios from "../config/axios";
 import OrderTraker from "../Components/OrderTracker";
 import axiosApiInstance from "../config/api";
+const province_vi = require("../config/province_vi.json");
 const OrderSummary = (order) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +28,17 @@ const OrderSummary = (order) => {
   const [address, setAddress] = useState("");
   const [name, setName] = useState();
   const [phone, setPhone] = useState();
+  const [province, setProvince] = useState(0);
+  const [distrcit, setDistrict] = useState(0);
+  const [ward, setWard] = useState(0);
+  const [street, setStreet] = useState("");
+  const [listProvince, setListProvince] = useState([...province_vi]);
+  const [listDistrict, setListDictrict] = useState([
+    ...province_vi[0].districts,
+  ]);
+  const [listWard, setListWard] = useState([
+    ...province_vi[0].districts[0].wards,
+  ]);
   useEffect(() => {
     getData()
       .catch((err) => {
@@ -67,7 +79,7 @@ const OrderSummary = (order) => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      height: "30%",
+      height: "50%",
       width: "40%",
       padding: 0,
     },
@@ -80,71 +92,14 @@ const OrderSummary = (order) => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        {/* <div className="flex-column min-h-full">
-          <div className="grow h-40">
-            <div>
-              Name:{" "}
-              <input
-                className="w-full"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              ></input>
-            </div>
-            <div>
-              Phone:{" "}
-              <input
-                className="w-full"
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                }}
-              ></input>
-            </div>
-            <div>
-              Address:{" "}
-              <input
-                className="w-full"
-                value={address}
-                onChange={(e) => {
-                  setAddress(e.target.value);
-                }}
-              ></input>
-            </div>
-          </div>
-          <div className="grid justify-items-center flex-row">
-            <div
-              className="h-10 w-40 border"
-              style={{
-                backgroundColor: "#c9db34d4",
-                borderRadius: 10,
-                color: "white",
-              }}
-            >
-              Save
-            </div>
-            <div
-              className="h-10 w-40 border"
-              style={{
-                backgroundColor: "red",
-                borderRadius: 10,
-                color: "white",
-                right: 0,
-              }}
-            >
-              Close
-            </div>
-          </div>
-        </div> */}
-        <form class="w-full max-w-lg">
-          <div class="flex flex-wrap -mx-3 mb-6">
+        <form class="w-full min-h-full max-w-lg">
+          <div class="flex flex-wrap -mx-3 mb-6 h-40">
             <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label
                 class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 for="grid-first-name"
               >
-                First Name
+                Name
               </label>
               <input
                 class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -156,20 +111,6 @@ const OrderSummary = (order) => {
                 Please fill out this field.
               </p>
             </div>
-            <div class="w-full md:w-1/2 px-3">
-              <label
-                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                for="grid-last-name"
-              >
-                Last Name
-              </label>
-              <input
-                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-last-name"
-                type="text"
-                placeholder="Doe"
-              />
-            </div>
           </div>
           <div class="flex flex-wrap -mx-3 mb-6">
             <div class="w-full px-3">
@@ -177,14 +118,9 @@ const OrderSummary = (order) => {
                 class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 for="grid-password"
               >
-                Password
+                Phone
               </label>
-              <input
-                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-password"
-                type="password"
-                placeholder="******************"
-              />
+              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" />
               <p class="text-gray-600 text-xs italic">
                 Make it as long and as crazy as you'd like
               </p>
@@ -194,32 +130,31 @@ const OrderSummary = (order) => {
             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                for="grid-city"
-              >
-                City
-              </label>
-              <input
-                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-city"
-                type="text"
-                placeholder="Albuquerque"
-              />
-            </div>
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-              <label
-                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 for="grid-state"
               >
-                State
+                Province
               </label>
               <div class="relative">
                 <select
                   class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-state"
+                  onChange={(e) => {
+                    setProvince(e.target.value);
+                    setListDictrict([
+                      ...province_vi[e.target.value]?.districts,
+                    ]);
+                    setDistrict(0);
+                    setWard(0);
+                    setListWard([
+                      ...province_vi[e.target.value]?.districts[0].wards,
+                    ]);
+                  }}
                 >
-                  <option>New Mexico</option>
-                  <option>Missouri</option>
-                  <option>Texas</option>
+                  {listProvince.length > 0
+                    ? listProvince.map((item, index) => {
+                        return <option value={index}>{item.name}</option>;
+                      })
+                    : null}
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg
@@ -235,16 +170,70 @@ const OrderSummary = (order) => {
             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                for="grid-zip"
+                for="grid-state"
               >
-                Zip
+                District
               </label>
-              <input
-                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-zip"
-                type="text"
-                placeholder="90210"
-              />
+              <div class="relative">
+                <select
+                  class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-state"
+                  onClick={(e) => {
+                    setDistrict(e.target.value);
+                    setWard(0);
+                    setListWard([
+                      ...province_vi[province]?.districts[e.target.value].wards,
+                    ]);
+                  }}
+                >
+                  {listDistrict.length > 0
+                    ? listDistrict.map((item, index) => {
+                        return <option value={index}>{item.name}</option>;
+                      })
+                    : null}
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    class="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+              <label
+                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                for="grid-state"
+              >
+                Ward
+              </label>
+              <div class="relative">
+                <select
+                  class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-state"
+                  onClick={(e) => {
+                    setWard(e.target.value);
+                  }}
+                >
+                 {listWard.length > 0
+                    ? listWard.map((item, index) => {
+                        return <option value={index}>{item.name}</option>;
+                      })
+                    : null}
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    class="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </form>
@@ -431,7 +420,7 @@ const OrderSummary = (order) => {
   async function getAddress() {
     const data = (await axiosApiInstance.get("/api/v1/address/get")).data.data;
     setListAddress([...data.address]);
-    setAddressSelect(data.address[0].id);
+    setAddressSelect(data.address[0]?.id);
     setName(data.user?.name || null);
     setPhone(data.user?.phone || "0123456786");
   }
