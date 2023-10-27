@@ -22,8 +22,7 @@ function LoginForm() {
     if (event.target.name === "username") {
       setUsername(event.target.value);
       setUsernameError("");
-    } 
-    if (event.target.name === "password") {
+    } else if (event.target.name === "password") {
       setPassword(event.target.value);
       setPasswordError("");
     }

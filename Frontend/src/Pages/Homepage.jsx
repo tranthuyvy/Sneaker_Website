@@ -1,49 +1,26 @@
 import { useEffect, useState } from "react";
-import { Card, Pagination } from "@mui/material";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import {
+  Card,
+  Pagination,
+} from "@mui/material";
+import {toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import ItemProduct from "../Components/ProductCard";
 import axios from "../config/axios";
 import { getImage } from "../config/common";
 import Filter from "../Components/Filter";
 const Homepage = (props) => {
-  const lang = useSelector((state) => state.lang);
+  const lang = useSelector((state) => state.lang)
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
-  const pageSize = 9;
-  // useEffect(() => {
-
-  //   getProduct().catch(err => {
-  //     toast(lang['003']);
-  //     console.error(err)
-  //   })
-  // }, [])
-
-  const fetchProducts = (page) => {
-    axios
-      .get(`api/v1/product/get?page=${page}&pageSize=${pageSize}`)
-      .then((response) => {
-        const productsArray = Array.isArray(response.data.data)
-          ? response.data.data
-          : [];
-        setListProduct(productsArray);
-        setCurrentPage(page);
-        setTotalPages(response.data.totalPage);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi gọi API:", error);
-      });
-  };
-
   useEffect(() => {
-    fetchProducts(currentPage);
-  }, []);
-
-  const handlePaginationChange = (event, page) => {
-    fetchProducts(page);
-  };
-
+   
+    getProduct().catch(err => {
+      toast(lang['003']);
+      console.error(err)
+    })
+  }, [])
   return (
     <div className="">
       <div className="">
@@ -52,25 +29,23 @@ const Homepage = (props) => {
         </div>
         <div className="grid grid-cols-10">
           <div className="flex-none col-span-2 border h-100">
-            <Filter />
+            <Filter/>
           </div>
           <div className="grow col-span-7">
             <div className="grid grid-cols-3 gap-3 ">
-              {listProduct.length > 0
-                ? listProduct.map((item, index) => {
-                    let product = {
-                      id: item.id,
-                      title: item.name,
-                      price: item.product_price,
-                      discountPersent: item.id_discount_discount?.value || 0,
-                      discountedPrice:
-                        item.product_price -
-                        (item.id_discount_discount?.value || 0),
-                      status: 0,
-                      imageUrl: getImage(item),
-                    };
-                    return <ItemProduct product={product}></ItemProduct>;
-                  })
+              {listProduct.length > 0 ?
+                listProduct.map((item, index) => {
+                  let product = {
+                    id: item.id,
+                    title: item.name,
+                    price: item.product_price,
+                    discountPersent: item.id_discount_discount?.value || 0,
+                    discountedPrice: item.product_price - (item.id_discount_discount?.value || 0),
+                    status: 0,
+                    imageUrl: getImage(item)
+                  }
+                  return <ItemProduct product={product}></ItemProduct>
+                })
                 : null}
             </div>
             <div>
@@ -81,7 +56,7 @@ const Homepage = (props) => {
                     size="medium"
                     page={currentPage}
                     color="primary"
-                    onChange={handlePaginationChange}
+                    // onChange={handlePaginationChange}
                     showFirstButton
                     showLastButton
                   />
@@ -91,18 +66,21 @@ const Homepage = (props) => {
           </div>
         </div>
       </div>
+
     </div>
   );
-  // async function getProduct() {
-  //   let data = (await axios.get(`/api/v1/product/get?page=${currentPage}`)).data;
-
-  //   if (data.code.localeCompare("002") != 0) {
-  //     toast(lang[data.code])
-  //   }
-  //   else {
-  //     setListProduct([...data.data])
-  //   }
-  // }
+  async function getProduct() {
+    let data = (await axios.get(`/api/v1/product/get?page=${currentPage}`)).data;
+  
+    if (data.code.localeCompare("002") != 0) {
+      toast(lang[data.code])
+    }
+    else {
+      setListProduct([...data.data])
+    }
+  }
+  
 };
+
 
 export default Homepage;
