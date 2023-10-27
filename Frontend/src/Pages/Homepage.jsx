@@ -85,12 +85,12 @@ const Homepage = (props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-10">
+        <div className="grid grid-cols-11">
           <div className="flex-none col-span-2 border h-100">
             <Filter/>
           </div>
-          <div className="grow col-span-7">
-            <div className="grid grid-cols-3 gap-3 ">
+          <div className="grow col-span-9">
+            <div className="grid grid-cols-4 gap-4 ">
               {listProduct.length > 0
                 ? listProduct.map((item, index) => {
                     let product = {
@@ -116,7 +116,7 @@ const Homepage = (props) => {
                     size="medium"
                     page={currentPage}
                     color="primary"
-                    // onChange={handlePaginationChange}
+                    onChange={handlePaginationChange}
                     showFirstButton
                     showLastButton
                   />
@@ -129,16 +129,16 @@ const Homepage = (props) => {
 
     </div>
   );
-  async function getProduct() {
-    let data = (await axios.get(`/api/v1/product/get?page=${currentPage}`)).data;
+  // async function getProduct() {
+  //   let data = (await axios.get(`/api/v1/product/get?page=${currentPage}`)).data;
   
-    if (data.code.localeCompare("002") != 0) {
-      toast(lang[data.code])
-    }
-    else {
-      setListProduct([...data.data])
-    }
-  }
+  //   if (data.code.localeCompare("002") != 0) {
+  //     toast(lang[data.code])
+  //   }
+  //   else {
+  //     setListProduct([...data.data])
+  //   }
+  // }
   
 };
 
