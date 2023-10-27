@@ -35,12 +35,12 @@ const CartItem = ({ detail, showButton }) => {
     // window.location.reload();
   };
   return (
-    <div className={`p-5 shadow-lg border rounded-md ${detail.isValid? 'border-neutral-200': 'border-red-500'}`}>
+    <div className={`p-2 shadow-lg rounded-md  ${detail.isValid ? 'border-neutral-200': 'border-red-500'} border-2`} >
       <div className="flex items-center">
         <div className="w-[5rem] h-[5rem] lg:w-[9rem] lg:h-[9rem] ">
           <img
             className="w-full h-full object-cover object-top"
-            src={getImage(detail)}
+            src={getImage(detail.id_product_product)}
             alt="Product image"
             loading="lazy"
           />

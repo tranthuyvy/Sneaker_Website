@@ -76,9 +76,8 @@ const Cart = () => {
               </div>
 
               <Button
-                onClick={handleCheckOut}
+                onClick={() => handleCheckOut()}
                 variant="contained"
-                type="submit"
                 sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}
               >
                 Check Out
@@ -104,8 +103,8 @@ const Cart = () => {
     return quantity;
   }
   function isIdInList(id, list) {
-    return list.some((item) => item.id === id);
-  };
+    return list.some((item) => item.id.localeCompare(id) == 0);
+  }
   function handleCheckOut() {
     (async () => {
       let data = (
@@ -117,8 +116,9 @@ const Cart = () => {
       ).data;
       if (!data.flag) {
         const li = listCart;
-        
-        setListCart(li.map((item) => {
+        setListCart(
+          li.map((item) => {
+            console.log({ ...item, isValid: !isIdInList(item.id, data.listProduct) })
             return { ...item, isValid: !isIdInList(item.id, data.listProduct) };
           })
         );

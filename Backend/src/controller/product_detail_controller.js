@@ -41,19 +41,19 @@ class product_detail_controller {
                         model: Model.product_batch_item,
                         as: "product_batch_items",
                         attributes: [[fn('SUM', literal('product_batch_items.quantity')), 'product_batch_item_quantity']],
+                        group: ['id_product_detail'],
                     },
                     {
                         model: Model.order_detail,
                         as: "order_details",
                         attributes: [[fn('SUM', literal('order_details.quantity')), 'order_quantity']],
+                        group: [`${literal('order_details.id_product_detail')}`]
                     },
                 ],
             });
-            let batch_quantity = detail.dataValues.product_batch_items[0]?.dataValues.product_batch_item_quantity
-            let order_quantity = detail.dataValues.order_details[0]?.dataValues.order_quantity
+            let batch_quantity = detail?.product_batch_items[0]?.dataValues.product_batch_item_quantity || 0
+            let order_quantity = detail?.order_details[0]?.dataValues.order_quantity || 0
             const data = { ...detail.dataValues, quantity: batch_quantity - order_quantity }
-            delete data.product_batch_items
-            delete data.order_details
             res.status(200).send({
                 code: '002',
                 data: data
@@ -62,7 +62,6 @@ class product_detail_controller {
             console.log(error);
             res.status(500).send({
                 code: '001',
-
             })
         }
     }

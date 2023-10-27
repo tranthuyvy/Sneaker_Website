@@ -15,8 +15,8 @@ async function checkInventory(list) {
             attributes: [[fn('SUM', col('quantity')), 'quantity']],
             group: ['id_product_detail'],
         })
-        let limit = batchItem.dataValues.quantity - orderItem.dataValues.quantity
-        if (limit < i.quantity) {
+        let limit = batchItem?.dataValues.quantity || 0 - orderItem?.dataValues.quantity || 0
+        if (limit < i.quantity || limit==0) {
             flag = false
             listProduct.push({ id: i.id_product_detail, limit })
         }
