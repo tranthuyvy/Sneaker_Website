@@ -2,27 +2,70 @@ import { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "../config/axios";
+import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
+import "./Navbar.css";
+
 function Navbar() {
-  const [isNavigation, setIsNavigation] = useState(false);
+  // const [isNavigation, setIsNavigation] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [listCategory, setListCategory] = useState([]);
+  const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [isCardVisible, setCardVisible] = useState(false);
   const lang = useSelector((state) => state.lang);
+
+  const handleCategoryHover = (category) => {
+    setHoveredCategory(category);
+  };
+
+  const handleCategoryMouseLeave = () => {
+    setHoveredCategory(null);
+  };
+
   const handleShowMenu = () => {
     setShowMenu(!showMenu);
   };
+
   useEffect(() => {
     (async () => {
       const data = (await axios.get("/api/v1/category/get")).data;
-      if (data.code.localeCompare("002") == 0) {
-        setListCategory([...data.data]);
+      if (data.code.localeCompare("002") === 0) {
+        const sortedCategories = sortCategoriesByParent(data.data);
+        console.log(data.data);
+        setListCategory(sortedCategories);
       }
     })().catch((err) => {
     });
   }, []);
+
+  const sortCategoriesByParent = (categories) => {
+    const sortedCategories = [];
+    const categoryMap = {};
+
+    categories.forEach((category) => {
+      categoryMap[category.id] = category;
+      category.children = [];
+    });
+
+    categories.forEach((category) => {
+      if (category.id_parent === 1) {
+        if (category.id !== 1) {
+          sortedCategories.push(category);
+        }
+      } else {
+        const parentCategory = categoryMap[category.id_parent];
+        if (parentCategory) {
+          parentCategory.children.push(category);
+        }
+      }
+    });
+
+    return sortedCategories;
+  };
+
   return (
     <Fragment>
       {/* Navigation bar */}
-      <nav className="bg-blue-700 text-white border-b border-gray-200 lg:px-20 px-2">
+      <nav className="bg-white-700 text-white border-b border-gray-200 lg:px-20 px-2">
         <div className="mx-auto px-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
@@ -30,28 +73,53 @@ function Navbar() {
               <img
                 src="https://cdn.printgo.vn/uploads/media/774255/logo-giay-1_1586510617.jpg"
                 alt="Ecommerce"
-                className="h-8 w-8 mr-2"
+                className="h-14 w-14 mr-2"
               />
-              <span className="font-bold text-white text-lg">Ecommerce</span>
+              <span className="font-bold text-black text-lg">Sneaker</span>
             </Link>
-
-            {/* Navigation menu */}
-            <ul className="hidden md:flex items-center space-x-4">
+            <ul className="hidden md:flex items-center space-x-10">
               {listCategory.length > 0
-                ? listCategory.map((item, index) => {
-                    return (
-                      <li key={index}>
-                        <Link
-                          to={`/category/${item.name}`}
-                          className="font-medium text-white hover:text-black"
+                ? listCategory.map((item, index) => (
+                    <li
+                      key={index}
+                      onMouseEnter={() => handleCategoryHover(item)}
+                      onMouseLeave={handleCategoryMouseLeave}
+                    >
+                      <Link
+                        to={`/category/${item.name}`}
+                        className={`font-medium text-black hover:text-purple-700`}
+                      >
+                        {item.name}
+                      </Link>
+                      {item.children.length > 0 && (
+                        <div
+                          className={`${
+                            hoveredCategory === item ? "block" : "hidden"
+                          } relative text-sm text-gray-500`}
                         >
-                          {`${item.name}`}
-                        </Link>
-                      </li>
-                    );
-                  })
+                          <div className="parent">
+                            <div className="card grid justify-center">
+                              <ul className="grid grid-cols-3 gap-4 max-w-screen-xl w-full">
+                                {item.children.map((child, childIndex) => (
+                                  <li key={childIndex}>
+                                    <Link
+                                      to={`/category/${child.name}`}
+                                      className="block font-medium text-gray-900"
+                                    >
+                                      {child.name}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </li>
+                  ))
                 : null}
             </ul>
+
             {/* Search bar */}
             <form className="hidden md:block flex-grow max-w-sm">
               <div className="relative w-full">
@@ -82,7 +150,7 @@ function Navbar() {
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
-                stroke="currentColor"
+                stroke="purple"
                 className="w-8 h-8"
               >
                 <path
@@ -96,24 +164,24 @@ function Navbar() {
                 className="font-medium text-white hover:text-black"
               >
                 <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-8 h-8, ml-3"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                />
-              </svg>
-              </Link>   
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="purple"
+                  className="w-8 h-8, ml-3"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                  />
+                </svg>
+              </Link>
             </div>
 
             {/* Mobile navigation menu */}
-            <div className="md:hidden flex items-center">
+            {/* <div className="md:hidden flex items-center">
               <button onClick={handleShowMenu} className="text-white p-2">
                 <svg
                   className="h-6 w-6"
@@ -127,13 +195,13 @@ function Navbar() {
                   <path d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>
 
       {/* Mobile navigation menu */}
-      {showMenu && (
+      {/* {showMenu && (
         <div className="md:hidden bg-white">
           <ul className="flex flex-col py-4 space-y-2 px-5">
             <li>
@@ -186,7 +254,7 @@ function Navbar() {
             </li>
           </ul>
         </div>
-      )}
+      )} */}
     </Fragment>
   );
 }
