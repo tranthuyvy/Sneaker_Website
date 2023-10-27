@@ -1,0 +1,14 @@
+code,vi,en
+000,Đăng nhập thành công,Logged in successfully
+001,Đăng nhập thất bại,Login failed
+002,Lấy dữ liệu thành công,Successful data
+003,Lấy dữ liệu thất bại,Get data failure
+004,Thêm dữ liệu thành công,Add successful data
+005,Thêm dữ liệu thất bại,Add data failure
+006,Lỗi hệ thống,System error
+007,Email đã tồn tại trong hệ thống
+008,Tạo tài khoản nhân viên thành công 
+009,Nhập thiếu dữ liệu
+010,Email không đúng định dạng
+011,Tên sản phẩm đã tồn tại
+012,Thêm sản phẩm thành công
