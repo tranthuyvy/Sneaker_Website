@@ -18,6 +18,9 @@ import { Box, Avatar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import api from '../../../config/api'
+import errorMessagesEn from "../../../Lang/en.json";
+import errorMessagesVi from "../../../Lang/vi.json";
+import { toast, ToastContainer } from "react-toastify";
 
 const DetailProduct = () => {
     const isLargeScreen = useMediaQuery("(min-width:1200px)");
@@ -25,8 +28,11 @@ const DetailProduct = () => {
     const jwt = localStorage.getItem("jwt");
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const lang = useSelector((state) => state);
+    const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
     // const { customersProduct } = useSelector((store) => store);
     const [customersProduct, setCustomersProduct] = useState([])
+    const [listReview, setListReview] = useState([])
     const [inputs, setInputs] = useState([{ id: 1, value: '' }]);
     const [idSize, setIdSize] = useState(1)
     //user Params
@@ -35,6 +41,7 @@ const DetailProduct = () => {
     useEffect(() => {
         const data = { productId: Number(productId), jwt };
         fetchApi();
+        fetchApiReview();
     }, [productId]);
 
     const fetchApi = async () => {
@@ -43,20 +50,14 @@ const DetailProduct = () => {
         if (res.data && res.data.data) {
             setCustomersProduct(res.data.data)
         }
-
-        // if (res && res.data && res.data.data) {
-        //     let data = res.data.data
-        //     setName(data.name);
-        //     setBrand(data.id_branch);
-        //     setDescription(data.description);
-        //     setPrice(data.product_price);
-        //     setCategory(data.id_category);
-        //     setImage(data.images);
-        //     setListImage(data.images);
-        // }
-        // setListCategory(res.data.data);
     }
-
+    const fetchApiReview = async () => {
+        let res = await api.get(`/api/v1/review/get?id_product=${id}`);
+        console.log("Check review data: ", res.data);
+        if (res && res.data) {
+            setListReview(res.data.data)
+        }
+    }
     const [value, setValue] = React.useState(4.5);
 
     const totalRatings = (customersProduct.product?.reviews || []).reduce(
@@ -70,7 +71,7 @@ const DetailProduct = () => {
         const newInputs = inputs.filter(input => input.id !== id);
         setInputs(newInputs);
     };
-    const handlePrintValues = () => {
+    const handlePrintValues = async () => {
         let check = true;
         for (let i = 0; i < inputs.length; i++) {
             const item = inputs[i];
@@ -85,6 +86,31 @@ const DetailProduct = () => {
                 const item = inputs[i];
                 console.log(`Input ID: ${item.id}, Value: ${item.value}`);
                 //Gọi api thêm 
+                try {
+                    const response = await api.post("/api/v1/product_detail/create", {
+                        idProduct: id,
+                        size: item.value,
+                    });
+                    if (response && (response.status === 200)) {
+                        toast.success(errorMessages["008"], {
+                            autoClose: 1000,
+                        });
+                        dispatch({ type: "LANG_ENG" });
+                        fetchApi();
+                        setInputs([{ id: 1, value: '' }]);
+                        //   navigate("/admin/supplier");
+                    }
+                } catch (error) {
+                    if (error.response && (error.response.status === 500)) {
+                        toast.error(errorMessages[error.response.data.code], {
+                            autoClose: 1000,
+                        });
+                    } else {
+                        toast.error(errorMessages["103"], {
+                            autoClose: 1000,
+                        });
+                    }
+                }
             }
         }
 
@@ -120,18 +146,28 @@ const DetailProduct = () => {
             </div>
         ));
     };
+
+    const calStar = (list) => {
+        let sum = 0;
+        for (let i = 0; i < list.length; i++) {
+
+            sum += list[i].star
+        }
+        return sum / list.length;
+    }
+
     //----------------Xử lý cho input size-----------------------------
     return (
         <div className="px-5 lg:px-20">
-            <h1 className="text-xl p-5 shadow-lg mb-8 font-bold">
-                Rate & Review Product
+            <h1 className="text-xl p-5 shadow-lg mb-8 font-bold text-center">
+                PRODUCT DETAIL
             </h1>
             <Grid sx={{ justifyContent: "space-between" }} container>
                 <Grid
                     className="flex lg:items-center shadow-lg border rounded-md p-5"
                     item
                     xs={12}
-                    lg={7.8}
+                    lg={8}
                 >
                     <div>
                         <img
@@ -140,6 +176,7 @@ const DetailProduct = () => {
                             alt=""
                         />
                     </div>
+
                     <div className="ml-3 lg:ml-5 space-y-2 lg:space-y-4">
                         <p className="lg:text-lg font-bold">
                             {customersProduct?.name}
@@ -149,44 +186,43 @@ const DetailProduct = () => {
                         </p>
 
                         <div className="flex space-x-2 items-center">
-                            <p className="text-red-600 font-semibold text-lg">
-                                ${customersProduct.product?.discountedPrice}
-                            </p>
-                            {customersProduct.product?.discountedPrice !==
-                                customersProduct.product?.price &&
-                                customersProduct.product?.price !== 0 && (
-                                    <p className="opacity-50 line-through">
-                                        ${customersProduct?.product_price}
-                                    </p>
-                                )}
-                            {customersProduct.product?.discountPersent !== 0 && (
-                                <p className="text-green-600 font-semibold">
-                                    {customersProduct.product?.discountPersent}% off
+                            {/* <p className="text-red-600 font-semibold text-lg">
+                                ${customersProduct?.product_price}
+                            </p> */}
+                            {/* {
+                                <p className="opacity-50 line-through">
+                                    ${customersProduct?.product_price}
                                 </p>
-                            )}
+                            } */}
+                            {
+                                <p className="text-green-600 font-semibold">
+                                    $ {customersProduct?.product_price}
+                                </p>
+                            }
                         </div>
                         <p className="font-semibold text-sm">
-                            Size: 30,31,32,33,34,46,47s
-                            {/* {customersProduct.product?.sizes[0].name} */}
+                            Size:&nbsp;
+                            {customersProduct?.product_details && customersProduct.product_details.map((item, index) => {
+                                return (
+                                    item.size + " "
+                                )
+                            })
+                            }
                         </p>
-                        {customersProduct.product?.color && (
-                            <p className="font-semibold text-sm">
-                                Color: {customersProduct.product?.color}
-                            </p>
-                        )}
+
                         <div className="flex items-center space-x-3">
                             <Rating
                                 name="read-only"
-                                value={averageRating}
+                                value={listReview && listReview.length > 0 && calStar(listReview)}
                                 precision={0.5}
                                 readOnly
                             />
 
                             <p className="opacity-60 text-sm hover:text-indigo-500">
-                                {customersProduct.product?.reviews.length} Ratings
+                                {listReview && listReview.length > 0 && calStar(listReview)} Ratings
                             </p>
                             <p className="ml-3 text-sm font-medium hover:text-indigo-500">
-                                {customersProduct.product?.reviews.length} reviews
+                                {listReview && listReview.length} reviews
                             </p>
                         </div>
                     </div>
@@ -197,8 +233,8 @@ const DetailProduct = () => {
                     <div className={`${!isLargeScreen ? "py-10" : ""} space-y-5`}>
                         <div className="shadow-md border rounded-md p-5" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                             <Typography className="font-semibold" component="legend">
-                                {customersProduct.product?.reviews && customersProduct.product?.reviews.length > 0 ?
-                                    (customersProduct.product?.reviews.map((item) => (
+                                {listReview && listReview.length > 0 ?
+                                    (listReview.map((item) => (
                                         <div className="p-5">
                                             <Grid container spacing={2} gap={4}>
                                                 <Grid item xs={1}>
@@ -206,8 +242,8 @@ const DetailProduct = () => {
                                                         <Avatar
                                                             className="text-white"
                                                             sx={{ width: 40, height: 40, bgcolor: "#9155FD" }}
-                                                            alt={item.user.firstName}
-                                                            src=""
+                                                            // alt={item.user.firstName}
+                                                            src="item."
                                                         >
                                                             {/* {item.user.firstName[0].toUpperCase()} */}
                                                         </Avatar>
@@ -217,10 +253,10 @@ const DetailProduct = () => {
                                                     <div className="space-y-2">
                                                         <div className="flex justify-between">
                                                             <p className="font-semibold text-lg">
-                                                                {item.user.firstName}
+                                                                {item?.id_user_user && item.id_user_user.name}
                                                             </p>
                                                             <p className="opacity-70 mt-1">
-                                                                {format(new Date(item.createdAt), "dd/MM/yyyy")}
+                                                                {format(new Date(item.create_at), "dd/MM/yyyy")}
                                                             </p>
                                                         </div>
                                                         <div>
@@ -235,7 +271,7 @@ const DetailProduct = () => {
                                                                 readOnly
                                                             />
                                                         </div>
-                                                        <p>{item.review}</p>
+                                                        <p>{item.comment}</p>
                                                     </div>
                                                 </Grid>
                                             </Grid>

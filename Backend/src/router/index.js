@@ -10,6 +10,7 @@ import order_router from "./order";
 import discount_user_router from "./discount_user";
 import supplier_router from "./supplier";
 import brand_router from "./brand";
+import review_router from "./review"
 import address_router from "./address";
 
 
@@ -27,4 +28,5 @@ export default function router(app) {
   app.use("/api/v1/discount_user", discount_user_router)
   app.use("/api/v1/supplier", supplier_router)
   app.use("/api/v1/brand", brand_router)
+  app.use("/api/v1/review", review_router)
 }

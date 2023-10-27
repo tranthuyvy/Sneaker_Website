@@ -9,11 +9,11 @@ class discount_controller {
   };
 
   createDiscount = async (req, res) => {
-    let { value, type, expiration_date } = req.body;
+    let { value, type, expiration_date, start_date, listProduct } = req.body;
     let create_by = "";
 
     let id_account = auth.tokenData(req)?.id; //cái này chỉ là id_account
-    if (!value || !type || !expiration_date || !id_account) {
+    if (!value || !type || !expiration_date || !id_account || !start_date) {
       return res.status(500).send({ code: "009" });
     }
 
@@ -24,18 +24,48 @@ class discount_controller {
     }
     //Điều chỉnh múi giờ cho đúng
     const dateObject = new Date(expiration_date);
-    const utcDate = new Date(
+    const utcDateExpiration = new Date(
       Date.UTC(
         dateObject.getFullYear(),
         dateObject.getMonth(),
         dateObject.getDate()
       )
     );
-    console.log("Múi giờ: ", utcDate);
+    // console.log("Múi giờ: ", utcDate);
+
+    //Điều chỉnh múi giờ cho đúng
+    const dateObjectNew = new Date(start_date);
+    const utcDateStart = new Date(
+      Date.UTC(
+        dateObjectNew.getFullYear(),
+        dateObjectNew.getMonth(),
+        dateObjectNew.getDate()
+      )
+    );
+    // console.log("Múi giờ: ", utcDateNew);
+    console.log("Start: ", utcDateStart.getFullYear(), "End:", utcDateExpiration.getFullYear());
+    if (Number(utcDateStart.getFullYear()) > Number(utcDateExpiration.getFullYear())) {
+      return res.status(200).send({ code: "203" });
+    }
+    else {
+
+      if (utcDateStart.getMonth() > utcDateExpiration.getMonth()) {
+        return res.status(200).send({ code: "203" });
+      }
+      else {
+
+        if (utcDateStart.getDay() >= utcDateExpiration.getDay()) {
+          return res.status(200).send({ code: "203" });
+        }
+        else {
+          console.log("Hợp lệ");
+        }
+      }
+    }
     // console.log(">>> Check id của staff: ", dataStaff.dataValues);
     type = Number(type);
     value = Number(value);
-    console.log(value, type, utcDate, id_account);
+    console.log(value, type, id_account);
 
     //Nếu type=1 thì là khuyến mãi theo tiền
     //Nếu type=2 thì khuyến mãi theo phần trăm
@@ -44,13 +74,14 @@ class discount_controller {
       console.log("value sau khi km: ", value);
     }
     try {
-      await discount.create({
-        value,
-        type,
-        expiration_date: utcDate,
-        create_by,
-        status: 1,
-      });
+      // let id_discount = await discount.create({
+      //   value,
+      //   type,
+      //   expiration_date: utcDate,
+      //   start_date: utcDateNew,
+      //   create_by,
+      //   status: 1,
+      // });
       console.log("Thành công rồi bro");
       return res.status(200).send({ code: "004" });
     } catch (e) {
