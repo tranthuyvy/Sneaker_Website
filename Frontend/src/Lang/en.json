@@ -51,5 +51,7 @@
     "131": "Username cannot contain spaces",
     "201": "Updated failed",
     "202": "Disable failed",
-    "203": "Promotion period is not valid"
+    "203": "Promotion period is not valid",
+    "204": "Delete success",
+    "205": "Delete failed,"
 }

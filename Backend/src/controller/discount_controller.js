@@ -3,13 +3,14 @@ import auth from "../middleware/authenJWT";
 
 const discount = Model.discount;
 const staff = Model.staff;
+const discount_product = Model.discount_product;
 class discount_controller {
   hello = (req, res) => {
     return res.status(200).send("Hello from discount");
   };
 
   createDiscount = async (req, res) => {
-    let { value, type, expiration_date, start_date, listProduct } = req.body;
+    let { value, type, expiration_date, start_date } = req.body;
     let create_by = "";
 
     let id_account = auth.tokenData(req)?.id; //cái này chỉ là id_account
@@ -74,14 +75,14 @@ class discount_controller {
       console.log("value sau khi km: ", value);
     }
     try {
-      // let id_discount = await discount.create({
-      //   value,
-      //   type,
-      //   expiration_date: utcDate,
-      //   start_date: utcDateNew,
-      //   create_by,
-      //   status: 1,
-      // });
+      let id_discount = await discount.create({
+        value,
+        type,
+        expiration_date: utcDate,
+        start_date: utcDateNew,
+        create_by,
+        status: 1,
+      });
       console.log("Thành công rồi bro");
       return res.status(200).send({ code: "004" });
     } catch (e) {
@@ -130,6 +131,85 @@ class discount_controller {
       return res.status(404).send({ code: "014" });
     }
   };
+
+  applyDiscount = async (req, res) => {
+    let { listProduct } = req.body;
+    let id_discount = req.query.id;
+    try {
+      if (listProduct.length > 0) {
+
+        for (let i = 0; i < listProduct.length; i++) {
+          let checkExist = await discount_product.findOne({ where: { id_discount, id_product: listProduct[i].id } })
+          console.log(checkExist);
+          if (checkExist && checkExist.dataValues && checkExist.dataValues.id) {
+            console.log("Sản phẩm đã có trong db");
+          }
+          else {
+            await discount_product.create({ id_discount, id_product: listProduct[i].id, status: 1 })
+          }
+          // 
+        }
+        return res.status(200).send({ code: "004" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(404).send({ code: "005" });
+    }
+
+  }
+  deleteProductByIdDiscount = async (req, res) => {
+
+    try {
+      let id_discount = req.query.id;
+      if (id_discount) {
+        await discount_product.destroy({
+          where: {
+            id: id_discount
+          },
+        })
+        return res.status(200).send({ code: "204" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(404).send({ code: "205" });
+    }
+  }
+  getApplyDiscount = async (req, res) => {
+    try {
+      let id_discount = req.query.id;
+      let option = [
+        {
+          model: Model.product,
+          as: "id_product_product",
+          include: [{
+            model: Model.branch,
+            as: 'id_branch_branch'
+          },
+          {
+            model: Model.image,
+            as: "images"
+          },
+          {
+            model: Model.category,
+            as: "id_category_category"
+          }]
+
+        }
+      ]
+      if (id_discount) {
+        let data = await discount_product.findAll({ where: { id_discount, status: 1 }, include: option });
+        return res
+          .status(200)
+          .send({ code: "002", data });
+      }
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .send({ code: "003" });
+    }
+
+  }
 }
 
 export default new discount_controller();
