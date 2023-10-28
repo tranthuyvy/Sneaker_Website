@@ -57,7 +57,11 @@ class order_controller {
     }
     async create(req, res) {
         try {
-            // const id_user = auth.tokenData(req).id;
+            const email = auth.tokenData(req).email;
+            const account = await Model.user.findOne({
+                where: { email: email }
+            })
+            let id_user = account.dataValues.id
             const { id_address, listDetail, payment_method } = req.body;
             let totalPrice = 0,
                 totalItem = 0,
@@ -75,14 +79,14 @@ class order_controller {
                     status_payment: 0,
                     status: 1,
                     create_at: new Date(),
-                    id_user: 2,
+                    id_user,
                     id_address,
                     payment_method
                 })
                 let detail = await Promise.all(listDetail.map(item => {
                     return orderDetail.create({ ...item, id_order: order.dataValues.id })
                 }))
-                res.status(200).send({ code: '004' })
+                res.status(200).send({ code: '019' })
             }
             else {
                 res.status(200).send({ code: '017', data: listProduct })
