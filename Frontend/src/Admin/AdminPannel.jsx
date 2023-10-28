@@ -45,6 +45,7 @@ import AllBrand from "./componets/Brand/allBrand";
 import CreateBrand from "./componets/Brand/createBrand";
 import UpdateBrand from "./componets/Brand/updateBrand";
 import DetailProduct from "./componets/DetailProduct/DetailProduct";
+import ApplyDiscount from "./componets/Discount/applyDiscount";
 
 const drawerWidth = 240;
 
@@ -197,6 +198,7 @@ export default function AdminPannel() {
 
             <Route path="/discount" element={<AllDiscount />}></Route>
             <Route path="/discount/create" element={<CreateDiscount />}></Route>
+            <Route path="/discount/detail/:id" element={<ApplyDiscount />}></Route>
 
             <Route path="/supplier" element={<AllSupplier />}></Route>
             <Route path="/supplier/create" element={<CreateSupplier />}></Route>
