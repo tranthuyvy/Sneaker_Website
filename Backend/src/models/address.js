@@ -39,8 +39,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(45),
       allowNull: true
     },
-    street: {
-      type: DataTypes.STRING(45),
+    recipient_name: {
+      type: DataTypes.STRING(100),
       allowNull: true
     }
   }, {

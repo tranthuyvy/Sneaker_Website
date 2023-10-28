@@ -22,7 +22,24 @@ class address_controller {
         } catch (error) {
             res.send(error)
         }
-
+    }
+    async create(req, res) {
+        try {
+            const body = req.body;
+            const email = auth.tokenData(req).email;
+            const account = await Model.user.findOne({
+                where: { email: email }
+            })
+            let id_user = account.dataValues.id
+            const data = await Model.address.create({ ...body, id_user })
+            res.send({
+                data: data,
+                code: '018'
+            })
+        } catch (error) {
+            console.log(error)
+            res.send({ code: '001' })
+        }
     }
 }
 export default new address_controller()

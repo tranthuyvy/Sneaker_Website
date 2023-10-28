@@ -17,6 +17,8 @@
     "015": "Password is not in correct format",
     "016": "Please fill in Username fields",
     "017": "The product is out of stock, please reduce the quantity or choose another product",
+    "018": "Address added successfully",
+    "019": "Order added successfully",
     "100": "Please fill in Email fields",
     "101": "Please fill in Password fields",
     "102": "Please fill in Staff Name fields",

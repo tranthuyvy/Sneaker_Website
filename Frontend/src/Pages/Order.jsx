@@ -4,8 +4,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
+import validator from "validator";
 // import { getOrderById, updatePaymentStatus } from "../../../Redux/Customers/Order/Action";
-import { findQuantity, getCart } from "../config/common";
+import { findQuantity, getCart, setCart } from "../config/common";
 import CartItem from "../Components/CartItem";
 import axios from "../config/axios";
 import OrderTraker from "../Components/OrderTracker";
@@ -13,7 +14,7 @@ import axiosApiInstance from "../config/api";
 const province_vi = require("../config/province_vi.json");
 const OrderSummary = (order) => {
   const navigate = useNavigate();
-  const location = useLocation();
+
   const dispatch = useDispatch();
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,12 +27,12 @@ const OrderSummary = (order) => {
   const [listAddress, setListAddress] = useState([]);
   const [addressSelect, setAddressSelect] = useState("");
   const [address, setAddress] = useState("");
-  const [name, setName] = useState();
-  const [phone, setPhone] = useState();
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [province, setProvince] = useState(0);
-  const [distrcit, setDistrict] = useState(0);
+  const [district, setDistrict] = useState(0);
   const [ward, setWard] = useState(0);
-  const [street, setStreet] = useState("");
+  const [addressName, setAddressName] = useState("");
   const [listProvince, setListProvince] = useState([...province_vi]);
   const [listDistrict, setListDictrict] = useState([
     ...province_vi[0].districts,
@@ -92,51 +93,80 @@ const OrderSummary = (order) => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <form class="w-full min-h-full max-w-lg">
-          <div class="flex flex-wrap -mx-3 mb-6 h-40">
-            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+        <form className="w-full min-h-full max-w-lg">
+          <div className="flex flex-wrap -mx-3 mb-4 h-24">
+            <div className="w-full md:w-1/2 px-3 md:mb-0">
               <label
-                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                for="grid-first-name"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
               >
-                Name
+                Name Address
               </label>
               <input
-                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-first-name"
                 type="text"
-                placeholder="Jane"
+                placeholder="Name address"
+                value={addressName}
+                onChange={(e) => handleChange(e, 2)}
               />
-              <p class="text-red-500 text-xs italic">
-                Please fill out this field.
-              </p>
+            </div>
+            <div className="w-full md:w-1/2 px-3 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Recipient name
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                id="grid-first-name"
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => handleChange(e, 0)}
+              />
             </div>
           </div>
-          <div class="flex flex-wrap -mx-3 mb-6">
-            <div class="w-full px-3">
-              <label
-                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                for="grid-password"
-              >
+          <div className="flex flex-wrap -mx-3 mb-4">
+            <div className="w-full md:w-1/2 px-3  md:mb-0">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                 Phone
               </label>
-              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" />
-              <p class="text-gray-600 text-xs italic">
-                Make it as long and as crazy as you'd like
-              </p>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                onChange={(e) => handleChange(e, 1)}
+                value={phone}
+              />
+            </div>
+            <div className="w-full md:w-1/2 px-3 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Address
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                id="grid-first-name"
+                type="text"
+                placeholder="97 Man Thiện"
+                value={address}
+                onChange={(e) => handleChange(e, 3)}
+              />
             </div>
           </div>
-          <div class="flex flex-wrap -mx-3 mb-2">
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+          <div className="flex flex-wrap -mx-3 mb-2">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
-                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                for="grid-state"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-state"
               >
                 Province
               </label>
-              <div class="relative">
+              <div className="relative">
                 <select
-                  class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-state"
                   onChange={(e) => {
                     setProvince(e.target.value);
@@ -156,9 +186,9 @@ const OrderSummary = (order) => {
                       })
                     : null}
                 </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg
-                    class="fill-current h-4 w-4"
+                    className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
@@ -167,16 +197,16 @@ const OrderSummary = (order) => {
                 </div>
               </div>
             </div>
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
-                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                for="grid-state"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-state"
               >
                 District
               </label>
-              <div class="relative">
+              <div className="relative">
                 <select
-                  class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-state"
                   onClick={(e) => {
                     setDistrict(e.target.value);
@@ -192,9 +222,9 @@ const OrderSummary = (order) => {
                       })
                     : null}
                 </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg
-                    class="fill-current h-4 w-4"
+                    className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
@@ -203,30 +233,30 @@ const OrderSummary = (order) => {
                 </div>
               </div>
             </div>
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
-                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                for="grid-state"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-state"
               >
                 Ward
               </label>
-              <div class="relative">
+              <div className="relative">
                 <select
-                  class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-state"
                   onClick={(e) => {
                     setWard(e.target.value);
                   }}
                 >
-                 {listWard.length > 0
+                  {listWard.length > 0
                     ? listWard.map((item, index) => {
                         return <option value={index}>{item.name}</option>;
                       })
                     : null}
                 </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg
-                    class="fill-current h-4 w-4"
+                    className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
@@ -234,6 +264,36 @@ const OrderSummary = (order) => {
                   </svg>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap -mx-3 mb-2">
+            <div className="flex justify-around font-bold text-lg">
+              <button
+                className="h-10 w-40 border"
+                style={{
+                  backgroundColor: "#9155FD",
+                  borderRadius: 10,
+                  color: "white",
+                }}
+                onClick={(e) =>
+                  saveAddress(e).catch((err) => toast(lang["001"]))
+                }
+              >
+                Save
+              </button>
+            </div>
+            <div className="flex justify-around font-bold text-lg">
+              <button
+                className="h-10 w-40 border"
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: 10,
+                  color: "white",
+                }}
+                onClick={() => setModalIsOpen(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         </form>
@@ -250,9 +310,11 @@ const OrderSummary = (order) => {
               ? listAddress.map((item) => {
                   return (
                     <option key={item.id} value={item.id}>
-                      {`${item.name},
-                         ${item.phone},
-                        ${item.address}`}
+                      {`${item?.name},
+                         ${item?.phone || "Phone number"},
+                        ${item?.address}, ${item?.ward},  ${item?.district},  ${
+                        item?.province
+                      }`}
                     </option>
                   );
                 })
@@ -386,6 +448,23 @@ const OrderSummary = (order) => {
       </div>
     </div>
   );
+  function handleChange(e, type) {
+    if (type == 0) {
+      setName(e.target.value);
+      return;
+    }
+    if (type == 1) {
+      if (validator.isNumeric(e.target.value)) {
+        setPhone(e.target.value);
+      }
+      return;
+    }
+    if (type == 2) {
+      setAddressName(e.target.value);
+      return;
+    }
+    setAddress(e.target.value);
+  }
   function getTotal() {
     let totalTmp = 0;
     listCart.forEach((item) => {
@@ -404,7 +483,7 @@ const OrderSummary = (order) => {
     const listTmp = [];
     const data = (await Promise.all(listPromise)).map((item) => {
       let quantity = findQuantity(item.data.data.id, cart);
-      return { ...item.data.data, quantity: quantity };
+      return { ...item.data.data, quantity: quantity, isValid: true };
     });
     for (let a of data) {
       listTmp.push({ ...a });
@@ -421,11 +500,49 @@ const OrderSummary = (order) => {
     const data = (await axiosApiInstance.get("/api/v1/address/get")).data.data;
     setListAddress([...data.address]);
     setAddressSelect(data.address[0]?.id);
-    setName(data.user?.name || null);
-    setPhone(data.user?.phone || "0123456786");
+    setName(data.user?.name || "");
+    setPhone(data.user?.phone || "");
   }
-  function handleOrder() {
-    toast(address);
+  async function saveAddress(e) {
+    e.preventDefault();
+    const body = {
+      phone,
+      name: addressName,
+      recipient_name: name,
+      address,
+      ward: province_vi[province].districts[district].wards[ward].name,
+      district: province_vi[province].districts[district].name,
+      province: province_vi[province].name,
+    };
+    // console.log(body)
+    const data = (await axiosApiInstance.post("/api/v1/address/create", body))
+      .data;
+    setListAddress([...listAddress, data.data]);
+    setModalIsOpen(false);
+    toast(lang[data.code]);
+  }
+  async function handleOrder() {
+    const body = {
+      id_address: Number.parseInt(addressSelect),
+      payment_method: 1,
+      listDetail: [
+        ...listCart.map((item) => {
+          return {
+            id_product_detail: item.id,
+            quantity: item.quantity,
+            price: item.id_product_product.product_price,
+          };
+        }),
+      ],
+    };
+    const data = (await axiosApiInstance.post("/api/v1/order/create", body))
+      .data;
+    toast(lang[data.code], { autoClose: 1000 });
+    setCart([]);
+    dispatch({ type: "DELETE_CART" });
+    setTimeout(() => {
+      navigate("/home");
+    }, 1100);
   }
 };
 

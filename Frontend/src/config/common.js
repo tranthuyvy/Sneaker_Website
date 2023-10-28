@@ -19,11 +19,15 @@ function getCart() {
   const cartData = localStorage.getItem(localStorageKey);
   return cartData ? JSON.parse(cartData) : [];
 }
-function findQuantity(id,cart) {
+function findQuantity(id, cart) {
   let quantity = 0;
   for (let i of cart) {
     if (i.id.localeCompare(id) == 0) quantity = i.quantity;
   }
   return quantity;
 }
-export { getImage, setCart, getCart,findQuantity};
+function checkValidPhone(phone) {
+  const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+  return phone.match(regexPhoneNumber) ? true : false;
+}
+export { getImage, setCart, getCart, findQuantity };
