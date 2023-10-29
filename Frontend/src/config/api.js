@@ -1,5 +1,5 @@
 import axios from "./axios";
-const LOCALHOST = "http://localhost:8081";
+const LOCALHOST = "https://sneaker-real.onrender.com";
 
 export const API_BASE_URL = LOCALHOST
 
