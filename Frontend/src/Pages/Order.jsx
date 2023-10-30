@@ -11,6 +11,7 @@ import CartItem from "../Components/CartItem";
 import axios from "../config/axios";
 import OrderTraker from "../Components/OrderTracker";
 import axiosApiInstance from "../config/api";
+
 const province_vi = require("../config/province_vi.json");
 const OrderSummary = (order) => {
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ const OrderSummary = (order) => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      height: "50%",
+      height: "65%",
       width: "40%",
       padding: 0,
     },
@@ -98,7 +99,7 @@ const OrderSummary = (order) => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <form className="w-full min-h-full max-w-lg p-5">
+        <form className="w-full min-h-full max-w-lg p-5 ml-16">
           <div className="flex flex-wrap -mx-3 mb-4 h-24">
             <div className="w-full md:w-1/2 px-3 md:mb-0">
               <label
@@ -164,7 +165,7 @@ const OrderSummary = (order) => {
           <div className="flex flex-wrap -mx-3 mb-2">
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 "
                 htmlFor="grid-state"
               >
                 Province
@@ -274,7 +275,7 @@ const OrderSummary = (order) => {
           <div className="flex flex-wrap -mx-3 mb-2">
             <div className="flex justify-around font-bold text-lg">
               <button
-                className="h-10 w-40 border"
+                className="h-10 w-40 border ml-4 my-4"
                 style={{
                   backgroundColor: "#9155FD",
                   borderRadius: 10,
@@ -289,9 +290,9 @@ const OrderSummary = (order) => {
             </div>
             <div className="flex justify-around font-bold text-lg">
               <button
-                className="h-10 w-40 border"
+                className="h-10 w-40 border ml-4 my-4"
                 style={{
-                  backgroundColor: "#fff",
+                  backgroundColor: "#9155FD",
                   borderRadius: 10,
                   color: "white",
                 }}
@@ -310,9 +311,19 @@ const OrderSummary = (order) => {
 
       <div className="lg:grid grid-cols-1 relative justify-between">
         <div className="p-5 shadow-lg rounded-md border mt-3 mx-5">
-          <div>Thông tin giao hàng</div>
+          
+          <div className="font-bold mb-3">THÔNG TIN GIAO HÀNG</div>
+          
           <select
-            className="w-full"
+            className="w-full my-2 my-custom-select"
+            style={{
+              padding: '10px',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              backgroundColor: '#f4f4f4',
+              color: 'black',
+              transition: 'all 0.3s',
+            }}
             onChange={(e) => setAddressSelect(e.target.value)}
           >
             {listAddress.length > 0
@@ -329,16 +340,18 @@ const OrderSummary = (order) => {
                 })
               : null}
           </select>
+
           <button
-            className="h-10 w-40 border"
+            className="h-10 w-40 border font-semibold"
             style={{
-              backgroundColor: "#c9db34d4",
+              backgroundColor: "#2747BE",
               borderRadius: 10,
               color: "white",
+              marginTop: "15px",
             }}
             onClick={() => setModalIsOpen(true)}
           >
-            Add address
+            ADD ADDRESS
           </button>
         </div>
       </div>
