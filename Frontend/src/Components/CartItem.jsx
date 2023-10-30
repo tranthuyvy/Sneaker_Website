@@ -8,36 +8,53 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import axios from "../config/axios";
 import { getImage, setCart } from "../config/common";
 import { useSelector } from "react-redux";
+import "./CartItem.css";
+
 const CartItem = ({ detail, showButton }) => {
   const dispatch = useDispatch();
   const cart = useSelector((store) => store.cart);
   const [discountedPrice, setDiscountedPrice] = useState(0);
-  const [discountPersent, setDiscountedPresent] = useState(10);
+  const [discountPersent, setDiscountedPresent] = useState(0);
+
   const handleRemoveItemFromCart = () => {
-    // window.location.reload();
+    const updatedCart = cart.filter((item) => item.id !== detail.id);
+
+    dispatch({
+      type: "SET_CART",
+      data: updatedCart,
+    });
+
+    setCart(updatedCart);
+    
   };
+
   const handleUpdateCartItem = (num) => {
     dispatch({
       type: "SET_CART",
       data: cart.map((item) => {
-        return item.id.localeCompare(detail.id) == 0
+        return item.id.localeCompare(detail.id) === 0
           ? { ...item, quantity: item.quantity + num }
           : item;
       }),
     });
+
     setCart(
       cart.map((item) => {
-        return item.id.localeCompare(detail.id) == 0
+        return item.id.localeCompare(detail.id) === 0
           ? { ...item, quantity: item.quantity + num }
           : item;
       })
     );
-    // window.location.reload();
   };
+
   return (
-    <div className={`p-2 shadow-lg rounded-md  ${detail.isValid ? 'border-neutral-200': 'border-red-500'} border-2`} >
-      <div className="flex items-center">
-        <div className="w-[5rem] h-[5rem] lg:w-[9rem] lg:h-[9rem] ">
+    <div
+      className={`p-3 shadow-lg rounded-md  ${
+        detail.isValid ? "border-neutral-200" : "border-red-500"
+      } border-2`}
+    >
+      <div className="flex items-center mt-2">
+        <div className="w-[12rem] h-[12rem] ml-5">
           <img
             className="w-full h-full object-cover object-top"
             src={getImage(detail.id_product_product)}
@@ -45,28 +62,32 @@ const CartItem = ({ detail, showButton }) => {
             loading="lazy"
           />
         </div>
-        <div className="ml-5 space-y-1">
+        <div className="ml-8 space-y-1">
           <p className="font-bold text-lg">
             {detail?.id_product_product?.name}
           </p>
-          <p className="opacity-70 text-sm mt-5">Size: {detail?.size}, White</p>
-          <p className="opacity-70 mt-5 text-sm">
+          <p className="opacity-80 text-sm mt-3">Size: {detail?.size}</p>
+          <p className="opacity-80 mt-3 text-sm">
             Brand: {detail?.id_product_product?.id_branch_branch.name}
           </p>
           {!showButton ? (
-            <p className="opacity-70 mt-5 text-sm">x{detail?.quantity}</p>
+            <p className="opacity-90 mt-5 text-sm">x{detail?.quantity}</p>
           ) : null}
           <div className="flex space-x-2 items-center pt-3">
-            <p className="text-red-600 font-semibold text-lg">
-              ${discountedPrice != 0 ? discountedPrice : null}
-            </p>
-            <p
-              className={`opacity-50 text-lg ${
-                discountedPrice ? "line-through" : null
-              }`}
-            >
-              ${detail?.id_product_product?.product_price}
-            </p>
+            {discountedPrice !== 0 ? (
+              <p className="text-red-600 font-semibold text-lg">
+                ${discountedPrice}
+              </p>
+            ) : (
+              <p className="text-red-600 font-semibold text-lg">
+                ${detail?.id_product_product?.product_price}
+              </p>
+            )}
+            {discountedPrice ? (
+              <p className={`opacity-50 text-lg line-through`}>
+                ${detail?.id_product_product?.product_price}
+              </p>
+            ) : null}
             {discountPersent !== 0 && (
               <p className="text-green-600 font-semibold text-lg">
                 {discountPersent}% off
@@ -76,8 +97,8 @@ const CartItem = ({ detail, showButton }) => {
         </div>
       </div>
       {showButton && (
-        <div className="lg:flex items-center lg:space-x-10 pt-4">
-          <div className="flex items-center space-x-2 ">
+        <div className="lg:flex items-center lg:space-x-5 pt-2 ml-8">
+          <div className="flex items-center space-x-2 mt-4">
             <IconButton
               onClick={() => handleUpdateCartItem(-1)}
               disabled={findQuantity(detail.id) <= 1}
@@ -87,14 +108,28 @@ const CartItem = ({ detail, showButton }) => {
               <RemoveCircleOutlineIcon />
             </IconButton>
 
-            <input
-              type={"number"}
-              className="py-1 px-7 border rounded-sm"
-              step={null}
-              value={findQuantity(detail.id)}
-              min={1}
-              onChange={(e) => handleUpdateCartItem(e.target.value-findQuantity(detail.id))}
-            ></input>
+            <div className="input-card">
+              <input
+                type={"text"}
+                className="input-small"
+                step={null}
+                value={findQuantity(detail.id)}
+                min={1}
+                inputMode="numeric"
+                pattern="[0-9]*"
+                onInput={(e) => {
+                  let inputValue = e.target.value;
+                  inputValue = inputValue.replace(/[^0-9]/g, '');
+                  if (inputValue === '' || parseInt(inputValue, 10) <= 0) {
+                    inputValue = '1';
+                  }
+                  e.target.value = inputValue;
+                }}
+                onChange={(e) =>
+                  handleUpdateCartItem(e.target.value - findQuantity(detail.id))
+                }
+              ></input>
+            </div>
             <IconButton
               onClick={() => handleUpdateCartItem(1)}
               color="primary"
@@ -103,7 +138,7 @@ const CartItem = ({ detail, showButton }) => {
               <AddCircleOutlineIcon />
             </IconButton>
           </div>
-          <div className="flex text-sm lg:text-base mt-5 lg:mt-0">
+          <div className="flex text-sm lg:text-base mt-4 lg:mt-0">
             <Button onClick={handleRemoveItemFromCart} variant="text">
               <DeleteIcon />
             </Button>
@@ -115,7 +150,7 @@ const CartItem = ({ detail, showButton }) => {
   function findQuantity(id) {
     let quantity = 0;
     for (let i of cart) {
-      if (i.id.localeCompare(id) == 0) quantity = i.quantity;
+      if (i.id.localeCompare(id) === 0) quantity = i.quantity;
     }
     return quantity;
   }
