@@ -31,6 +31,11 @@ function ApplyDiscount() {
     const [valueError, setValueError] = useState("");
     const [typeError, setTypeError] = useState("");
     const [expirationDateError, setExpirationDateError] = useState("");
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const pageSize = 5;
+
     const [search, setSearch] = useState([]);
     const [result, setResult] = useState([]);
     const [select, setSelect] = useState([])
@@ -44,12 +49,15 @@ function ApplyDiscount() {
     const id_discount = useParams().id;
 
     useEffect(() => {
-        fetchApiDiscount()
+        fetchApiDiscount(currentPage)
         fetchApi()
     }, [])
-    const fetchApiDiscount = async () => {
-        const res = await api.get(`/api/v1/discount/apply/get?id=${id_discount}`);
+    const fetchApiDiscount = async (page) => {
+        const res = await api.get(`/api/v1/discount/apply/get?id=${id_discount}&page=${page}&pageSize=${pageSize}`);
         if (res && res.data && res.data.data) {
+            console.log("total: ", res.data);
+            setCurrentPage(page);
+            setTotalPages(res.data.totalPage);
             setListDiscountProduct(res.data.data)
         }
     }
@@ -98,7 +106,7 @@ function ApplyDiscount() {
                 toast.success(errorMessages[res.data.code], {
                     autoClose: 1000,
                 });
-                fetchApiDiscount()
+                fetchApiDiscount(currentPage)
                 setListSelect([])
                 // navigate("/admin/products");
             } catch (error) {
@@ -115,6 +123,9 @@ function ApplyDiscount() {
             }
         }
     }
+    const handlePaginationChange = (event, page) => {
+        fetchApiDiscount(page);
+    };
 
     const handleDelete = async (id) => {
 
@@ -124,7 +135,7 @@ function ApplyDiscount() {
             toast.success(errorMessages[res.data.code], {
                 autoClose: 1000,
             });
-            fetchApiDiscount()
+            fetchApiDiscount(currentPage)
             // navigate("/admin/products");
         } catch (error) {
             if (error.response && error.response.status === 500) {
@@ -142,8 +153,9 @@ function ApplyDiscount() {
     }
     return (
         <React.Fragment>
-            <div style={{ fontSize: "1.2rem" }} className="mt-3">
-                Tìm sản phẩm để khuyến mãi:
+            <div style={{ fontSize: "1.2rem", fontWeight: "bold", fontStyle: "italic" }} className="my-3">
+                {/* Tìm và chọn sản phẩm để khuyến mãi: */}
+                Find and select products for promotion:
             </div>
             <form className="hidden md:block flex-grow max-w-sm">
                 <div className="relative w-full">
@@ -177,40 +189,85 @@ function ApplyDiscount() {
 
                             <li key={index}
                                 className="list-group-item list-group-item-action cursor-pointer"
-                                // style={{ display: "flex", backgroundColor: "white", color: "black", border: "1px solid green", overflow: "auto", whiteSpace: "nowrap", padding: "6px", cursor: "pointer", fontWeight: "bold" }}
+                                style={{ padding: "0.5rem" }}
                                 onClick={() => handleSelect(item)}
-                            > {index} - Id: {item.id} Name: {item.name}</li>
+                            >
+                                <div
+                                    style={{ display: "flex", backgroundColor: "white", color: "black" }}
+                                >
+                                    <div style={{ flex: 2.5 }}><b>{index + 1} - Id: </b><span style={{ color: "#a855f7" }}>{item.id}</span> </div>
+                                    <div style={{ flex: 2 }}>  <b>Name:</b> <span style={{ color: "#a855f7" }}>{item.name}</span></div>
+                                </div>
+                                {/* <b>{index} - Id:</b>  <span style={{ color: "#a855f7" }}>{item.id}</span> <b>Name:</b> <span style={{ color: "#a855f7" }}>{item.name}</span> */}
+                            </li>
                         ))}
                     </ul>
                 </div>
             </form >
             {console.log(listSelect)}
-            <div style={{ fontSize: "1.2rem", marginTop: "180px" }}>Sản phẩm áp dụng khuyến mãi: </div>
-            <div style={{ border: "1px solid green" }
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", border: "2px solid white", marginTop: "200px", }
             } >
+                <div style={{
+                    fontSize: "1.25rem",
+                    lineHeight: "1.75rem",
+                    fontWeight: "bold", marginTop: "20px",
+                    marginBottom: "20px",
+                    fontFamily: "system-ui",
+                    textTransform: "uppercase"
+                }}>
+                    {/* Sản phẩm áp dụng khuyến mãi  */}
+                    PROMOTION APPLICABLE PRODUCTS
+                </div>
                 {
-                    listSelect.map((item, index) => {
-                        return (<div style={{ display: "flex", position: "relative" }} >
-                            <div style={{ backgroundColor: "white", color: "black", width: "500px", padding: "6px", border: "1px solid green" }}>Id: {item.id}  Name: {item.name} </div>&nbsp; <div onClick={() => handleRemoveSelect(item)} style={{ color: "red", cursor: "pointer", position: "absolute", top: "0", left: "480px" }}>X</div></div>
+                    listSelect.length > 0 ? listSelect.map((item, index) => {
+                        return (
+                            <div style={{ display: "flex", position: "relative" }} >
+                                <div
+                                    style={{ display: "flex", backgroundColor: "white", color: "black", width: "550px", padding: "8px", border: "1px solid green", borderRadius: "6px", margin: "6px" }}
+                                >
+                                    <div style={{ flex: 2.5 }}><b>{index + 1} - Id: </b><span style={{ color: "#a855f7" }}>{item.id}</span> </div>
+                                    <div style={{ flex: 2 }}>  <b>Name:</b> <span style={{ color: "#a855f7" }}>{item.name}</span></div>
+                                </div>&nbsp; <div onClick={() => handleRemoveSelect(item)} style={{ color: "red", cursor: "pointer", position: "absolute", top: "8px", left: "530px" }}>X</div>
+                            </div>
                         )
-                    })
-                }</div >
+                    }) : <div>
+                        {/* Chưa chọn sản phẩm */}
+                        Product has not been selected
+                    </div>
+                }
+                <Button
+                    color="primary"
+                    style={{
+                        fontSize: "1.125rem",
+                        lineHeight: "1.75rem",
+                        fontWeight: "bold",
+                        color: "white",
+                        marginTop: "20px",
+                        marginBottom: "20px"
+                    }}
+                    // className="text-6xl"
+                    variant="contained"
+                    onClick={() => handleApply()}
+                >
+                    Apply
+                </Button>
+            </div >
             {/* {result} */}
             {/* <div>{selectProduct}</div> */}
-            <Button
-                color="info"
-                variant="contained"
-                onClick={() => handleApply()}
-            >
-                Apply
-            </Button>
-            <div style={{ fontSize: "1.2rem" }} className="mt-3">
-                Những sản phẩm đã áp dụng:
+
+            <div style={{
+                fontSize: "1.25rem", marginTop: "50px", marginBottom: "20px",
+                lineHeight: "1.75rem", textAlign: "center", fontWeight: "bold", fontFamily: "system-ui", textTransform: "uppercase"
+            }} >
+                {/* Sản phẩm đã áp dụng khuyến mãi */}
+                Promotion has been applied to the product
             </div>
-            <TableContainer>
+            <TableContainer style={{ border: "2px solid white" }}>
                 <Table sx={{ minWidth: 390 }} aria-label="table in dashboard">
                     <TableHead>
                         <TableRow>
+                            <TableCell style={{ textAlign: "center" }}>Num</TableCell>
                             <TableCell style={{ textAlign: "center" }}>Id</TableCell>
                             <TableCell style={{ textAlign: "center" }}>Image</TableCell>
                             <TableCell style={{ textAlign: "center" }}>Name</TableCell>
@@ -230,6 +287,9 @@ function ApplyDiscount() {
                                     "&:last-of-type td, &:last-of-type th": { border: 0 },
                                 }}
                             >
+                                <TableCell style={{ textAlign: "center" }}>
+                                    {index + 1}
+                                </TableCell>
                                 <TableCell style={{ textAlign: "center" }}>
                                     {discount.id_product}
                                 </TableCell>
@@ -277,6 +337,19 @@ function ApplyDiscount() {
                     </div>
                 )
             })} */}
+            <Card className="mt-2 border">
+                <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
+                    <Pagination
+                        count={totalPages}
+                        size="medium"
+                        page={currentPage}
+                        color="primary"
+                        onChange={handlePaginationChange}
+                        showFirstButton
+                        showLastButton
+                    />
+                </div>
+            </Card>
         </React.Fragment >
     );
 }

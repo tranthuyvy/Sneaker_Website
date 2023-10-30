@@ -41,11 +41,6 @@ const OrderSummary = (order) => {
   const [listWard, setListWard] = useState([
     ...province_vi[0].districts[0].wards,
   ]);
-  useEffect(()=>{
-     if(!isLogin){
-      dispatch({type:'OPEN_MODAL'})
-     }
-  },[])
   useEffect(() => {
     getData()
       .catch((err) => {
@@ -59,7 +54,8 @@ const OrderSummary = (order) => {
         toast(lang["003"]);
       })
       .finally(() => {});
-  }, []);
+      console.log(isLogin)
+  }, [isLogin]);
    
   // const handleCreatePayment=()=>{
   //   const data={orderId:order.order?.id,jwt}

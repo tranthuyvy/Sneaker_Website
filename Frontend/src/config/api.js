@@ -1,5 +1,6 @@
+import { store } from "../Redux/Store";
 import axios from "./axios";
-const HOST = axios.defaults.baseURL
+const HOST = axios.defaults.baseURL;
 const axiosApiInstance = axios.create({
   baseURL: HOST,
 });
@@ -12,7 +13,7 @@ axiosApiInstance.interceptors.request.use((config) => {
   if (accessToken == null) {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("accessToken");
-    window.location.href = "/login";
+    store.dispatch({type:"OPEN_MODAL"})
   }
 
   config.headers = {
