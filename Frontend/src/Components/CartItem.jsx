@@ -25,7 +25,6 @@ const CartItem = ({ detail, showButton }) => {
     });
 
     setCart(updatedCart);
-    
   };
 
   const handleUpdateCartItem = (num) => {
