@@ -1,6 +1,7 @@
 const admin = require('firebase-admin')
-import path from 'path'
+const path = require('path');
 require('dotenv').config();
+
 
 const serviceAccount = {
     type: process.env.type,

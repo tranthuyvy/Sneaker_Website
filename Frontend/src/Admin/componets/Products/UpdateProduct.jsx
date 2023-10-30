@@ -35,6 +35,7 @@ const listBrand = [
 const UpdateProduct = () => {
 
     const [image, setImage] = useState([])
+    const [imageNew, setImageNew] = useState([])
     const [brand, setBrand] = useState('')
     const [category, setCategory] = useState('')
     const [name, setName] = useState('')
@@ -179,10 +180,11 @@ const UpdateProduct = () => {
         // setImages(files);
         if (files) {
             setImage(files);
-
+            setImageNew(files);
             // setSelectedImage(URL.createObjectURL(files));
         } else {
             setImage(null);
+            setImageNew(null);
             // setSelectedImage(null);
         }
     };
@@ -245,6 +247,21 @@ const UpdateProduct = () => {
                                             alt={`img-${index}`}
                                             style={{ width: "180px", height: "180px", marginRight: "12px", borderRadius: "8px" }}
                                         />
+
+                                        <button onClick={() => handleRemoveImage(index)} style={{ position: 'absolute', top: 0, right: "12px", backgroundColor: "green", color: "#ddd", padding: "6px" }}>X</button>
+                                    </div>
+                                ))}
+                                {imageNew && imageNew.map((img, index) => (
+                                    // console.log(img.link)
+                                    <div style={{ position: 'relative', marginRight: '10px' }}>
+                                        <img
+                                            key={index}
+                                            // src={URL.createObjectURL(img && img.link)}
+                                            src={img.link ? img.link : URL.createObjectURL(img)}
+                                            alt={`img-${index}`}
+                                            style={{ width: "180px", height: "180px", marginRight: "12px", borderRadius: "8px" }}
+                                        />
+
                                         <button onClick={() => handleRemoveImage(index)} style={{ position: 'absolute', top: 0, right: "12px", backgroundColor: "green", color: "#ddd", padding: "6px" }}>X</button>
                                     </div>
                                 ))}

@@ -177,6 +177,10 @@ class discount_controller {
   getApplyDiscount = async (req, res) => {
     try {
       let id_discount = req.query.id;
+      const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
+      const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu nhà cung cấp trong 1 trang
+      let startIndex = (page - 1) * pageSize;
+      let endIndex = startIndex + pageSize;
       let option = [
         {
           model: Model.product,
@@ -197,10 +201,13 @@ class discount_controller {
         }
       ]
       if (id_discount) {
+
         let data = await discount_product.findAll({ where: { id_discount, status: 1 }, include: option });
+        const paginatedProducts = data.slice(startIndex, endIndex);
+        const totalPage = Math.ceil(data.length / pageSize);
         return res
           .status(200)
-          .send({ code: "002", data });
+          .send({ code: "002", data: paginatedProducts, totalPage });
       }
     } catch (error) {
       console.log(error);
