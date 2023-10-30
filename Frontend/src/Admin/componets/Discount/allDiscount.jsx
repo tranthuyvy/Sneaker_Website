@@ -52,24 +52,28 @@ const AllDiscount = () => {
   };
 
   const handleDeleteDiscount = (id) => {
-    
+
     axios
       .put(`/api/v1/discount/disable/?id=${id}`)
       .then((response) => {
 
-        console.log('Successful',id);
+        console.log('Successful', id);
         fetchDiscounts(currentPage);
       })
       .catch((error) => {
-        
+
         console.error('Error', error);
       });
   };
 
+  const handleGoDiscount = (id) => {
+    navigate(`/admin/discount/detail/${id}`);
+  }
+
   return (
     <Box>
       <Card>
-      <CardHeader
+        <CardHeader
           title={
             <div style={{ display: "flex", alignItems: "center" }}>
               <span style={{ flex: 1 }}>All Discounts</span>
@@ -95,6 +99,7 @@ const AllDiscount = () => {
                 <TableCell style={{ textAlign: "center" }}>Create At</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Status</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Action</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Apply</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -137,7 +142,7 @@ const AllDiscount = () => {
                   </TableCell>
 
                   <TableCell sx={{ textAlign: "center" }}>
-                  {/* <Button
+                    {/* <Button
                       onClick={() => navigate(`/admin/discount/update/${discount.id}`)}
                       variant="text"
                       color="warning"
@@ -150,6 +155,25 @@ const AllDiscount = () => {
                       color="secondary"
                     >
                       <DeleteIcon />
+                    </Button>
+                  </TableCell>
+
+                  <TableCell sx={{ textAlign: "center" }}>
+                    {/* <Button
+                      onClick={() => navigate(`/admin/discount/update/${discount.id}`)}
+                      variant="text"
+                      color="warning"
+                    >
+                      <EditIcon />
+                    </Button> */}
+                    <Button
+                      onClick={() => handleGoDiscount(discount.id)}
+                      variant="text"
+                      color="info"
+
+                    >
+                      {/* <DeleteIcon /> */}
+                      GO
                     </Button>
                   </TableCell>
                 </TableRow>

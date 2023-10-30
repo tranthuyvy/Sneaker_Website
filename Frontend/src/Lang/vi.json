@@ -53,5 +53,7 @@
     "131": "Username không thể chứa khoảng trắng",
     "201": "Cập nhật thất bại",
     "202": "Vô hiệu hóa thất bại",
-    "203": "Thời gian khuyến mãi không hợp lệ"
+    "203": "Thời gian khuyến mãi không hợp lệ",
+    "204": "Xóa thành công",
+    "205": "Xóa thất bại,"
 }
