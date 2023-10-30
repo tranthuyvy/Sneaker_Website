@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider, useGoogleOneTapLogin } from "@react-oauth/google";
 import { Provider } from "react-redux";
 import { store } from "./Redux/Store";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
