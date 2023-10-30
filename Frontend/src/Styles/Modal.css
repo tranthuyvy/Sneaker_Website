@@ -1,0 +1,38 @@
+.button-login {
+  background: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: bold;
+  color: #000000;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 250px;
+}
+.button-login:hover {
+    background: #ff9191;
+    color: #ffffff;
+    transform: scale(1.1);
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 0 10px #ff9191;
+}
+h1{
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 100px;
+    animation: show 2s ease-in-out ;
+  }
+  @keyframes show {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  };

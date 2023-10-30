@@ -1,4 +1,6 @@
 import Model from "../config/sequelize";
+import { sequelize } from "../config/sequelize";
+
 const product = Model.product;
 import {
   generateProductDetailId,

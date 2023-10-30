@@ -11,10 +11,11 @@ import CartItem from "../Components/CartItem";
 import axios from "../config/axios";
 import OrderTraker from "../Components/OrderTracker";
 import axiosApiInstance from "../config/api";
+
 const province_vi = require("../config/province_vi.json");
 const OrderSummary = (order) => {
   const navigate = useNavigate();
-
+  const isLogin = useSelector(state=>state.auth)
   const dispatch = useDispatch();
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -40,6 +41,11 @@ const OrderSummary = (order) => {
   const [listWard, setListWard] = useState([
     ...province_vi[0].districts[0].wards,
   ]);
+  useEffect(()=>{
+     if(!isLogin){
+      dispatch({type:'OPEN_MODAL'})
+     }
+  },[])
   useEffect(() => {
     getData()
       .catch((err) => {
@@ -54,7 +60,7 @@ const OrderSummary = (order) => {
       })
       .finally(() => {});
   }, []);
-
+   
   // const handleCreatePayment=()=>{
   //   const data={orderId:order.order?.id,jwt}
   //   dispatch(createPayment(data))
@@ -80,7 +86,7 @@ const OrderSummary = (order) => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      height: "50%",
+      height: "65%",
       width: "40%",
       padding: 0,
     },
@@ -93,7 +99,7 @@ const OrderSummary = (order) => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <form className="w-full min-h-full max-w-lg">
+        <form className="w-full min-h-full max-w-lg p-5 ml-16">
           <div className="flex flex-wrap -mx-3 mb-4 h-24">
             <div className="w-full md:w-1/2 px-3 md:mb-0">
               <label
@@ -159,7 +165,7 @@ const OrderSummary = (order) => {
           <div className="flex flex-wrap -mx-3 mb-2">
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 "
                 htmlFor="grid-state"
               >
                 Province
@@ -269,7 +275,7 @@ const OrderSummary = (order) => {
           <div className="flex flex-wrap -mx-3 mb-2">
             <div className="flex justify-around font-bold text-lg">
               <button
-                className="h-10 w-40 border"
+                className="h-10 w-40 border ml-4 my-4"
                 style={{
                   backgroundColor: "#9155FD",
                   borderRadius: 10,
@@ -284,9 +290,9 @@ const OrderSummary = (order) => {
             </div>
             <div className="flex justify-around font-bold text-lg">
               <button
-                className="h-10 w-40 border"
+                className="h-10 w-40 border ml-4 my-4"
                 style={{
-                  backgroundColor: "#fff",
+                  backgroundColor: "#9155FD",
                   borderRadius: 10,
                   color: "white",
                 }}
@@ -298,12 +304,26 @@ const OrderSummary = (order) => {
           </div>
         </form>
       </Modal>
-      <OrderTraker activeStep={0}></OrderTraker>
-      <div className="lg:grid grid-cols-3 relative justify-between">
-        <div className="p-5 shadow-lg rounded-md border ">
-          <div>Thông tin giao hàng</div>
+
+      <div className="mt-5">
+        <OrderTraker activeStep={2}></OrderTraker>
+      </div>
+
+      <div className="lg:grid grid-cols-1 relative justify-between">
+        <div className="p-5 shadow-lg rounded-md border mt-3 mx-5">
+          
+          <div className="font-bold mb-3">THÔNG TIN GIAO HÀNG</div>
+          
           <select
-            className="w-full"
+            className="w-full my-2 my-custom-select"
+            style={{
+              padding: '10px',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              backgroundColor: '#f4f4f4',
+              color: 'black',
+              transition: 'all 0.3s',
+            }}
             onChange={(e) => setAddressSelect(e.target.value)}
           >
             {listAddress.length > 0
@@ -320,20 +340,25 @@ const OrderSummary = (order) => {
                 })
               : null}
           </select>
+
           <button
-            className="h-10 w-40 border"
+            className="h-10 w-40 border font-semibold"
             style={{
-              backgroundColor: "#c9db34d4",
+              backgroundColor: "#2747BE",
               borderRadius: 10,
               color: "white",
+              marginTop: "15px",
             }}
             onClick={() => setModalIsOpen(true)}
           >
-            Add address
+            ADD ADDRESS
           </button>
         </div>
-        <div className="lg:col-span-2 ">
-          <div className=" space-y-3">
+      </div>
+
+      <div className="lg:grid grid-cols-6 relative justify-between">
+        <div className="lg:col-span-4 ml-12 mt-3">
+          <div className="space-y-3">
             {listCart.length > 0
               ? listCart.map((item, index) => (
                   <>
@@ -343,52 +368,54 @@ const OrderSummary = (order) => {
               : null}
           </div>
         </div>
-        <div className="sticky top-0 h-[100vh] mt-5 lg:mt-0 ml-5">
-          <div className="border p-5 bg-white shadow-lg rounded-md">
-            <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
-            <div className="space-y-3 font-semibold">
-              <div className="flex justify-between pt-3 text-black ">
-                <span>Price ({listCart?.length || 0} item)</span>
-                <span>${total}</span>
+
+        <div className="lg:col-span-2">
+          <div className="sticky top-0 h-[150vh] lg:mt-0 mx-5 mt-3">
+            <div className="border p-5 bg-white shadow-lg rounded-md">
+              <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
+              <div className="space-y-3 font-semibold">
+                <div className="flex justify-between pt-3 text-black ">
+                  <span>Price ({listCart?.length || 0} item)</span>
+                  <span>${total}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Discount</span>
+                  <span className="text-green-700">-${discount}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Delivery Charges</span>
+                  <span className="text-green-700">Free</span>
+                </div>
+                <hr />
+                <div className="flex justify-between font-bold text-lg">
+                  <span>Total Amount</span>
+                  <span className="text-green-700">${total - discount}</span>
+                </div>
+                <div className="flex justify-around font-bold text-lg">
+                  <button
+                    className="h-10 w-40 border"
+                    style={{
+                      backgroundColor: "#9155FD",
+                      borderRadius: 10,
+                      color: "white",
+                    }}
+                    onClick={handleOrder}
+                  >
+                    CONFIRM
+                  </button>
+                  <button
+                    className="h-10 w-40 border"
+                    style={{
+                      backgroundColor: "#c9db34d4",
+                      borderRadius: 10,
+                      color: "white",
+                    }}
+                  >
+                    Digital Wallets
+                  </button>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span>Discount</span>
-                <span className="text-green-700">-${discount}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Delivery Charges</span>
-                <span className="text-green-700">Free</span>
-              </div>
-              <hr />
-              <div className="flex justify-between font-bold text-lg">
-                <span>Total Amount</span>
-                <span className="text-green-700">${total - discount}</span>
-              </div>
-              <div className="flex justify-around font-bold text-lg">
-                <button
-                  className="h-10 w-40 border"
-                  style={{
-                    backgroundColor: "#9155FD",
-                    borderRadius: 10,
-                    color: "white",
-                  }}
-                  onClick={handleOrder}
-                >
-                  CONFIRM
-                </button>
-                <button
-                  className="h-10 w-40 border"
-                  style={{
-                    backgroundColor: "#c9db34d4",
-                    borderRadius: 10,
-                    color: "white",
-                  }}
-                >
-                  Digital Wallets
-                </button>
-              </div>
-            </div>
-            {/* <PayPalScriptProvider
+              {/* <PayPalScriptProvider
               options={{
                 "client-id": "AVR129jGmpPplO0U5gNQnlPlfCeRffQ1r6E0GUJkJGyRTUP8Ce16qs3xocDzt7OwphQaRHDB0XdEuzzC"
               }}
@@ -435,7 +462,7 @@ const OrderSummary = (order) => {
               </Modal>
             </PayPalScriptProvider> */}
 
-            {/* <Button
+              {/* <Button
               onClick={handleCreatePayment}
               variant="contained"
               type="submit"
@@ -443,6 +470,7 @@ const OrderSummary = (order) => {
             >
               PAYMENT HI
             </Button> */}
+            </div>
           </div>
         </div>
       </div>

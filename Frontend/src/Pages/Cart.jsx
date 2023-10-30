@@ -36,58 +36,65 @@ const Cart = () => {
     getTotal();
   });
   return (
-    <div className="">
-      {cart.length > 0 && (
-        <div className="lg:grid grid-cols-3 lg:px-16 relative">
-          <div className="lg:col-span-2 lg:px-5 bg-white">
-            <div className=" space-y-3">
-              {listCart.length > 0
-                ? listCart.map((item, index) => (
-                    <>
-                      <CartItem key={index} detail={item} showButton={true} />
-                    </>
-                  ))
-                : null}
-            </div>
-          </div>
-          <div className="px-5 sticky top-0 h-[100vh] mt-5 lg:mt-0 ">
-            <div className="border p-5 bg-white shadow-lg rounded-md">
-              <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
-              <hr />
-
-              <div className="space-y-3 font-semibold">
-                <div className="flex justify-between pt-3 text-black ">
-                  {/* <span>Price ({cart.cart?.totalItem} item)</span> */}
-                  <span>${total}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Discount</span>
-                  <span className="text-green-700">${0}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Delivery Charges</span>
-                  <span className="text-green-700">Free</span>
-                </div>
-                <hr />
-                <div className="flex justify-between font-bold text-lg">
-                  <span>Total Amount</span>
-                  <span className="text-green-700">${total}</span>
-                </div>
-              </div>
-
-              <Button
-                onClick={() => handleCheckOut()}
-                variant="contained"
-                sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}
-              >
-                Check Out
-              </Button>
-            </div>
-          </div>
+    <div className="lg:grid grid-cols-3 lg:px-16 relative mt-10">
+      <div className="lg:col-span-2 lg:px-5 bg-white">
+        <div className="space-y-3">
+          {cart.length > 0 && listCart.length > 0 ? (
+            listCart.map((item, index) => (
+              <CartItem key={index} detail={item} showButton={true} />
+            ))
+          ) : (
+            <p
+              style={{
+                color: "red",
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: "50px",
+              }}
+            >
+              YOUR CART EMPTY.
+            </p>
+          )}
         </div>
-      )}
+      </div>
+      <div className="px-4 lg:col-span-1">
+        <div className="border p-5 bg-white shadow-lg rounded-md">
+          <p className="font-bold opacity-60 pb-4">PRICE DETAILS</p>
+          <hr />
+
+          <div className="space-y-3 font-semibold">
+            <div className="flex justify-between pt-3 text-black ">
+              <span>Total</span>
+              <span style={{ justifyContent: "flex-end" }}>${total}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Discount</span>
+              <span className="text-green-700">${0}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Delivery Charges</span>
+              <span className="text-green-700">Free</span>
+            </div>
+            <hr />
+            <div className="flex justify-between font-bold text-lg">
+              <span>Total Amount</span>
+              <span className="text-green-700">${total}</span>
+            </div>
+          </div>
+
+          <Button
+            onClick={() => handleCheckOut()}
+            variant="contained"
+            sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}
+          >
+            Check Out
+          </Button>
+        </div>
+      </div>
     </div>
   );
+
   function getTotal() {
     let totalTmp = 0;
     listCart.forEach((item) => {
@@ -118,7 +125,10 @@ const Cart = () => {
         const li = listCart;
         setListCart(
           li.map((item) => {
-            console.log({ ...item, isValid: !isIdInList(item.id, data.listProduct) })
+            console.log({
+              ...item,
+              isValid: !isIdInList(item.id, data.listProduct),
+            });
             return { ...item, isValid: !isIdInList(item.id, data.listProduct) };
           })
         );

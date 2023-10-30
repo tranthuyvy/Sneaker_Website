@@ -2,7 +2,6 @@ import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
 import thunk from "redux-thunk";
 import langReducer from "./langReducer";
 import cartReducer from "./Customers/cartReducer";
-// import authReducer from "./Auth/Reducer";
 // import customerProductReducer from "./Customers/Product/Reducer";
 // import productReducer from "./Admin/Product/Reducer";
 // import cartReducer from "./Customers/Cart/Reducer";
@@ -10,11 +9,12 @@ import cartReducer from "./Customers/cartReducer";
 // import usersReducer from "./Admin/Users/Reducer";
 // import adminOrderReducer from "./Admin/Orders/Reducer";
 // import ReviewReducer from "./Customers/Review/Reducer";
-
+import { authReducer, modalLoginReducer } from "./auth";
 const rootReducers = combineReducers({
   lang: langReducer,
-  cart: cartReducer
-  // auth: authReducer,
+  cart: cartReducer,
+  auth: authReducer,
+  openModal: modalLoginReducer,
   // customersProduct: customerProductReducer,
   // cart: cartReducer,
   // order: orderReducer,
