@@ -1,4 +1,5 @@
 import Model from "../config/sequelize";
+import { setProduct, getProduct } from "service/redis";
 const product = Model.product;
 import {
   generateProductDetailId,
@@ -10,7 +11,11 @@ const branch = Model.branch;
 const productImage = Model.image;
 const staff = Model.staff
 const { Op } = require('sequelize');
+setProduct().catch(err=>{
+  console.log(err)
+})
 class product_controller {
+  
   createProduct = async (req, res) => {
     let {
       name,
@@ -79,6 +84,7 @@ class product_controller {
       }
     }
   };
+  
 
   updateProduct = async (req, res) => {
     let { id } = req.query;
@@ -207,59 +213,57 @@ class product_controller {
   }
 
   getAllProduct = async (req, res) => {
-    const id_product = req.query.id;
-    const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
-    const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu sản phẩm trong 1 trang
+    res.send(await getProduct())
+    // const id_product = req.query.id;
+    // const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
+    // const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu sản phẩm trong 1 trang
+    // // Tính vị trí bắt đầu và vị trí kết thúc của sản phẩm trên trang hiện tại
+    // const option = [
+    //   {
+    //     model: Model.product_detail,
+    //     as: "product_details",
+    //   },
+    //   {
+    //     model: Model.branch,
+    //     as: 'id_branch_branch'
+    //   },
+    //   {
+    //     model: Model.image,
+    //     as: "images"
+    //   },
+    //   {
+    //     model: Model.category,
+    //     as: "id_category_category"
+    //   },
+    //   {
+    //     model: Model.review,
+    //     as: "reviews"
+    //   }
+    // ]
 
-    console.log(page, pageSize);
-    // Tính vị trí bắt đầu và vị trí kết thúc của sản phẩm trên trang hiện tại
-    const option = [
-      {
-        model: Model.product_detail,
-        as: "product_details",
-      },
-      {
-        model: Model.branch,
-        as: 'id_branch_branch'
-      },
-      {
-        model: Model.image,
-        as: "images"
-      },
-      {
-        model: Model.category,
-        as: "id_category_category"
-      },
-      {
-        model: Model.review,
-        as: "reviews"
-      }
-    ]
+    // if (id_product) {
+    //   // console.log("id:", id_product);
+    //   let data = await product.findOne({ where: { id: id_product }, include: option });
+    //   return res.status(200).send({ code: "002", data: data });
+    // } else {
+    //   if (page || pageSize) {
+    //     let startIndex = (page - 1) * pageSize;
+    //     let endIndex = startIndex + pageSize;
+    //     let data = await product.findAll({
+    //       where: { status: 1 },
+    //       include: option
+    //     });
+    //     const paginatedProducts = data.slice(startIndex, endIndex);
+    //     const totalPage = Math.ceil(data.length / pageSize);
+    //     return res
+    //       .status(200)
+    //       .send({ code: "002", data: paginatedProducts, totalPage });
+    //   } else {
+    //     let data = await product.findAll();
+    //     return res.status(200).send({ code: "002", data: data });
+    //   }
+    // }
 
-    if (id_product) {
-      // console.log("id:", id_product);
-      let data = await product.findOne({ where: { id: id_product }, include: option });
-      return res.status(200).send({ code: "002", data: data });
-    } else {
-      if (page || pageSize) {
-        let startIndex = (page - 1) * pageSize;
-        let endIndex = startIndex + pageSize;
-        let data = await product.findAll({
-          where: { status: 1 },
-          include: option
-        });
-        const paginatedProducts = data.slice(startIndex, endIndex);
-        const totalPage = Math.ceil(data.length / pageSize);
-        return res
-          .status(200)
-          .send({ code: "002", data: paginatedProducts, totalPage });
-      } else {
-        let data = await product.findAll();
-        return res.status(200).send({ code: "002", data: data });
-      }
-    }
-    //nếu bình thường thì lấy hết còn không thì lấy theo id
-    console.log("Check list product: ", data);
   };
 }
 
