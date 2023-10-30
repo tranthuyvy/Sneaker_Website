@@ -46,10 +46,9 @@ const handleFilter = (value, sectionId) => {
 };
 
 function ProductFilter() {
-
   return (
-    <form className="hidden lg:block border rounded-md p-5">
-        <h2 className="py-5 font-semibold opacity-60 text-lg">Filters</h2>
+    <form className="hidden lg:block rounded-md p-4 ml-2">
+      <h2 className="py-3 font-semibold opacity-60 text-lg">Filters</h2>
       {filters.map((section) => (
         <Disclosure
           // defaultOpen={false}
