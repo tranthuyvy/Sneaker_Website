@@ -57,45 +57,45 @@ class order_controller {
     }
     async create(req, res) {
         
-        // try {
-        //     const email = auth.tokenData(req).email;
-        //     const account = await Model.user.findOne({
-        //         where: { email: email }
-        //     })
-        //     let id_user = account.dataValues.id
-        //     const { id_address, listDetail, payment_method } = req.body;
-        //     let totalPrice = 0,
-        //         totalItem = 0,
-        //         total_discounted_price = 0;
-        //     for (let i of listDetail) {
-        //         totalItem += i.quantity;
-        //         totalPrice += i.quantity * i.price;
-        //     }
-        //     let { flag, listProduct } = await checkInventory(listDetail)
-        //     if (flag) {
-        //         let order = await orderModel.create({
-        //             total_price: totalPrice,
-        //             total_item: totalItem,
-        //             total_discounted_price,
-        //             status_payment: 0,
-        //             status: 1,
-        //             create_at: new Date(),
-        //             id_user,
-        //             id_address,
-        //             payment_method
-        //         })
-        //         let detail = await Promise.all(listDetail.map(item => {
-        //             return orderDetail.create({ ...item, id_order: order.dataValues.id })
-        //         }))
-        //         res.status(200).send({ code: '019' })
-        //     }
-        //     else {
-        //         res.status(200).send({ code: '017', data: listProduct })
-        //     }
-        // } catch (error) {
-        //     console.log(error)
-        //     res.status(500).send({ code: '005' })
-        // }
+        try {
+            const email = auth.tokenData(req).email;
+            const account = await Model.user.findOne({
+                where: { email: email }
+            })
+            let id_user = account.dataValues.id
+            const { id_address, listDetail, payment_method } = req.body;
+            let totalPrice = 0,
+                totalItem = 0,
+                total_discounted_price = 0;
+            for (let i of listDetail) {
+                totalItem += i.quantity;
+                totalPrice += i.quantity * i.price;
+            }
+            let { flag, listProduct } = await checkInventory(listDetail)
+            if (flag) {
+                let order = await orderModel.create({
+                    total_price: totalPrice,
+                    total_item: totalItem,
+                    total_discounted_price,
+                    status_payment: 0,
+                    status: 1,
+                    create_at: new Date(),
+                    id_user,
+                    id_address,
+                    payment_method
+                })
+                let detail = await Promise.all(listDetail.map(item => {
+                    return orderDetail.create({ ...item, id_order: order.dataValues.id })
+                }))
+                res.status(200).send({ code: '019' })
+            }
+            else {
+                res.status(200).send({ code: '017', data: listProduct })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ code: '005' })
+        }
         
     }
     async checkInventory(req, res) {
