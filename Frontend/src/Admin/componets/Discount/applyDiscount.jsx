@@ -171,19 +171,21 @@ function ApplyDiscount() {
                     </div>
 
                 </div>
-                <div style={{ minHeight: "20px" }}>
-                    <ol>
+                <div style={{ height: "20px" }} >
+                    <ul className="list-group overflow-y-auto" style={{ height: "200px", position: "relative", zIndex: 3 }}>
                         {result.map((item, index) => (
 
-                            <li key={index} style={{ display: "flex", backgroundColor: "white", color: "black", border: "1px solid green", overflow: "auto", whiteSpace: "nowrap", padding: "6px", cursor: "pointer", fontWeight: "bold" }}
+                            <li key={index}
+                                className="list-group-item list-group-item-action cursor-pointer"
+                                // style={{ display: "flex", backgroundColor: "white", color: "black", border: "1px solid green", overflow: "auto", whiteSpace: "nowrap", padding: "6px", cursor: "pointer", fontWeight: "bold" }}
                                 onClick={() => handleSelect(item)}
                             > {index} - Id: {item.id} Name: {item.name}</li>
                         ))}
-                    </ol>
+                    </ul>
                 </div>
             </form >
             {console.log(listSelect)}
-            <div className="my-3" style={{ fontSize: "1.2rem" }}>Sản phẩm áp dụng khuyến mãi: </div>
+            <div style={{ fontSize: "1.2rem", marginTop: "180px" }}>Sản phẩm áp dụng khuyến mãi: </div>
             <div style={{ border: "1px solid green" }
             } >
                 {
@@ -232,7 +234,7 @@ function ApplyDiscount() {
                                     {discount.id_product}
                                 </TableCell>
                                 <TableCell style={{ textAlign: "center" }}>
-                                    <div >
+                                    <div style={{ display: "flex", justifyContent: "center" }}>
                                         <img
                                             className="w-[3rem] lg:w-[3rem] rounded-md"
                                             src={discount?.id_product_product && discount.id_product_product?.images && discount.id_product_product.images[0]?.link}

@@ -16,13 +16,13 @@ class order_controller {
         let startIndex = (page - 1) * pageSize;
         let endIndex = startIndex + pageSize;
         if (status) {
-            data = await order.findAll({
+            data = await orderModel.findAll({
                 where: { status },
                 include: [{
-                    model: order_detail,
+                    model: orderDetail,
                     as: 'order_details',
                     include: {
-                        model: product_detail,
+                        model: orderDetail,
                         as: 'id_product_detail_product_detail',
                         include: {
                             model: Model.product,
@@ -34,12 +34,12 @@ class order_controller {
         }
         else {
 
-            data = await order.findAll({
+            data = await orderModel.findAll({
                 include: [{
-                    model: order_detail,
+                    model: orderDetail,
                     as: 'order_details',
                     include: {
-                        model: product_detail,
+                        model: productDetail,
                         as: 'id_product_detail_product_detail',
                         include: {
                             model: Model.product,
