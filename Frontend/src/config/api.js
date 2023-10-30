@@ -1,25 +1,28 @@
 import axios from "./axios";
 const LOCALHOST = "https://sneaker-real.onrender.com";
 
-export const API_BASE_URL = LOCALHOST
+export const API_BASE_URL = LOCALHOST;
 
 const axiosApiInstance = axios.create({
   baseURL: API_BASE_URL,
 });
 
 axiosApiInstance.interceptors.request.use((config) => {
-  let [accessToken, refreshToken] = [localStorage.getItem('accessToken'), localStorage.getItem('refreshToken')]
+  let [accessToken, refreshToken] = [
+    localStorage.getItem("accessToken"),
+    localStorage.getItem("refreshToken"),
+  ];
   if (accessToken == null) {
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("accessToken");
     window.location.href = "/login";
   }
 
   config.headers = {
-    'Authorization': `Bearer ${accessToken}`,
-    'Accept': 'application/json',
+    Authorization: `Bearer ${accessToken}`,
+    Accept: "application/json",
     // 'Content-Type': 'application/json'
-  }
+  };
 
   return config;
 });
@@ -44,8 +47,8 @@ axiosApiInstance.interceptors.response.use(
           };
           window.location.reload();
         } else {
-          localStorage.removeItem('refreshToken');
-          localStorage.removeItem('accessToken');
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("accessToken");
           window.location.href = "/login";
         }
       }
