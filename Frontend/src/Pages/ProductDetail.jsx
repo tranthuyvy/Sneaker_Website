@@ -249,6 +249,7 @@ export default function ProductDetails(props) {
     });
     dispatch({ type: "SET_CART", data: [...cart,...listCart] });
     setCart([...cart,...listCart]);
+    toast(lang['020'])
   }
   function checkInCart(id){
     for(let i of cart){

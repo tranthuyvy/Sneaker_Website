@@ -1,10 +1,7 @@
 import axios from "./axios";
-const LOCALHOST = "https://sneaker-real.onrender.com";
-
-export const API_BASE_URL = LOCALHOST;
-
+const HOST = axios.defaults.baseURL
 const axiosApiInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: HOST,
 });
 
 axiosApiInstance.interceptors.request.use((config) => {

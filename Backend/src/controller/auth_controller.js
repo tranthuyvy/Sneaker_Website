@@ -27,7 +27,7 @@ class auth_controller {
     }
     async login_google(req, res) {
         try {
-            const data = await jwt_decode(req.body.code);
+            const data = req.body
             const user = await Model.user.findOne({ where: { email: data.email } });
             if (user) {
                 const acc = {

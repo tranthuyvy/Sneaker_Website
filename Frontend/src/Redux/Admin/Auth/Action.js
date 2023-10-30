@@ -3,6 +3,7 @@ export const LOGOUT = "LOGOUT";
 export const logout = (token) => {
   return async (dispatch) => {
     dispatch({ type: LOGOUT });
-    localStorage.clear();
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken')
   };
 };

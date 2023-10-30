@@ -12,7 +12,7 @@ function Navbar() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isCardVisible, setCardVisible] = useState(false);
   const lang = useSelector((state) => state.lang);
-
+  const cart = useSelector(state=>state.cart)
   const handleCategoryHover = (category) => {
     setHoveredCategory(category);
   };
@@ -33,8 +33,7 @@ function Navbar() {
         console.log(data.data);
         setListCategory(sortedCategories);
       }
-    })().catch((err) => {
-    });
+    })().catch((err) => {});
   }, []);
 
   const sortCategoriesByParent = (categories) => {
@@ -151,7 +150,7 @@ function Navbar() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="purple"
-                className="w-8 h-8"
+                className="w-12 h-12"
               >
                 <path
                   strokeLinecap="round"
@@ -169,7 +168,7 @@ function Navbar() {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="purple"
-                  className="w-8 h-8, ml-3"
+                  className="w-12 h-12, ml-3"
                 >
                   <path
                     strokeLinecap="round"
@@ -177,6 +176,24 @@ function Navbar() {
                     d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
                   />
                 </svg>
+                <div
+                  style={{
+                    color: "white",
+                    background: "red",
+                    height: "26px",
+                    width: "26px",
+                    fontSize: 19,
+                    position: "absolute",
+                    top: "20px",
+                    right: "26px",
+                    borderRadius: "30px",
+                    display:'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <span style={{}}>{cart.length || 0}</span>
+                </div>
               </Link>
             </div>
 
