@@ -9,7 +9,7 @@ import Filter from "../Components/Filter";
 import { sortOptions } from "../Components/FilterData";
 
 const Homepage = (props) => {
-  const lang = useSelector((state) => state.lang)
+  const lang = useSelector((state) => state.lang);
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
@@ -49,10 +49,10 @@ const Homepage = (props) => {
   };
 
   const handleSortMenuOpen = (event) => {
-    setSortMenuOpen(event.currentTarget); 
+    setSortMenuOpen(event.currentTarget);
   };
 
-  const handleSortMenuClose = () => { 
+  const handleSortMenuClose = () => {
     setSortMenuOpen(null);
   };
 
@@ -86,8 +86,8 @@ const Homepage = (props) => {
         </div>
 
         <div className="grid grid-cols-11">
-          <div className="flex-none col-span-2 border h-100">
-            <Filter/>
+          <div className="flex-none col-span-2 border h-100 mt-3 ml-1">
+            <Filter />
           </div>
           <div className="grow col-span-9">
             <div className="grid grid-cols-4 gap-4 ">
@@ -110,7 +110,7 @@ const Homepage = (props) => {
             </div>
             <div>
               <Card className="mt-2 border">
-                <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
+                <div className="mx-auto px-4 py-4 flex justify-center shadow-lg rounded-md">
                   <Pagination
                     count={totalPages}
                     size="medium"
@@ -126,12 +126,11 @@ const Homepage = (props) => {
           </div>
         </div>
       </div>
-
     </div>
   );
   // async function getProduct() {
   //   let data = (await axios.get(`/api/v1/product/get?page=${currentPage}`)).data;
-  
+
   //   if (data.code.localeCompare("002") != 0) {
   //     toast(lang[data.code])
   //   }
@@ -139,8 +138,6 @@ const Homepage = (props) => {
   //     setListProduct([...data.data])
   //   }
   // }
-  
 };
-
 
 export default Homepage;
