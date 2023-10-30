@@ -5,6 +5,7 @@ dotenv.config()
 const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.LOGIN_NAME, process.env.PASSWORD, {
   host: process.env.SERVER_NAME,
   dialect: 'mysql',
+  logging: false
 });
 
 (async () => {
