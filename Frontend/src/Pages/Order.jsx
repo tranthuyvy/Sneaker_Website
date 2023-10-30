@@ -14,7 +14,7 @@ import axiosApiInstance from "../config/api";
 const province_vi = require("../config/province_vi.json");
 const OrderSummary = (order) => {
   const navigate = useNavigate();
-
+  const isLogin = useSelector(state=>state.auth)
   const dispatch = useDispatch();
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -40,6 +40,11 @@ const OrderSummary = (order) => {
   const [listWard, setListWard] = useState([
     ...province_vi[0].districts[0].wards,
   ]);
+  useEffect(()=>{
+     if(!isLogin){
+      dispatch({type:'OPEN_MODAL'})
+     }
+  },[])
   useEffect(() => {
     getData()
       .catch((err) => {
@@ -54,7 +59,7 @@ const OrderSummary = (order) => {
       })
       .finally(() => {});
   }, []);
-
+   
   // const handleCreatePayment=()=>{
   //   const data={orderId:order.order?.id,jwt}
   //   dispatch(createPayment(data))
