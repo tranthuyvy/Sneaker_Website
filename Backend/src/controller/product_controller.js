@@ -208,10 +208,10 @@ class product_controller {
 
   getAllProduct = async (req, res) => {
     const id_product = req.query.id;
-    const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
-    const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu sản phẩm trong 1 trang
+    const page = parseInt(req.query.page); //Trang bao nhiêu
+    const pageSize = parseInt(req.query.pageSize); // bao nhiêu sản phẩm trong 1 trang
 
-    console.log(page, pageSize);
+    // console.log(page, pageSize);
     // Tính vị trí bắt đầu và vị trí kết thúc của sản phẩm trên trang hiện tại
     const option = [
       {
