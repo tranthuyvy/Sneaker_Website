@@ -204,7 +204,7 @@ const UpdateProduct = () => {
             <Typography
                 variant="h3"
                 sx={{ textAlign: "center" }}
-                className="py-10 text-center "
+                className="py-10 text-center product-animation"
             >
                 Update Product
             </Typography>
@@ -235,7 +235,7 @@ const UpdateProduct = () => {
                             <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                                 {image && image.map((img, index) => (
                                     // console.log(img.link)
-                                    <div style={{ position: 'relative', marginRight: '10px' }}>
+                                    <div style={{ position: 'relative', marginRight: '10px' }} className="img-product">
                                         <img
                                             key={index}
                                             // src={URL.createObjectURL(img && img.link)}
@@ -253,6 +253,7 @@ const UpdateProduct = () => {
                                         <img
                                             key={index}
                                             // src={URL.createObjectURL(img && img.link)}
+                                            className="product-animation"
                                             src={img && URL.createObjectURL(img)}
                                             alt={`img-${index}`}
                                             style={{ width: "180px", height: "180px", marginRight: "12px", borderRadius: "8px" }}

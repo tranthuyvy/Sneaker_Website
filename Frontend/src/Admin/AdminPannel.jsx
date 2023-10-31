@@ -46,6 +46,9 @@ import CreateBrand from "./componets/Brand/createBrand";
 import UpdateBrand from "./componets/Brand/updateBrand";
 import DetailProduct from "./componets/DetailProduct/DetailProduct";
 import ApplyDiscount from "./componets/Discount/applyDiscount";
+import InventoryTable from "./componets/Warehouse/InventoryTable";
+import ImportWarehouse from "./componets/Warehouse/ImportWarehouse";
+
 
 const drawerWidth = 240;
 
@@ -59,6 +62,7 @@ const menu = [
   { name: "Discount", path: "/admin/discount" },
   { name: "Category", path: "/admin/category" },
   { name: "Brand", path: "/admin/brand" },
+  { name: "Warehouse", path: "/admin/warehouse" },
   // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
@@ -207,6 +211,9 @@ export default function AdminPannel() {
             <Route path="/staff" element={<AllStaff />}></Route>
             <Route path="/staff/profile" element={<StaffProfile />}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount />}></Route>
+
+            <Route path="/warehouse" element={<InventoryTable />}></Route>
+            <Route path="/warehouse/import" element={<ImportWarehouse />}></Route>
 
             <Route path="/login" element={<Login />}></Route>
             <Route path="/demo" element={<SideBar />} />
