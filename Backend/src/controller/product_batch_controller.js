@@ -15,6 +15,39 @@ class product_batch_controller {
         return res.send("Hello from product_batch");
     }
 
+    getAllBatchProduct = async (req, res) => {
+        try {
+            let data = await product_batch.findAll({
+                include: [{
+                    model: product_batch_item,
+                    as: "product_batch_items",
+                    include: [{
+                        model: Model.product_detail,
+                        as: "id_product_detail_product_detail",
+                        include: [{
+                            model: Model.product,
+                            as: "id_product_product",
+                            include: [{
+                                model: Model.image,
+                                as: "images",
+                            }]
+                        }]
+                    }],
+
+                }, {
+                    model: Model.supplier,
+                    as: "id_supplier_supplier"
+                }
+                ]
+            })
+            console.log("data: ", data);
+            return res.status(200).send({ code: "004", data })
+        } catch (e) {
+            console.log(e);
+            return res.status(500).send({ code: "003" })
+        }
+    }
+
     enterBatchProduct = async (req, res) => {
         // let { arrProductBatch } = req.body
         // [{"id":1,"name": "Nike","size":1,"color":"Đen","price":200}]

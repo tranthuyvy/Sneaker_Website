@@ -1,6 +1,6 @@
 import Model from '../config/sequelize';
 import auth from '../middleware/authenJWT';
-import {sequelize} from '../config/sequelize';
+import { sequelize } from '../config/sequelize';
 
 import { checkInventory } from 'service/order';
 const orderModel = Model.order;
@@ -56,7 +56,7 @@ class order_controller {
             .send({ code: "002", data: paginatedProducts, totalPage });
     }
     async create(req, res) {
-        
+
         try {
             const email = auth.tokenData(req).email;
             const account = await Model.user.findOne({
@@ -96,7 +96,7 @@ class order_controller {
             console.log(error)
             res.status(500).send({ code: '005' })
         }
-        
+
     }
     async checkInventory(req, res) {
         try {

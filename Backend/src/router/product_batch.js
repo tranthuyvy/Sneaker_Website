@@ -4,4 +4,5 @@ const product_batch_router = Router();
 
 product_batch_router.get("/test", product_batch_controller.hello);
 product_batch_router.post("/create", product_batch_controller.enterBatchProduct)
+product_batch_router.get("/get", product_batch_controller.getAllBatchProduct)
 export default product_batch_router;
