@@ -19,7 +19,7 @@
     transition: all 0.2s ease-in-out;
     box-shadow: 0 0 10px #ff9191;
 }
-h1{
+.login-text{
     font-size: 24px;
     font-weight: bold;
     color: #000000;

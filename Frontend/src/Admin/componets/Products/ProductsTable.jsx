@@ -171,12 +171,10 @@ const ProductsTable = () => {
                 <TableCell>BAR CODE</TableCell>
                 <TableCell>Image</TableCell>
                 <TableCell>Name</TableCell>
-                {/* <TableCell sx={{ textAlign: "center" }}>Category</TableCell> */}
                 <TableCell sx={{ textAlign: "center" }}>Price</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Brand</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Category</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
-                {/* <TableCell sx={{ textAlign: "center" }}>Delete</TableCell> */}
                 <TableCell sx={{ textAlign: "center" }}>Reviews</TableCell>
               </TableRow>
             </TableHead>
@@ -190,18 +188,18 @@ const ProductsTable = () => {
                   <TableCell>
                     {product.id && (
                       <QRCode
-                        size={140}
+                        size={100}
                         bgColor="white"
                         fgColor="black"
-                        // value={`http://localhost:3000/product/${item.id}`}
-                        value={`https://www.nike.com/t/air-jordan-xxxvii-low-basketball-shoes-00ZHpg/DQ4122-007`}
+                        value={`https://sneaker-website-inky.vercel.app/product/?id=${product.id}`}
                       />
                     )}
                   </TableCell>
 
                   <TableCell>
                     <Barcode
-                      style={{ width: "50px", height: "auto" }}
+                      width={"1px"}
+                      height={"60px"}
                       value={product.id}
                     />
                   </TableCell>

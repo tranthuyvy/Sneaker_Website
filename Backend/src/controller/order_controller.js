@@ -1,8 +1,8 @@
-import Model from '../config/sequelize';
-import auth from '../middleware/authenJWT';
-import { sequelize } from '../config/sequelize';
+import Model from "../config/sequelize";
+import auth from "../middleware/authenJWT";
+import { sequelize } from "../config/sequelize";
 
-import { checkInventory } from 'service/order';
+import { checkInventory } from "service/order";
 const orderModel = Model.order;
 const orderDetail = Model.order_detail;
 const productDetail = Model.product_detail;

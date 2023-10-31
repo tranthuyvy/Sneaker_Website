@@ -13,8 +13,10 @@ axiosApiInstance.interceptors.request.use((config) => {
   if (accessToken == null) {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("accessToken");
-    // store.dispatch({ type: "OPEN_MODAL" })
-    window.location.href = "/admin/login";
+    const location = window.location;
+    const currentUrl = location.href;
+    currentUrl.includes('/admin') ? window.location.href = '/admin/login' : store.dispatch({ type: "OPEN_MODAL" })
+
   }
 
   config.headers = {
@@ -25,32 +27,38 @@ axiosApiInstance.interceptors.request.use((config) => {
 
   return config;
 });
-
 axiosApiInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response.status == 403) {
       const refreshToken = localStorage.getItem("refreshToken");
-      if (refreshToken) {
-        let apiResponse = await axios.post(
-          axios.defaults.baseURL + `/api/v1/auth/refresh`,
-          { token: refreshToken }
-        );
-        if (apiResponse.data.status && apiResponse) {
-          // alert("Da Refresh Token")
-          const { accessToken, refreshToken } = apiResponse.data.data;
-          // setToken(accessToken, refreshToken);
-          //alert("Da set Token moi")
-          error.config.headers = {
-            Authorization: `Bearer ${accessToken}`,
-          };
-          window.location.reload();
-        } else {
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("accessToken");
-          window.location.href = "/login";
-        }
+      const accessToken = localStorage.getItem("accessToken");
+      // if(accessToken){
+      //   window.location.href='/admin'
+      // }
+      if (error.response.data.code == 400) {
+        window.location.href = '/admin/login'
       }
+      // if (refreshToken) {
+      //   let apiResponse = await axios.post(
+      //     axios.defaults.baseURL + `/api/v1/auth/refresh`,
+      //     { token: refreshToken }
+      //   );
+      //   if (apiResponse.data.status && apiResponse) {
+      //     // alert("Da Refresh Token")
+      //     const { accessToken, refreshToken } = apiResponse.data.data;
+      //     // setToken(accessToken, refreshToken);
+      //     //alert("Da set Token moi")
+      //     error.config.headers = {
+      //       Authorization: `Bearer ${accessToken}`,
+      //     };
+      //     window.location.reload();
+      //   } else {
+      //     localStorage.removeItem("refreshToken");
+      //     localStorage.removeItem("accessToken");
+      //     store.dispatch({ type: "OPEN_MODAL" })
+      //   }
+      // }
     } else {
       return Promise.reject(error);
     }
