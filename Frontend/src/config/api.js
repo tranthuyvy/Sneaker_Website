@@ -13,7 +13,7 @@ axiosApiInstance.interceptors.request.use((config) => {
   if (accessToken == null) {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("accessToken");
-    store.dispatch({type:"OPEN_MODAL"})
+    store.dispatch({ type: "OPEN_MODAL" })
   }
 
   config.headers = {

@@ -99,41 +99,47 @@ class product_controller {
         }
         let dataProduct = await product.findOne({ where: { id } });
         const listImageName = saveImg(req, res);
-        console.log("listImageName: ", listImageName);
+        //1. Ảnh mới để lưu thêm
+        console.log("ảnh mới listImageName: ", listImageName);
         if (listImageName.length > 0) {
-          await productImage.destroy({
-            where: {
-              id_product: id
-            },
-          })
+          // await productImage.destroy({
+          //   where: {
+          //     id_product: id
+          //   },
+          // })
           const image = req.files.length == 0 ? [] : listImageName.map(item => {
             return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
           });
           const img = image.length == 0 ? null : await productImage.bulkCreate(image);
         }
-        else {
+        //2. Ảnh cần xóa
+        let { listImageDelete } = req.body;
+        console.log("ảnh cần xóa listImageDelete: ", listImageDelete);
 
-          console.log("Hello");
-          let { listImageDelete } = req.body;
-          // console.log(listImageDelete);
-          if (!listImageDelete) {
-            console.log("listImageDelete:", listImageDelete);
-            // return res.status(500).send({ code: "009" });
+        if (!listImageDelete) {
+          console.log("listImageDelete:", listImageDelete);
+        }
+        else {
+          //Nếu ảnh cần xóa là 1 và số lượng ảnh trong db cũng là 1 thì k cho xóa
+          let lengthImage = await productImage.count({ where: { id_product: id } })
+          console.log("lengthImage: ", lengthImage);
+          if (listImageDelete.length == lengthImage) {
+            console.log("Khong duoc");
+            return res.status(500).send({ code: "206" })
           }
-          else {
-            for (let i = 0; i < listImageDelete.length; i++) {
-              console.log("Delete: ", listImageDelete[i]);
-              await productImage.destroy({
-                where: {
-                  id: listImageDelete[i]
-                },
-              })
-              //api delete từng cái ảnh
-              //Bỏ ảnh thì xóa ảnh
-              //Chọn ảnh thì thêm ảnh
-            }
+          for (let i = 0; i < listImageDelete.length; i++) {
+            console.log("Delete: ", listImageDelete[i]);
+            await productImage.destroy({
+              where: {
+                id: listImageDelete[i]
+              },
+            })
+            //api delete từng cái ảnh
+            //Bỏ ảnh thì xóa ảnh
+            //Chọn ảnh thì thêm ảnh
           }
         }
+
         if (dataProduct && dataProduct.dataValues && dataProduct.dataValues.id) {
           if (updataData.name) {
             let name = updataData.name.trim();
