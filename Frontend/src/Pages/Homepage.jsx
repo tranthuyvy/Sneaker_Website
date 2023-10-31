@@ -103,7 +103,7 @@ const Homepage = (props) => {
                         (item.id_discount_discount?.value || 0),
                       status: 0,
                       imageUrl:
-                        item.images.lenght > 0
+                        item.images.length > 0
                           ? [...item.images]
                           : [{link:getImage(item)}],
                     };
