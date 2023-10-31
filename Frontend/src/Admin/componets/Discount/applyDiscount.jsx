@@ -80,9 +80,10 @@ function ApplyDiscount() {
         }
     }
     const handleOnChange = (value) => {
-        setSearch(value)
-        console.log(value);
-        filterProduct(value);
+        let a = value.toLowerCase();//Nhập vào chữ biến thành chữ thường
+        setSearch(a)
+        console.log(a);
+        filterProduct(a);
     }
 
     const handleSelect = (pro) => {

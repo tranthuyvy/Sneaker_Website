@@ -107,50 +107,44 @@ const UpdateProduct = () => {
         formData.append("id_category", category);
         formData.append("product_price", price);
         formData.append("description", description);
-        if (image.length > 0) {
-            // if (image.length === listImage.length) {
-            //     return;
-            // }
-            if (image[0] && image[0].id) {
-                console.log("Còn ảnh");
-                const commonIds = [];
-                console.log(">>> image: ", image, listImage);
-                for (const item2 of listImage) {
-                    let isCommon = false;
-                    for (const item1 of image) {
-                        if (item1.id === item2.id) {
-                            isCommon = true;
-                            break;
-                        }
-                    }
-                    if (!isCommon && !commonIds.includes(item2.id)) {
-                        commonIds.push(item2.id);
-                    }
+        // if (image.length > 0) {
+        // if (image.length === listImage.length) {
+        //     return;
+        // }
+        // if (image[0] && image[0].id) {
+        console.log("Còn ảnh cũ");
+        const commonIds = [];
+        console.log(">>> image: ", image, listImage);
+        for (const item2 of listImage) {
+            let isCommon = false;
+            for (const item1 of image) {
+                if (item1.id === item2.id) {
+                    isCommon = true;
+                    break;
                 }
-                console.log(">>>> check commonIds: ", commonIds);
-                for (let i = 0; i < commonIds.length; i++) {
-                    formData.append(`listImageDelete[${i}]`, commonIds[i]);
-                }
+            }
+            if (!isCommon && !commonIds.includes(item2.id)) {
+                commonIds.push(item2.id);
+            }
+        }
+        console.log(">>>> check commonIds: ", commonIds);
+        for (let i = 0; i < commonIds.length; i++) {
+            formData.append(`listImageDelete[${i}]`, commonIds[i]);
+        }
 
-                // formData.append(`listImageDelete${}`, commonIds);
-                // return commonIds;
-            }
-            else {
-                console.log("Ảnh mới");
-                console.log(image);
-                for (let i = 0; i < image.length; i++) {
-                    formData.append(`file${i + 1}`, image[i]);
-                }
+        // formData.append(`listImageDelete${}`, commonIds);
+        // return commonIds;
+        // }
+        if (imageNew.length > 0) {
+            console.log("Ảnh mới");
+            console.log(imageNew);
+            for (let i = 0; i < imageNew.length; i++) {
+                formData.append(`file${i + 1}`, imageNew[i]);
             }
         }
-        else {
-            // if (listImage) {
-            //     return;
-            // }
-            // else {
-            //     formData.append("listImageDelete: ", '');
-            // }
-        }
+
+
+
 
         try {
             let res = await api.put(`/api/v1/product/update?id=${id}`, formData
@@ -173,17 +167,18 @@ const UpdateProduct = () => {
         }
     };
 
-    const [imageToShow, setImageToShow] = useState("");
 
     const handleImageChangeGPT = (e) => {
         const files = Array.from(e.target.files);
         // setImages(files);
+        //Nếu mà còn ảnh thì khỏi setImage
+
         if (files) {
-            setImage(files);
+            // setImage(files);
             setImageNew(files);
             // setSelectedImage(URL.createObjectURL(files));
         } else {
-            setImage(null);
+            // setImage(null);
             setImageNew(null);
             // setSelectedImage(null);
         }
@@ -195,12 +190,13 @@ const UpdateProduct = () => {
         console.log("filteredImages: ", filteredImages);
 
         setImage(filteredImages)
+    };
 
+    const handleRemoveImageNew = (index) => {
+        const filteredImages = imageNew.filter((image, i) => i !== index);
+        console.log("filteredImages: ", filteredImages);
 
-        // setProductData((prevState) => ({
-        //     ...prevState,
-        //     image: filteredImages,
-        // }));
+        setImageNew(filteredImages)
     };
 
     return (
@@ -257,12 +253,12 @@ const UpdateProduct = () => {
                                         <img
                                             key={index}
                                             // src={URL.createObjectURL(img && img.link)}
-                                            src={img.link ? img.link : URL.createObjectURL(img)}
+                                            src={img && URL.createObjectURL(img)}
                                             alt={`img-${index}`}
                                             style={{ width: "180px", height: "180px", marginRight: "12px", borderRadius: "8px" }}
                                         />
 
-                                        <button onClick={() => handleRemoveImage(index)} style={{ position: 'absolute', top: 0, right: "12px", backgroundColor: "green", color: "#ddd", padding: "6px" }}>X</button>
+                                        <button onClick={() => handleRemoveImageNew(index)} style={{ position: 'absolute', top: 0, right: "12px", backgroundColor: "green", color: "#ddd", padding: "6px" }}>X</button>
                                     </div>
                                 ))}
                                 {/* {console.log(">>> Check: ", image)} */}
