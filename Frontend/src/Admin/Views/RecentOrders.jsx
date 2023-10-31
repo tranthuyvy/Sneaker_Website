@@ -34,6 +34,11 @@ const RecentOrders = () => {
         const ordersArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
+
+        ordersArray.sort(
+          (a, b) => new Date(b.create_at) - new Date(a.create_at)
+        );
+
         setOrders(ordersArray);
         setCurrentPage(page);
       })
@@ -108,7 +113,10 @@ const RecentOrders = () => {
                       {item.order_details.map((orderItem) => (
                         <Avatar
                           alt={item.id}
-                          src={orderItem.id_product_detail_product_detail.id_product_product.images[0].link}
+                          src={
+                            orderItem.id_product_detail_product_detail
+                              .id_product_product.images[0].link
+                          }
                         />
                       ))}
                     </AvatarGroup>{" "}
@@ -116,7 +124,7 @@ const RecentOrders = () => {
 
                   <TableCell
                     sx={{ textAlign: "center" }}
-                    style={{ color: "yellow", fontStyle: "bold" }}
+                    style={{ color: "white", fontStyle: "bold" }}
                   >
                     {item.order_details.map((orderItem) => (
                       <span>

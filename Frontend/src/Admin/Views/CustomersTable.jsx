@@ -14,7 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { deepOrange } from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "../../config/axios";
+import api from "../../config/api";
 
 const statusObj = {
   applied: { color: 'info' },
@@ -32,7 +32,7 @@ const CustomersTable = () => {
   const pageSize = 5;
 
   const fetchUsers = (page) => {
-    axios
+    api
       .get(`/api/v1/admin/get?id_role=2&page=${page}&pageSize=${pageSize}`)
       .then((response) => {
         const UsersArray = Array.isArray(response.data.data)
