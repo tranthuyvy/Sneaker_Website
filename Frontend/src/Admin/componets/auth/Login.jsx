@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
+import { applyMiddleware } from "redux";
+import axiosApiInstance from "../../../config/api";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -53,9 +55,8 @@ function LoginForm() {
         if (data.accessToken) {
           const token = data.accessToken;
           localStorage.setItem("accessToken", token);
-
           const successCode = response.data.code;
-
+          axiosApiInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           if (successCode) {
             toast.success(errorMessages[successCode], {
               autoClose: 1000,

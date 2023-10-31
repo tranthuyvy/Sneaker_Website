@@ -12,10 +12,11 @@ import supplier_router from "./supplier";
 import brand_router from "./brand";
 import review_router from "./review"
 import address_router from "./address";
+import auth from '../middleware/authenJWT'
 export default function router(app) {
   app.use("/api/v1/auth", auth_router);
   app.use("/api/v1/address", address_router);
-  app.use("/api/v1/admin", admin_router);
+  app.use("/api/v1/admin", auth.authenAdmin, admin_router);
   app.use("/api/v1/product", product_router);
   app.use("/api/v1/staff", staff_router);
   app.use("/api/v1/product_detail", product_detail_router);

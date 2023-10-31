@@ -47,9 +47,25 @@ auth.authenAdmin = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_KEY, (err, data) => {
         if (err) {
             console.log(err);
-            return res.sendStatus(403);
+            return res.status(403).send({ code: '400' });
         }
-        if (data.id_role != 2) return res.sendStatus(403);
+        if (data.id_role != 1) return res.status(403).send({ code: '400' });
+        next();
+    })
+}
+auth.authenStaff = (req, res, next) => {
+    const authorizationHeader = req.headers['authorization'];
+    if (!authorizationHeader) return res.sendStatus(401);
+
+    const token = authorizationHeader.split(' ')[1];
+    if (!token) return res.sendStatus(401);
+
+    jwt.verify(token, process.env.ACCESS_KEY, (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(403).send({ code: '401' });
+        }
+        if (data.id_role !=1  && data.id_role != 2) return res.status(403).send({ code: '401' });
         next();
     })
 }

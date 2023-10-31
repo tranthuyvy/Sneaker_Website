@@ -102,7 +102,10 @@ const Homepage = (props) => {
                         item.product_price -
                         (item.id_discount_discount?.value || 0),
                       status: 0,
-                      imageUrl: getImage(item),
+                      imageUrl:
+                        item.images.length > 0
+                          ? [...item.images]
+                          : [{link:getImage(item)}],
                     };
                     return <ItemProduct product={product}></ItemProduct>;
                   })
