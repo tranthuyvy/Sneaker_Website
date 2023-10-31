@@ -160,9 +160,9 @@ const AllOrder = () => {
                   <TableCell sx={{}}>
                     <AvatarGroup max={4} sx={{ justifyContent: "start" }}>
                         {order.order_details.map((orderItem) => (
-                          <Avatar
+                          <Avatar 
                             alt={order.id}
-                            src={orderItem.id_product_detail_product_detail.image}
+                            src={orderItem.id_product_detail_product_detail.id_product_product.images[0].link}
                           />
                         ))}
                       </AvatarGroup>{" "}
