@@ -97,6 +97,7 @@ class product_controller {
             update_by = dataStaff.dataValues.id;
           }
         }
+
         let dataProduct = await product.findOne({ where: { id } });
         const listImageName = saveImg(req, res);
         //1. Ảnh mới để lưu thêm

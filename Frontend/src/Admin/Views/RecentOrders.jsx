@@ -18,23 +18,29 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { format } from "date-fns";
-import axios from "../../config/axios";
+import api from "../../config/api";
 
 const RecentOrders = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 100;
 
   const fetchOrders = (page) => {
-    axios
+    api
       .get(`api/v1/order/get?page=${page}&pageSize=${pageSize}`)
       .then((response) => {
         const ordersArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
+
+        ordersArray.sort(
+          (a, b) => new Date(b.create_at) - new Date(a.create_at)
+        );
+
         setOrders(ordersArray);
+        console.log(ordersArray)
         setCurrentPage(page);
       })
       .catch((error) => {
@@ -108,7 +114,10 @@ const RecentOrders = () => {
                       {item.order_details.map((orderItem) => (
                         <Avatar
                           alt={item.id}
-                          src={orderItem.id_product_detail_product_detail.id_product_product.images[0].link}
+                          src={
+                            orderItem.id_product_detail_product_detail
+                              .id_product_product.images[0].link
+                          }
                         />
                       ))}
                     </AvatarGroup>{" "}
@@ -116,7 +125,7 @@ const RecentOrders = () => {
 
                   <TableCell
                     sx={{ textAlign: "center" }}
-                    style={{ color: "yellow", fontStyle: "bold" }}
+                    style={{ color: "white", fontStyle: "bold" }}
                   >
                     {item.order_details.map((orderItem) => (
                       <span>

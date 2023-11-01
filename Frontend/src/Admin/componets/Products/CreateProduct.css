@@ -8,3 +8,38 @@
     color: red;
     font-size: 14px;
 }
+
+@keyframes product-animation {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.product-animation {
+    position: relative;
+    animation: product-animation 2s;
+}
+
+@keyframes img-product {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.img-product {
+    animation-name: img-product;
+    animation-duration: 2s;
+}
+
+.img-product-select {
+    animation-name: img-product;
+    animation-duration: 5s;
+}

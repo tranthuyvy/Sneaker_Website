@@ -1,14 +1,24 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RadioGroup } from "@headlessui/react";
-import { Box, Button, Grid, LinearProgress, Rating, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  LinearProgress,
+  Rating,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "../config/axios";
 import { getImage, setCart } from "../config/common";
 import ProductReviewCard from "../Components/ProductReviewCard";
+import AddToCart from "../Animation/AddToCart.json";
+import Lottie from "lottie-react";
 
 export default function ProductDetails(props) {
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   const location = useLocation();
   const { lang, cart } = useSelector((state) => {
     return { lang: state.lang, cart: state.cart };
@@ -47,14 +57,14 @@ export default function ProductDetails(props) {
     })();
   }, []);
 
-  const totalRatings = (product && product.reviews) ? product.reviews.reduce(
-    (total, review) => total + review.star,
-    0
-  ) : 0;
+  const totalRatings =
+    product && product.reviews
+      ? product.reviews.reduce((total, review) => total + review.star, 0)
+      : 0;
 
   const averageRating = totalRatings / product?.reviews.length;
 
-  console.log("averageRating", averageRating)
+  console.log("averageRating", averageRating);
 
   // total ratings excellent
   const excellentRatings = (product?.reviews || []).filter(
@@ -139,21 +149,7 @@ export default function ProductDetails(props) {
                 className="h-full w-full object-cover object-center"
               />
             </div>
-            <div className="flex flex-wrap space-x-5 justify-center">
-              {/* {product.images.map((image, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleSetActiveImage(image)}
-                  className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg max-w-[5rem] max-h-[5rem] mt-4"
-                >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="h-full w-full object-cover object-center"
-                  />
-                </div>
-              ))} */}
-            </div>
+            <div className="flex flex-wrap space-x-5 justify-center"></div>
           </div>
           {/* product detail */}
           <div className="lg:col-span-1 mx-auto max-w-2xl px-4 pb-16 sm:px-6  lg:max-w-7xl  lg:px-8 lg:pb-24">
@@ -192,9 +188,16 @@ export default function ProductDetails(props) {
                 <h3 className="sr-only">Reviews</h3>
 
                 <div className="flex items-center space-x-3">
-                  <Rating name="read-only" value={averageRating} precision={0.5} readOnly />
+                  <Rating
+                    name="read-only"
+                    value={averageRating}
+                    precision={0.5}
+                    readOnly
+                  />
 
-                  <p className="opacity-60 text-sm">{product?.reviews.length} Ratings</p>
+                  <p className="opacity-60 text-sm">
+                    {product?.reviews.length} Ratings
+                  </p>
                   <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
                     {product?.reviews.length} reviews
                   </p>
@@ -249,7 +252,40 @@ export default function ProductDetails(props) {
                     </div>
                   </RadioGroup>
                 </div>
-                <Button
+
+                {isAddingToCart ? (
+                  <Lottie
+                    style={{
+                      width: "70%",
+                      height: "50%",
+                      cursor: "pointer",
+                    }}
+                    loop={true}
+                    animationData={AddToCart}
+                  />
+                ) : (
+                  <Button
+                    variant="contained"
+                    onClick={addCart}
+                    sx={{
+                      padding: ".9rem 4rem",
+                      marginTop: "5.8rem",
+                      marginLeft: "6rem",
+                      backgroundColor: "#9155FD",
+                      borderRadius: 8,
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: "#6f38e6",
+                      },
+                    }}
+                  >
+                    <Typography variant="button" fontWeight="bold">
+                      Add To Cart
+                    </Typography>
+                  </Button>
+                )}
+
+                {/* <Button
                   variant="contained"
                   onClick={addCart}
                   sx={{
@@ -267,6 +303,7 @@ export default function ProductDetails(props) {
                     Add To Cart
                   </Typography>
                 </Button>
+                <Lottie onClick={addCart} style={{width: "70%", cursor:"pointer", marginRight:"50px"}} loop={true} animationData={AddToCart} /> */}
               </form>
             </div>
 
@@ -343,8 +380,8 @@ export default function ProductDetails(props) {
                         sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
                         value={
-                          (totalExcellentRatings /
-                            product?.reviews.length) * 100
+                          (totalExcellentRatings / product?.reviews.length) *
+                          100
                         }
                         color="success"
                       />
@@ -373,8 +410,7 @@ export default function ProductDetails(props) {
                         sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
                         value={
-                          (totalVeryGoodRatings /
-                            product?.reviews.length) * 100
+                          (totalVeryGoodRatings / product?.reviews.length) * 100
                         }
                         color="success"
                       />
@@ -403,8 +439,7 @@ export default function ProductDetails(props) {
                         sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
                         value={
-                          (totalGoodRatings /
-                            product?.reviews.length) * 100
+                          (totalGoodRatings / product?.reviews.length) * 100
                         }
                         color="warning"
                       />
@@ -439,9 +474,7 @@ export default function ProductDetails(props) {
                         }}
                         variant="determinate"
                         value={
-                          (totalAverageRatings /
-                            product?.reviews.length) *
-                          100
+                          (totalAverageRatings / product?.reviews.length) * 100
                         }
                         color="warning"
                       />
@@ -469,9 +502,7 @@ export default function ProductDetails(props) {
                         sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
                         variant="determinate"
                         value={
-                          (totalPoorRatings /
-                            product?.reviews.length) *
-                          100
+                          (totalPoorRatings / product?.reviews.length) * 100
                         }
                         color="error"
                       />
@@ -492,6 +523,7 @@ export default function ProductDetails(props) {
   );
 
   function addCart() {
+    setIsAddingToCart(true);
     let listCart = [];
     listSize.forEach((item) => {
       if (item.isChecked && !checkInCart(item.id))
@@ -499,6 +531,9 @@ export default function ProductDetails(props) {
     });
     dispatch({ type: "SET_CART", data: [...cart, ...listCart] });
     setCart([...cart, ...listCart]);
+    setTimeout(() => {
+      setIsAddingToCart(false);
+    }, 2500);
     toast(lang["020"]);
   }
   function checkInCart(id) {

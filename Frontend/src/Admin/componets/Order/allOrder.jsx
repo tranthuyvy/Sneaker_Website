@@ -42,6 +42,11 @@ const AllOrder = () => {
         const ordersArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
+
+        ordersArray.sort(
+          (a, b) => new Date(b.create_at) - new Date(a.create_at)
+        );
+
         setOrders(ordersArray);
         setCurrentPage(page);
         setTotalPages(response.data.totalPage);
@@ -159,14 +164,17 @@ const AllOrder = () => {
                 >
                   <TableCell sx={{}}>
                     <AvatarGroup max={4} sx={{ justifyContent: "start" }}>
-                        {order.order_details.map((orderItem) => (
-                          <Avatar 
-                            alt={order.id}
-                            src={orderItem.id_product_detail_product_detail.id_product_product.images[0].link}
-                          />
-                        ))}
-                      </AvatarGroup>{" "}
-                      {/* <Typography
+                      {order.order_details.map((orderItem) => (
+                        <Avatar
+                          alt={order.id}
+                          src={
+                            orderItem.id_product_detail_product_detail
+                              .id_product_product.images[0].link
+                          }
+                        />
+                      ))}
+                    </AvatarGroup>{" "}
+                    {/* <Typography
                           sx={{
                             fontWeight: 500,
                             fontSize: "0.875rem !important",
@@ -203,11 +211,20 @@ const AllOrder = () => {
                         </Typography>
                       </Box>
                     </TableCell> */}
-                    <TableCell
+                  <TableCell
                     sx={{ textAlign: "center" }}
-                    style={{ color: "yellow", fontStyle: "bold" }}
+                    style={{ color: "white", fontStyle: "bold" }}
                   >
-                    Name nè
+                    {order.order_details.map((orderItem) => (
+                      <span>
+                        {"  "}
+                        {
+                          orderItem.id_product_detail_product_detail
+                            .id_product_product.name
+                        }
+                        ,
+                      </span>
+                    ))}
                   </TableCell>
 
                   <TableCell

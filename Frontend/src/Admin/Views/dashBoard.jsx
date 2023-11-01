@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import AdminPannel from "../../Styles/AdminPannelWrapper";
 import Achivement from "./Achivement";
-// import MonthlyOverview from "../tables/MonthlyOverView";
+import Statistics from "./Statistics";
 // import CardStatsVertical from "../../Styles/CardStatsVertical";
 // import SalesByCountries from "../tables/SalesByContry";
 // import DepositWithdraw from "../tables/DepositeAndWithdraw";
@@ -10,7 +10,7 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { customTheme, darkTheme } from "../them/customThem";
 import "./dashBoard.css";
 // import RecentlyAddeddProducts from "../tables/RecentlyAddeddProducts";
-// import SalesOverTime from "../tables/SalesOverTime";
+import Chart from "./Chart";
 import RecentOrders from "./RecentOrders";
 // import {AssuredWorkloadIcon }from '@mui/icons-material';
 import { BriefcaseVariantOutline, CurrencyUsd, HelpCircleOutline, Poll } from "mdi-material-ui";
@@ -38,10 +38,10 @@ const Dashboard = () => {
               <Achivement />
             </Grid>
             <Grid item xs={12} md={8}>
-              {/* <MonthlyOverview /> */}
+              <Statistics />
             </Grid>
             <Grid item xs={12} md={12} lg={8}>
-              {/* <SalesOverTime/> */}
+              <Chart />
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <CustomersTable />

@@ -64,7 +64,7 @@ function LoginForm() {
           }
 
           dispatch({ type: "LANG_ENG" });
-          navigate("/admin/staff");
+          navigate("/admin/dashboard");
         } else {
           const errorCode = response.data.code;
 

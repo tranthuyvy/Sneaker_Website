@@ -15,7 +15,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { customTheme } from "./them/customThem";
-// import AdminNavbar from "./Navigation/AdminNavbar";
+import AdminNavbar from "./Views/AdminNavbar";
 import Dashboard from "./Views/dashBoard";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "./Views/sideBar";
@@ -36,7 +36,6 @@ import StaffProfile from "./componets/Staff/staffProfile";
 import AllStaff from "./componets/Staff/allStaff";
 import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
-import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
 import AllCategory from "./componets/Category/allCategory";
 import CreateCategory from "./componets/Category/createCategory";
@@ -46,11 +45,13 @@ import CreateBrand from "./componets/Brand/createBrand";
 import UpdateBrand from "./componets/Brand/updateBrand";
 import DetailProduct from "./componets/DetailProduct/DetailProduct";
 import ApplyDiscount from "./componets/Discount/applyDiscount";
+import InventoryTable from "./componets/Warehouse/InventoryTable";
+import ImportWarehouse from "./componets/Warehouse/ImportWarehouse";
 
 const drawerWidth = 240;
 
 const menu = [
-  { name: "Dashboard", path: "/admin" },
+  { name: "Dashboard", path: "/admin/dashboard" },
   { name: "Products", path: "/admin/products" },
   { name: "Customers", path: "/admin/customers" },
   { name: "Staff", path: "/admin/staff" },
@@ -59,6 +60,7 @@ const menu = [
   { name: "Discount", path: "/admin/discount" },
   { name: "Category", path: "/admin/category" },
   { name: "Brand", path: "/admin/brand" },
+  { name: "Warehouse", path: "/admin/warehouse" },
   // {name:"Create Account",path:"/admin/staff/create"},
 ];
 
@@ -71,15 +73,6 @@ export default function AdminPannel() {
 
   const location = useLocation();
   const isLoginPage = location.pathname === "/admin/login";
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/admin/login");
-  };
-
-  const handleAccount = () => {
-    navigate("/admin/staff/profile");
-  };
 
   const drawer = (
     <Box
@@ -108,23 +101,6 @@ export default function AdminPannel() {
         ))}
       </List>
 
-      <List sx={{ position: "absolute", bottom: 0, width: "100%" }}>
-        <Divider />
-        {["Account", "Logout"].map((text, index) => (
-          <ListItem
-            key={text}
-            disablePadding
-            onClick={text === "Logout" ? handleLogout : handleAccount}
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
     </Box>
   );
 
@@ -142,6 +118,7 @@ export default function AdminPannel() {
     <ThemeProvider theme={customTheme}>
       <Box sx={{ display: `${isLargeScreen ? "flex" : "block"}` }}>
         <CssBaseline />
+        <AdminNavbar handleSideBarViewInMobile={handleSideBarViewInMobile} />
 
         {!isLoginPage && (
           <Drawer
@@ -176,7 +153,7 @@ export default function AdminPannel() {
         <Box className="adminContainer" component="main" sx={{ flexGrow: 1 }}>
           <Toolbar />
           <Routes>
-            <Route path="/" element={<Dashboard />}></Route>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
             {/* <Route path="/product/create" element={<CreateProductForm/>}></Route> */}
             {/* <Route path="/product/update/:productId" element={<UpdateProductForm/>}></Route> */}
             {/* <Route path="/product/reviews/:productId" element={<ProductReview/>}></Route> */}
@@ -207,6 +184,9 @@ export default function AdminPannel() {
             <Route path="/staff" element={<AllStaff />}></Route>
             <Route path="/staff/profile" element={<StaffProfile />}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount />}></Route>
+
+            <Route path="/warehouse" element={<InventoryTable />}></Route>
+            <Route path="/warehouse/import" element={<ImportWarehouse />}></Route>
 
             <Route path="/login" element={<Login />}></Route>
             <Route path="/demo" element={<SideBar />} />
