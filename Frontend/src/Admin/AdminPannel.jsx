@@ -15,7 +15,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { customTheme } from "./them/customThem";
-// import AdminNavbar from "./Navigation/AdminNavbar";
+import AdminNavbar from "./Views/AdminNavbar";
 import Dashboard from "./Views/dashBoard";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "./Views/sideBar";
@@ -36,7 +36,6 @@ import StaffProfile from "./componets/Staff/staffProfile";
 import AllStaff from "./componets/Staff/allStaff";
 import CreateStaffAccount from "./componets/Staff/createStaffAccount";
 import Login from "./componets/auth/Login";
-import { logout } from "../Redux/Admin/Auth/Action";
 import { useDispatch } from "react-redux";
 import AllCategory from "./componets/Category/allCategory";
 import CreateCategory from "./componets/Category/createCategory";
@@ -48,7 +47,6 @@ import DetailProduct from "./componets/DetailProduct/DetailProduct";
 import ApplyDiscount from "./componets/Discount/applyDiscount";
 import InventoryTable from "./componets/Warehouse/InventoryTable";
 import ImportWarehouse from "./componets/Warehouse/ImportWarehouse";
-
 
 const drawerWidth = 240;
 
@@ -75,15 +73,6 @@ export default function AdminPannel() {
 
   const location = useLocation();
   const isLoginPage = location.pathname === "/admin/login";
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/admin/login");
-  };
-
-  const handleAccount = () => {
-    navigate("/admin/staff/profile");
-  };
 
   const drawer = (
     <Box
@@ -112,23 +101,6 @@ export default function AdminPannel() {
         ))}
       </List>
 
-      <List sx={{ position: "absolute", bottom: 0, width: "100%" }}>
-        <Divider />
-        {["Account", "Logout"].map((text, index) => (
-          <ListItem
-            key={text}
-            disablePadding
-            onClick={text === "Logout" ? handleLogout : handleAccount}
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
     </Box>
   );
 
@@ -146,6 +118,7 @@ export default function AdminPannel() {
     <ThemeProvider theme={customTheme}>
       <Box sx={{ display: `${isLargeScreen ? "flex" : "block"}` }}>
         <CssBaseline />
+        <AdminNavbar handleSideBarViewInMobile={handleSideBarViewInMobile} />
 
         {!isLoginPage && (
           <Drawer
