@@ -39,6 +39,9 @@ axiosApiInstance.interceptors.response.use(
       if (error.response.data.code == 400) {
         window.location.href = '/admin/login'
       }
+      else(
+        store.dispatch({ type: "OPEN_MODAL" })
+      )
       // if (refreshToken) {
       //   let apiResponse = await axios.post(
       //     axios.defaults.baseURL + `/api/v1/auth/refresh`,

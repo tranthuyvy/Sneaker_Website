@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(50),
       allowNull: false
     },
+    avatar: {
+      type: DataTypes.STRING(500),
+      allowNull: true
+    },
     point: {
       type: DataTypes.INTEGER,
       allowNull: false

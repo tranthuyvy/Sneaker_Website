@@ -5,7 +5,6 @@ const auth = {}
 auth.tokenData = (req, res) => {
     const authorizationHeader = req.headers['authorization'];
     if (!authorizationHeader) return null;
-
     const token = authorizationHeader.split(' ')[1];
     let result = null;
     jwt.verify(token, process.env.ACCESS_KEY, (err, data) => {
@@ -22,7 +21,6 @@ auth.tokenData = (req, res) => {
 auth.authenUser = (req, res, next) => {
     const authorizationHeader = req.headers['authorization']
     if (!authorizationHeader) return res.sendStatus(401)
-
     const token = authorizationHeader.split(' ')[1]
     if (!token) return res.sendStatus(401)
     let key = process.env.ACCESS_KEY
@@ -40,7 +38,6 @@ auth.authenUser = (req, res, next) => {
 auth.authenAdmin = (req, res, next) => {
     const authorizationHeader = req.headers['authorization'];
     if (!authorizationHeader) return res.sendStatus(401);
-
     const token = authorizationHeader.split(' ')[1];
     if (!token) return res.sendStatus(401);
 
