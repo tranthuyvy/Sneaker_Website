@@ -58,5 +58,6 @@
     "203": "Promotion period is not valid",
     "204": "Delete success",
     "205": "Delete failed",
-    "206": "Please select a photo"
+    "206": "Please select a photo",
+    "207": "Duplicate size"
 }

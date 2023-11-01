@@ -199,6 +199,15 @@ const UpdateProduct = () => {
         setImageNew(filteredImages)
     };
 
+    const handleChangeNumber = (e) => {
+        const { name, value } = e.target;
+        if (isNaN(value) || value.includes(".") || value.includes(" ")) {
+            return;
+        }
+        setPrice(value)
+    };
+
+
     return (
         <Fragment className="createProductContainer ">
             <Typography
@@ -323,7 +332,7 @@ const UpdateProduct = () => {
                             label="Price"
                             name="price"
                             value={price}
-                            onChange={(e) => setPrice(e.target.value)}
+                            onChange={(e) => handleChangeNumber(e)}
                         />
                     </Grid>
                     <Grid item xs={12}>

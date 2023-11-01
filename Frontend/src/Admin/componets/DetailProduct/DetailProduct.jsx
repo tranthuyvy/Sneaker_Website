@@ -116,9 +116,13 @@ const DetailProduct = () => {
 
     };
     const handleInputChange = (id, event) => {
+        let value = event.target.value
         const newInputs = inputs.map(input => {
             if (input.id === id) {
-                return { ...input, value: event.target.value };
+                if (isNaN(value) || value.includes(".") || value.includes(" ")) {
+                    return input;
+                }
+                return { ...input, value };
             }
             return input;
         });
