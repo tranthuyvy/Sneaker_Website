@@ -111,7 +111,7 @@ const InventoryTable = () => {
                                             && item.product_batch_items[0].id_product_detail_product_detail
                                             && item.product_batch_items[0].id_product_detail_product_detail.id_product_product
                                             && item.product_batch_items[0].id_product_detail_product_detail.id_product_product.images
-                                            && item.product_batch_items[0].id_product_detail_product_detail.id_product_product.images[0].link}
+                                            && item.product_batch_items[0].id_product_detail_product_detail.id_product_product.images[0]?.link}
                                             width={"100px"}
                                             height={"100px"}
                                             style={{ borderRadius: "50%" }}

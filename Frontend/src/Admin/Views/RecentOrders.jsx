@@ -116,7 +116,7 @@ const RecentOrders = () => {
                           alt={item.id}
                           src={
                             orderItem.id_product_detail_product_detail
-                              .id_product_product.images[0].link
+                              .id_product_product.images[0]?.link
                           }
                         />
                       ))}

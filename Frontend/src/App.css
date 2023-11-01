@@ -8,4 +8,5 @@ footer {
   bottom: 0;
   width: 100%;
   color: white;
+  max-height: 100vh;
 }
