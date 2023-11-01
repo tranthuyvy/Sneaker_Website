@@ -5,7 +5,6 @@ const auth = {}
 auth.tokenData = (req, res) => {
     const authorizationHeader = req.headers['authorization'];
     if (!authorizationHeader) return null;
-
     const token = authorizationHeader.split(' ')[1];
     let result = null;
     jwt.verify(token, process.env.ACCESS_KEY, (err, data) => {

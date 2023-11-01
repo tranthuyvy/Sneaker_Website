@@ -31,7 +31,7 @@ function UserProfile() {
     call();
   }, []);
   return (
-    <Fragment className='h-screen'>
+    <Fragment className="h-screen">
       <Typography
         variant="h3"
         sx={{ textAlign: "center" }}
@@ -70,55 +70,65 @@ function UserProfile() {
           />
         </div>
       </Typography>
-      <div className="h-44 px-20">
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4} key={1}>
-            <span>Name</span>
-            <TextField
-              fullWidth
-              placeholder={"name"}
-              name={"name"}
-              value={name}
-              onChange={handleChange}
-              type={"text"}
-            />
+      <div className="h-44 px-10 flex flex-row">
+        <div className="w-1/3 h-44">
+          <span>Dashboard</span>
+          <ul>
+            <li>Info</li>
+            <li>Address</li>
+            <li>Order</li>
+          </ul>
+        </div>
+        <div className="w-2/3 h-44">
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4} key={1}>
+              <span>Name</span>
+              <TextField
+                fullWidth
+                placeholder={"name"}
+                name={"name"}
+                value={name}
+                onChange={handleChange}
+                type={"text"}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} key={2}>
+              <span>Email</span>
+              <TextField
+                fullWidth
+                placeholder={"email"}
+                name={"email"}
+                value={user?.email}
+                onChange={handleChange}
+                type={"text"}
+                disabled
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} key={3}>
+              <span>Phone</span>
+              <TextField
+                fullWidth
+                placeholder={"phone"}
+                name={"phone"}
+                value={phone}
+                onChange={handleChange}
+                type={"text"}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                sx={{ p: 1.8 }}
+                className="py-20"
+                size="large"
+                // onClick={handleEdit}
+              >
+                Update Profile
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={4} key={2}>
-            <span>Email</span>
-            <TextField
-              fullWidth
-              placeholder={"email"}
-              name={"email"}
-              value={user?.email}
-              onChange={handleChange}
-              type={"text"}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} key={3}>
-            <span>Phone</span>
-            <TextField
-              fullWidth
-              placeholder={"phone"}
-              name={"phone"}
-              value={phone}
-              onChange={handleChange}
-              type={"text"}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              sx={{ p: 1.8 }}
-              className="py-20"
-              size="large"
-              // onClick={handleEdit}
-            >
-              Update Profile
-            </Button>
-          </Grid>
-        </Grid>
-        <ToastContainer />
+          <ToastContainer />
+        </div>
       </div>
     </Fragment>
   );
