@@ -2,7 +2,8 @@ import Model from "../config/sequelize"
 
 const product_batch = Model.product_batch;
 const product_batch_item = Model.product_batch_item;
-
+import auth from "../middleware/authenJWT"
+const staff = Model.staff
 class product_batch_controller {
     hello = (req, res) => {
         /**
@@ -57,129 +58,106 @@ class product_batch_controller {
         // { "id": 2, "name": "Jodan", "quantity": 22, "size": 3, "color": "Xanh", "price": 300 },
         // { "id": 3, "name": "Cao gót", "quantity": 50, "size": 3, "color": "Tím mộng mơ", "price": 100 }
         // ]
-        let arrProductBatch = [
-            {
-                id: 5,
-                name: "giày jodan air",
-                id_branch: 1,
-                id_category: 2,
-                create_by: 1,
-                create_at: "2023-10-12T14:14:43.000Z",
-                product_price: 200,
-                id_discount: null,
-                description: "Giày xanh dương hơi đậm",
-                update_by: null,
-                update_at: "2023-10-12T14:14:43.000Z",
-                status: 1,
-                id_product_detail: 'Hero',
-                quantity: 999,
-                import_price: 99,
-                id_supplier: 1,
-                "product_details": [
-                    {
-                        "id": 2,
-                        "color": "red",
-                        "size": 37,
-                        "id_product": 5
-                    },
-                    {
-                        "id": 1,
-                        "color": "red",
-                        "size": 37,
-                        "id_product": 5
-                    }
-                ]
-            },
-            {
-                id: 5,
-                name: "giày jodan air",
-                id_branch: 1,
-                id_category: 2,
-                create_by: 1,
-                create_at: "2023-10-12T14:14:43.000Z",
-                product_price: 200,
-                id_discount: null,
-                description: "Giày xanh dương hơi đậm",
-                update_by: null,
-                update_at: "2023-10-12T14:14:43.000Z",
-                status: 1,
-                id_product_detail: 'Hero1',
-                quantity: 759,
-                import_price: 300,
-                id_supplier: 1,
-                "product_details": [
-                    {
-                        "id": 2,
-                        "color": "red",
-                        "size": 37,
-                        "id_product": 5
-                    },
-                    {
-                        "id": 1,
-                        "color": "red",
-                        "size": 37,
-                        "id_product": 5
-                    }
-                ]
-            }
-        ]
-        // Tạo 1 cái lô trước product_batch
-        // await product_batch.create({
-        //     name:"Phong",
-        //      id_supplier:1,
-        //      create_by:1
-        //  })
-        if (!arrProductBatch || arrProductBatch.length < 1) {
-            return res.status(500).send({ code: "009" });
-        }
-        let check = false;
-        let dataBatch = '';
-        for (let i in arrProductBatch) {
-            // console.log(arrProductBatch[i]);
-            //Tạo từng sản phẩm trong lô
-            console.log("quantity:", arrProductBatch[i].quantity);
-            console.log("import_price:", arrProductBatch[i].import_price);
-            console.log("id_product_detail:", arrProductBatch[i].id_product_detail);
-            console.log("id_supplier: ", arrProductBatch[i].id_supplier);
-            if (!arrProductBatch[i].quantity || !arrProductBatch[i].import_price || !arrProductBatch[i].id_product_detail) {
+        try {
+            let { arrProductBatch, id_supplier, name } = req.body
+            let create_by = 1;
+            console.log("hello");
+            //Người tạo
+            let id_account = auth.tokenData(req)?.id;
+            console.log("id_acount", id_account);
+            if (!id_supplier || !name) {
                 return res.status(500).send({ code: "009" });
             }
+            else {
+                id_supplier = Number(id_supplier)
+                name = name.trim();
+                // Check xem thằng name có trong db chưa
+                let checkName = await product_batch.findOne({ where: { name } });
+                console.log(checkName);
 
-            if (!check) {
-                check = true;
-                try {
-                    dataBatch = await product_batch.create({
-                        name: "Lô 1",
-                        create_by: 2,
-                        id_supplier: arrProductBatch[i].id_supplier,
-                    })
-
-                } catch (e) {
-                    console.log(e);
-                    return res.status(500).send({ code: "006" });
-                }
-                console.log(dataBatch);
-            }
-            if (dataBatch && dataBatch.dataValues && dataBatch.dataValues.id) {
-                try {
-                    await product_batch_item.create({
-                        quantity: arrProductBatch[i].quantity,
-                        id_product_detail: arrProductBatch[i].id_product_detail,
-                        import_price: arrProductBatch[i].import_price,
-                        id_product_batch: dataBatch.dataValues.id
-                    })
-
-                } catch (e) {
-                    console.log(e);
-                    return res.status(500).send({ code: "006" });
+                if (checkName?.dataValues) {
+                    return res.status(500).send({ code: "011" });
                 }
             }
+            if (id_account) {
 
+                let dataStaff = await staff.findOne({ where: { id_account } });
+                if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
+                    create_by = dataStaff.dataValues.id;
+                }
+            }
+            console.log("arrProductBatch: ", arrProductBatch, id_supplier);
+            // Tạo 1 cái lô trước product_batch
+            // await product_batch.create({
+            //     name:"Phong",
+            //      id_supplier,
+            //      create_by:1
+            //  })
+            if (!arrProductBatch || arrProductBatch.length < 1) {
+                return res.status(500).send({ code: "009" });
+            }
+            let check = false;
+            let dataBatch = '';
+
+            //Check xem có đầy đủ các thuộc tính
+            for (let i in arrProductBatch) {
+                if (!arrProductBatch[i].quantity || !arrProductBatch[i].import_price || !arrProductBatch[i].id_product_detail) {
+                    return res.status(500).send({ code: "009" });
+                }
+            }
+            //Check xem thằng id_product_detail có trùng
+            for (let i = 0; i < arrProductBatch.length; i++) {
+                for (let j = i + 1; j < arrProductBatch.length; j++) {
+                    if (arrProductBatch[i].id_product_detail == arrProductBatch[j].id_product_detail) {
+                        return res.status(500).send({ code: "207" });
+                    }
+                }
+            }
+
+            for (let i in arrProductBatch) {
+                // console.log(arrProductBatch[i]);
+                //Tạo từng sản phẩm trong lô
+                console.log("quantity:", arrProductBatch[i].quantity);
+                console.log("import_price:", arrProductBatch[i].import_price);
+                console.log("id_product_detail:", arrProductBatch[i].id_product_detail);
+                // if (!arrProductBatch[i].quantity || !arrProductBatch[i].import_price || !arrProductBatch[i].id_product_detail) {
+                //     return res.status(500).send({ code: "009" });
+                // }
+
+                if (!check) {
+                    check = true;
+                    try {
+                        dataBatch = await product_batch.create({ name, create_by, id_supplier })
+                    } catch (e) {
+                        console.log(e);
+                        return res.status(500).send({ code: "005" });
+                    }
+                    console.log(dataBatch);
+                }
+                if (dataBatch && dataBatch.dataValues && dataBatch.dataValues.id) {
+                    try {
+                        await product_batch_item.create({
+                            quantity: arrProductBatch[i].quantity,
+                            id_product_detail: arrProductBatch[i].id_product_detail,
+                            import_price: arrProductBatch[i].import_price,
+                            id_product_batch: dataBatch.dataValues.id
+                        })
+
+                    } catch (e) {
+                        console.log(e);
+                        return res.status(500).send({ code: "005" });
+                    }
+                }
+
+            }
+            console.log("Thành công rồi bro");
+            return res.status(200).send({ code: "004" });
+
+        } catch (e) {
+            console.log(e);
+            return res.status(500).send({ code: "005" });
         }
-        console.log("Thành công rồi bro");
-        return res.status(200).send({ code: "004" });
     }
-
 }
 
 export default new product_batch_controller();

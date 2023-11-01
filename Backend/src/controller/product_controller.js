@@ -263,7 +263,7 @@ class product_controller {
           .status(200)
           .send({ code: "002", data: paginatedProducts, totalPage });
       } else {
-        let data = await product.findAll();
+        let data = await product.findAll({ include: option });
         return res.status(200).send({ code: "002", data: data });
       }
     }
