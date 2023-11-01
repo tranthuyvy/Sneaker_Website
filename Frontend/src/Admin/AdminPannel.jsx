@@ -53,7 +53,7 @@ import ImportWarehouse from "./componets/Warehouse/ImportWarehouse";
 const drawerWidth = 240;
 
 const menu = [
-  { name: "Dashboard", path: "/admin" },
+  { name: "Dashboard", path: "/admin/dashboard" },
   { name: "Products", path: "/admin/products" },
   { name: "Customers", path: "/admin/customers" },
   { name: "Staff", path: "/admin/staff" },
@@ -180,7 +180,7 @@ export default function AdminPannel() {
         <Box className="adminContainer" component="main" sx={{ flexGrow: 1 }}>
           <Toolbar />
           <Routes>
-            <Route path="/" element={<Dashboard />}></Route>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
             {/* <Route path="/product/create" element={<CreateProductForm/>}></Route> */}
             {/* <Route path="/product/update/:productId" element={<UpdateProductForm/>}></Route> */}
             {/* <Route path="/product/reviews/:productId" element={<ProductReview/>}></Route> */}

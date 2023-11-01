@@ -18,17 +18,17 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { format } from "date-fns";
-import axios from "../../config/axios";
+import api from "../../config/api";
 
 const RecentOrders = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 100;
 
   const fetchOrders = (page) => {
-    axios
+    api
       .get(`api/v1/order/get?page=${page}&pageSize=${pageSize}`)
       .then((response) => {
         const ordersArray = Array.isArray(response.data.data)
@@ -40,6 +40,7 @@ const RecentOrders = () => {
         );
 
         setOrders(ordersArray);
+        console.log(ordersArray)
         setCurrentPage(page);
       })
       .catch((error) => {
