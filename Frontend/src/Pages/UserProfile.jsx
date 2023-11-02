@@ -16,7 +16,7 @@ function UserProfile() {
     { name: "Address", isActive: false, component: <AddressUser/> },
     { name: "Order", isActive: false, component: <OrderUser/> },
   ]);
-  const [item, setItem] = useState(listItem.find((item) => item.isActive));
+  const [item, setItem] = useState(listItem[0]);
   useEffect(()=>{
  
   },[])
