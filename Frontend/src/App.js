@@ -17,6 +17,7 @@ function App(props) {
   useEffect(() => {
     dispatch({ type: "INIT_CART" });
     dispatch({ type: "INIT_AUTH" });
+    dispatch({ type: "LANG_ENG" });
   }, []);
 
   const customStyles = {
@@ -34,7 +35,7 @@ function App(props) {
   };
   return (
     <div className="">
-      <ToastContainer />
+      <ToastContainer autoClose={1000} />
       <Modal
         isOpen={openModal}
         style={customStyles}

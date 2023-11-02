@@ -17,7 +17,7 @@ import user_router from "./user";
 export default function router(app) {
   app.use("/api/v1/auth", auth_router);
   app.use("/api/v1/user", auth.authenUser, user_router);
-  app.use("/api/v1/address", address_router);
+  app.use("/api/v1/address", auth.authenUser,address_router);
   app.use("/api/v1/admin", auth.authenAdmin, admin_router);
   app.use("/api/v1/product", product_router);
   app.use("/api/v1/staff", staff_router);

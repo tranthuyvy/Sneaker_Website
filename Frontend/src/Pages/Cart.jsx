@@ -37,7 +37,7 @@ const Cart = () => {
   });
   return (
     <div className="lg:grid grid-cols-3 lg:px-16 relative mt-10">
-      <div className="lg:col-span-2 lg:px-5 bg-white">
+      <div className="lg:col-span-2 lg:px-5 ">
         <div className="space-y-3">
           {cart.length > 0 && listCart.length > 0 ? (
             listCart.map((item, index) => (

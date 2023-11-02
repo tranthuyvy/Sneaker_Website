@@ -64,7 +64,7 @@ function Navbar() {
   return (
     <Fragment>
       {/* Navigation bar */}
-      <nav className="bg-white-700 text-white border-b border-gray-200 lg:px-20 px-2">
+      <nav className="bg-white text-white border-b border-gray-200 lg:px-20 px-2">
         <div className="mx-auto px-4">
           <div className="flex justify-between items-center">
             {/* Logo */}

@@ -27,13 +27,21 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(50),
       allowNull: false
     },
+    point: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     avatar: {
       type: DataTypes.STRING(500),
       allowNull: true
     },
-    point: {
+    default_address: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true,
+      references: {
+        model: 'address',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -46,6 +54,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "fk_user_address_idx",
+        using: "BTREE",
+        fields: [
+          { name: "default_address" },
         ]
       },
     ]

@@ -15,11 +15,24 @@ export default function run(app) {
     limits: {
       fileSize: 4 * 1024 * 1024 // Giới hạn kích thước tệp tải lên là 4MB
     }
-  });
+  }).any("file")
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  app.use(upload.any("file"));
+  app.use((req, res, next) => {
+    upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        console.log(err)
+       return res.status(500).send({ code: err.code })
+      } else if (err) {
+        console.log(err)
+       return res.status(500).send({ code: '006' })
+        // An unknown error occurred when uploading.
+      }
+      next()
+    })
+  });
+
   app.use("/public", express.static(path.join(__dirname, "../public")));
   const httpServer = createServer(app);
   router(app);
