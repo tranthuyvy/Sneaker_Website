@@ -18,31 +18,48 @@ class product_batch_controller {
 
     getAllBatchProduct = async (req, res) => {
         try {
-            let data = await product_batch.findAll({
-                include: [{
-                    model: product_batch_item,
-                    as: "product_batch_items",
-                    include: [{
-                        model: Model.product_detail,
-                        as: "id_product_detail_product_detail",
-                        include: [{
-                            model: Model.product,
-                            as: "id_product_product",
-                            include: [{
-                                model: Model.image,
-                                as: "images",
-                            }]
-                        }]
-                    }],
+            let { id_product_batch } = req.query;
+            const page = parseInt(req.query.page); //Trang bao nhiêu
+            const pageSize = parseInt(req.query.pageSize); // bao nhiêu sản phẩm trong 1 trang
 
-                }, {
-                    model: Model.supplier,
-                    as: "id_supplier_supplier"
-                }
-                ]
-            })
-            console.log("data: ", data);
-            return res.status(200).send({ code: "004", data })
+            let option = [{
+                model: product_batch_item,
+                as: "product_batch_items",
+                include: [{
+                    model: Model.product_detail,
+                    as: "id_product_detail_product_detail",
+                    include: [{
+                        model: Model.product,
+                        as: "id_product_product",
+                        include: [{
+                            model: Model.image,
+                            as: "images",
+                        }]
+                    }]
+                }],
+
+            }, {
+                model: Model.supplier,
+                as: "id_supplier_supplier"
+            }
+            ]
+            if (id_product_batch) {
+                // console.log("id:", id_product);
+                let data = await product_batch.findOne({ where: { id: id_product_batch }, include: option });
+                return res.status(200).send({ code: "002", data: data });
+            }
+            else {
+
+                let startIndex = (page - 1) * pageSize;
+                let endIndex = startIndex + pageSize;
+                let data = await product_batch.findAll({
+                    include: option
+                })
+                const paginatedProducts = data.slice(startIndex, endIndex);
+                const totalPage = Math.ceil(data.length / pageSize);
+                console.log("data: ", data);
+                return res.status(200).send({ code: "002", data: paginatedProducts, totalPage });
+            }
         } catch (e) {
             console.log(e);
             return res.status(500).send({ code: "003" })
@@ -103,6 +120,12 @@ class product_batch_controller {
             for (let i in arrProductBatch) {
                 if (!arrProductBatch[i].quantity || !arrProductBatch[i].import_price || !arrProductBatch[i].id_product_detail) {
                     return res.status(500).send({ code: "009" });
+                }
+                if (Number(arrProductBatch[i].import_price) < 1) {
+                    return res.status(500).send({ code: "209" })
+                }
+                if (Number(arrProductBatch[i].quantity) < 1) {
+                    return res.status(500).send({ code: "210" })
                 }
             }
             //Check xem thằng id_product_detail có trùng

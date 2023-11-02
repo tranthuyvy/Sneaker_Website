@@ -22,7 +22,7 @@ import {
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
@@ -30,9 +30,10 @@ import { useSelector } from "react-redux";
 import axios from "../../../config/axios";
 import DeleteIcon2 from "@mui/icons-material/Delete";
 import axiosApiInstance from "../../../config/api";
+import { format } from "date-fns";
 
 
-const ImportWarehouse = () => {
+const WarehouseDetail = () => {
     const navigate = useNavigate();
     const [warehouse, setWarehouse] = useState([]);
     const [search, setSearch] = useState([])
@@ -47,11 +48,11 @@ const ImportWarehouse = () => {
 
     const lang = useSelector((state) => state);
     const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
-
+    const id = useParams().id;
     const fetchApi = async () => {
         try {
 
-            let res = await axios.get("/api/v1/product/get");
+            let res = await axios.get(`/api/v1/product-batch/get?id_product_batch=${id}`);
             console.log("res: ", res);
             if (res && res.data && res.data.data) {
                 setListProduct(res.data.data)
@@ -187,80 +188,22 @@ const ImportWarehouse = () => {
             <Card>
                 {/* <CardHeader
                     title={ */}
-                <div className="hidden md:block flex-grow max-w-sm" style={{ marginLeft: "20px", marginTop: "20px" }}>
-                    <div className="relative w-full">
-                        <input
-                            type="search"
-                            className="block w-full border border-gray-300 rounded-md py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 focus:text-gray-900 sm:text-sm"
-                            style={{ color: "black" }}
-                            placeholder="Search"
-                            // value={search}
-                            onChange={(e) => handleOnChange(e.target.value)}
-                        />
-
-                        <div className="absolute inset-y-0 left-0 flex items-center justify-center pl-3">
-                            <svg
-                                className="h-5 w-5 text-gray-400"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M7.716 14.966A7.25 7.25 0 1114.35 8.33a7.25 7.25 0 01-6.634 6.635zM15.5 9.75a5.75 5.75 0 10-11.5 0 5.75 5.75 0 0011.5 0z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        </div>
-
+                <div className="hidden md:block flex-grow" style={{ float: "right", width: "450px", fontSize: "1.2rem", marginTop: "30px", marginBottom: "30px" }}>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div style={{ flex: 2, fontWeight: "bold" }}>Supplier:</div>
+                        <div style={{ flex: 2 }}>{listProduct && listProduct.id_supplier_supplier && listProduct.id_supplier_supplier.name}</div>
                     </div>
-                    <div style={{ height: "20px" }} >
-                        <ul className="list-group overflow-y-auto" style={{ height: "200px", position: "relative", zIndex: 3 }}>
-                            {result.map((item, index) => (
-
-                                <li
-                                    // key={index}
-                                    className="list-group-item list-group-item-action cursor-pointer"
-                                    style={{ padding: "0.5rem" }}
-                                    onClick={() => handleSelect(item)}
-                                >
-                                    <div
-                                        style={{ display: "flex", backgroundColor: "white", color: "black" }}
-                                    >
-                                        <div style={{ flex: 2.5 }}><b>{index + 1} - Id: </b><span style={{ color: "#a855f7" }}>{item.id}</span> </div>
-                                        <div style={{ flex: 2 }}>  <b>Name:</b> <span style={{ color: "#a855f7" }}>{item.name}</span></div>
-                                    </div>
-                                    {/* <b>{index} - Id:</b>  <span style={{ color: "#a855f7" }}>{item.id}</span> <b>Name:</b> <span style={{ color: "#a855f7" }}>{item.name}</span> */}
-                                </li>
-                            ))}
-                        </ul>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div style={{ flex: 2, fontWeight: "bold" }}>Receipt_Code:</div>
+                        <div style={{ flex: 2 }}>{listProduct.id} </div>
                     </div>
-                    <FormControl fullWidth style={{ marginTop: "200px" }}>
-
-                        <InputLabel id="demo-simple-select-label">Select supplier</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={id_supplier}
-                            label="Age"
-                            onChange={(e) => setIdSupplier(e.target.value)}
-                        >
-                            {listSupplier.length > 0 && listSupplier.map((item, indexDetail) => {
-                                return (
-                                    <MenuItem value={item.id}
-                                    // onClick={() => handleClick(detail.id, item.id)}
-                                    >{item.name}</MenuItem>
-                                )
-                            })}
-                        </Select>
-                        <TextField className="my-3" label="Product Batch Name" variant="outlined"
-                            value={productBatchName}
-                            onChange={(e) => setProductBatchName(e.target.value)}
-                        />
-                    </FormControl>
-
-
-
-
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div style={{ flex: 2, fontWeight: "bold" }}>Date:</div>
+                        <div style={{ flex: 2 }}>{listProduct.create_at && format(
+                            new Date(listProduct.create_at),
+                            "dd/MM/yyyy"
+                        )}</div>
+                    </div>
                 </div>
                 {/* } */}
                 {/* sx={{ pt: 2, "& .MuiCardHeader-action": { mt: 0.6 } }} */}
@@ -276,11 +219,10 @@ const ImportWarehouse = () => {
                                 <TableCell style={{ textAlign: "center" }}>Quantity</TableCell>
                                 <TableCell style={{ textAlign: "center" }}>Price</TableCell>
                                 <TableCell style={{ textAlign: "center" }}>Total</TableCell>
-                                <TableCell style={{ textAlign: "center" }}>Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {listSelect && listSelect.map((item, index) => (
+                            {listProduct && listProduct.product_batch_items && listProduct.product_batch_items.length > 0 && listProduct.product_batch_items.map((item, index) => (
                                 <TableRow
                                     hover
                                     // key={item.id}
@@ -305,53 +247,25 @@ const ImportWarehouse = () => {
                                     </TableCell> */}
 
                                     <TableCell style={{ textAlign: "center" }}>
-                                        {item.name}
+                                        {item.id_product_detail_product_detail.id_product_product.name}
                                     </TableCell>
                                     <TableCell style={{ textAlign: "center" }}>
-                                        <FormControl fullWidth>
-                                            <InputLabel >Select Size</InputLabel>
-                                            <Select
-
-
-                                                value={item.id_product_detail}
-                                                onChange={(e) => handleInputChange(item.id_list_select, e, "size")}
-                                            // label="Age"
-                                            >
-                                                {/* <div style={{ overflowY: "scroll", height: "200px" }}> */}
-                                                {item.product_details.length > 0 && item.product_details.map((detail, indexDetail) => {
-                                                    return (
-                                                        <MenuItem value={detail.id}
-                                                        // onClick={() => handleClick(detail.id, item.id)}
-                                                        >{detail.size}</MenuItem>
-                                                    )
-                                                })}
-                                                {/* </div> */}
-                                            </Select>
-                                        </FormControl>
+                                        {item.id_product_detail_product_detail.size}
                                     </TableCell>
                                     <TableCell style={{ textAlign: "center" }}>
-                                        <TextField value={item.quantity}
-                                            onChange={e => handleInputChange(item.id_list_select, e, "quantity")}
-
-                                        />
+                                        {item.quantity}
                                     </TableCell>
 
 
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        <TextField value={item.import_price}
-                                            onChange={e => handleInputChange(item.id_list_select, e, "price")}
-                                        />
+                                        {item.import_price}
                                     </TableCell>
 
                                     <TableCell sx={{ textAlign: "center" }}>
                                         $ {Number(item.quantity) * Number(item.import_price)}
                                     </TableCell>
 
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        <DeleteIcon2 style={{ color: "red" }} className="cursor-pointer"
-                                            onClick={() => handleRemoveItemListSelect(item.id_list_select)}
-                                        />
-                                    </TableCell>
+
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -360,7 +274,7 @@ const ImportWarehouse = () => {
             </Card>
             {
 
-                listSelect.map((item, index) => {
+                listProduct && listProduct.product_batch_items && listProduct.product_batch_items.length > 0 && listProduct.product_batch_items.map((item, index) => {
                     quantity += Number(item.quantity);
                     total += (Number(item.quantity) * Number(item.import_price));
                 })}
@@ -373,10 +287,10 @@ const ImportWarehouse = () => {
                     <div style={{ flex: 2, fontWeight: "bold" }}>Total:</div>
                     <div style={{ flex: 2 }}>$ {total}</div>
                 </div>
-                <Button variant="contained" color="success" onClick={() => handleImport()} style={{ fontSize: "1.75rem", fontWeight: "bold", marginTop: "20px" }} >Import</Button>
+
             </div>
         </Box >
     );
 };
 
-export default ImportWarehouse;
+export default WarehouseDetail;

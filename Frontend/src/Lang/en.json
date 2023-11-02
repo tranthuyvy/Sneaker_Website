@@ -59,5 +59,10 @@
     "204": "Delete success",
     "205": "Delete failed",
     "206": "Please select a photo",
-    "207": "Duplicate size"
+    "207": "Duplicate size",
+    "208": "Image very big",
+    "209": "Price must be greater than 0",
+    "210": "The quantity must be greater than 0",
+    "211": "Size must be greater than 0 and less than 100",
+    "212": "Size already exists in the system"
 }

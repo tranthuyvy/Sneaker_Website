@@ -28,8 +28,8 @@ const InventoryTable = () => {
 
     const navigate = useNavigate();
     const [warehouse, setWarehouse] = useState([]);
-    //   const [currentPage, setCurrentPage] = useState(1);
-    //   const [totalPages, setTotalPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const pageSize = 8;
 
     const lang = useSelector((state) => state);
@@ -38,10 +38,12 @@ const InventoryTable = () => {
     const fetchApi = async (page) => {
         try {
 
-            let res = await axios.get("/api/v1/product-batch/get");
+            let res = await axios.get(`/api/v1/product-batch/get?page=${page}&pageSize=${pageSize}`);
             console.log("res: ", res);
             if (res && res.data && res.data.data) {
                 setWarehouse(res.data.data)
+                setCurrentPage(page);
+                setTotalPages(res.data.totalPage);
             }
         } catch (e) {
             console.log(e);
@@ -54,14 +56,19 @@ const InventoryTable = () => {
 
     useEffect(() => {
         // fetchApi(currentPage);
-        fetchApi();
+        fetchApi(currentPage);
     }, []);
 
     const handlePaginationChange = (event, page) => {
         // fetchSuppliers(page);
-        fetchApi();
+        fetchApi(page);
     };
 
+    const handleGoDetail = (id) => {
+        navigate(`/admin/warehouse/detail/${id}`);
+    }
+
+    let quantity = 0;
     return (
         <Box>
             <Card>
@@ -73,7 +80,7 @@ const InventoryTable = () => {
                                 onClick={() => navigate("/admin/warehouse/import")}
                                 variant="contained"
                                 color="primary"
-                                className="button-animation"
+                            // className="button-animation"
                             >
                                 + Import
                             </Button>
@@ -124,35 +131,28 @@ const InventoryTable = () => {
                                     </TableCell>
 
                                     <TableCell style={{ textAlign: "center" }}>
-                                        {/* {item.product_batch_items
-                                            && item.product_batch_items[index].quantity
-                                
-                                        } */}
+                                        {
+
+                                            item && item.product_batch_items && item.product_batch_items.length > 0 && item.product_batch_items.map((item, index) => {
+                                                quantity += Number(item.quantity);
+                                                console.log("quantity");
+                                            })}
+                                        {quantity}
                                     </TableCell>
 
                                     <TableCell style={{ textAlign: "center" }}>
-                                        <FiberManualRecordIcon
-                                        // style={{
-                                        //     color: supplier.status === 0 ? "red" : "green",
-                                        // }}
-                                        />
+                                        <Button
+                                            onClick={() => handleGoDetail(item.id)}
+                                            variant="text"
+                                            color="info"
+
+                                        >
+                                            {/* <DeleteIcon /> */}
+                                            GO
+                                        </Button>
                                     </TableCell>
                                     <TableCell style={{}} sx={{ textAlign: "center" }}>
-                                        <Button
-                                            onClick={() => navigate(`/admin/supplier/update/${item.id}`)}
-                                            variant="text"
-                                            color="warning"
-                                        >
-                                            <EditIcon />
-                                        </Button>
-
-                                        <Button
-                                            // onClick={() => handleDeleteSupplier(item.id)}
-                                            variant="text"
-                                            color="secondary"
-                                        >
-                                            <DeleteIcon />
-                                        </Button>
+                                        {quantity > 0 ? "Still" : "SOLD OUT"}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -163,9 +163,9 @@ const InventoryTable = () => {
             <Card className="mt-2 border">
                 <div className="mx-auto px-4 py-5 flex justify-center shadow-lg rounded-md">
                     <Pagination
-                        // count={totalPages}
+                        count={totalPages}
                         size="medium"
-                        // page={currentPage}
+                        page={currentPage}
                         color="primary"
                         onChange={handlePaginationChange}
                         showFirstButton
