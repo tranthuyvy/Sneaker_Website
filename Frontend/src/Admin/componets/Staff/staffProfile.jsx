@@ -221,7 +221,7 @@ const StaffProfile = () => {
               disabled: true,
               startAdornment: (
                 <InputAdornment position="start">
-                  {editedStaff.status === 0 ? (
+                  {editedStaff.status === 1 ? (
                     <>
                       <FiberManualRecordIcon style={{ color: "green" }} />
                       Làm Việc
