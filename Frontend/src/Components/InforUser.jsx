@@ -3,21 +3,24 @@ import { InputAdornment, Typography } from "@mui/material";
 import { Grid, TextField, Button, Avatar } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import { Fragment } from "react";
-
+import Lottie from "lottie-react";
+import validator from "validator";
 import axiosApiInstance from "../config/api";
 import { useSelector } from "react-redux";
-import { toast, ToastContainer } from "react-toastify";
-
+import { toast } from "react-toastify";
 function InforUser() {
   const [user, setUser] = useState();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [delay, setDelay] = useState(Math.random() * 4000 + 500);
+  const [errorName, setErrorName] = useState({ isValid: true, err: "" });
+  const [errorPhone, setErrorPhone] = useState({ isValid: true, err: "" });
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     function call() {
       getUser()
-        .then()
+        .then((data) => setIsLoading(false))
         .catch((err) => {
           setTimeout(() => {
             call();
@@ -26,8 +29,20 @@ function InforUser() {
     }
     call();
   }, []);
+
   return (
     <div className=" w-2/3 bg-white">
+      {isLoading ? (
+        <Lottie
+          style={{
+            width: "70%",
+            height: "50%",
+            cursor: "pointer",
+          }}
+          animationData={require("../Animation/Loading.json")}
+          loop={true}
+        />
+      ) : null}
       <Typography
         variant="h3"
         sx={{ textAlign: "center" }}
@@ -81,7 +96,11 @@ function InforUser() {
               value={name}
               onChange={handleChange}
               type={"text"}
+              error={!errorName.isValid}
             />
+            <p hidden={errorName.isValid} className="text-red-500">
+              {errorName.err}
+            </p>
           </Grid>
           <Grid item xs={12} sm={5} key={2}>
             <span>Email</span>
@@ -105,6 +124,9 @@ function InforUser() {
               onChange={handleChange}
               type={"text"}
             />
+            <p hidden={errorPhone.isValid} className="text-red-500">
+              {errorPhone.err}
+            </p>
           </Grid>
           <Grid item xs={12}>
             <Button
@@ -112,13 +134,13 @@ function InforUser() {
               sx={{ p: 1.8 }}
               className="py-20"
               size="large"
+              hidden={!errorName.isValid || !errorPhone.isValid}
               // onClick={handleEdit}
             >
               Update Profile
             </Button>
           </Grid>
         </Grid>
-        <ToastContainer />
       </div>
     </div>
   );
@@ -128,14 +150,30 @@ function InforUser() {
     setName(data?.name || "");
     setPhone(data?.phone || "");
   }
+  function handleChangeName(name) {
+    if (name.localeCompare("") == 0) {
+      setErrorName({ isValid: false, err: "Name is Empty" });
+    } else setErrorName({ isValid: true, err: "No thing" });
+    setName(name);
+  }
+  function handleChangePhone(phone) {
+    if (phone.localeCompare("") == 0) {
+      setErrorPhone({ isValid: false, err: "Phone is Empty" });
+    } else if (!validator.isNumeric(phone)) {
+      return setErrorPhone({ isValid: false, err: "Phone must be number" });
+    } else {
+      setPhone(phone);
+      setErrorPhone({ isValid: true, err: "No thing" });
+    }
+  }
   function handleChange(event) {
     const { name, value } = event.target;
     switch (name) {
       case "name":
-        setName(value);
+        handleChangeName(value);
         break;
       case "phone":
-        setPhone(value);
+        handleChangePhone(value);
         break;
       default:
         break;

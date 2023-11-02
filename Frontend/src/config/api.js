@@ -36,7 +36,7 @@ axiosApiInstance.interceptors.response.use(
       // if(accessToken){
       //   window.location.href='/admin'
       // }
-      if (error.response.data.code == 400) {
+      if (error.response.data.code == 400 || error.response.data.code == 401) {
         window.location.href = '/admin/login'
       }
       else(

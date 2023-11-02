@@ -21,6 +21,10 @@
     "019": "Order added successfully",
     "020": "Cart added successfully",
     "021": "Coming soon",
+    "022": "Deleted successfully",
+    "023": "Deletion failed because you already used this address",
+    "024": "You do not have permission to access this resource",
+    "025": "Updated failure",
     "100": "Please fill in Email fields",
     "101": "Please fill in Password fields",
     "102": "Please fill in Staff Name fields",
@@ -59,5 +63,6 @@
     "204": "Delete success",
     "205": "Delete failed",
     "206": "Please select a photo",
-    "207": "Duplicate size"
+    "207": "Duplicate size",
+    "LIMIT_FILE_SIZE": "file size is too large"
 }

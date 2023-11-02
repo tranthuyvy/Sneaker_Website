@@ -19,7 +19,7 @@ function AddressUser() {
   const [province, setProvince] = useState(0);
   const [district, setDistrict] = useState(0);
   const [ward, setWard] = useState(0);
-  const [idAddressDefault,setIdAddressDefault] = useState(0)
+  const [idAddressDefault, setIdAddressDefault] = useState(0);
   const [addressName, setAddressName] = useState("");
   const [listProvince, setListProvince] = useState([...province_vi]);
   const [listDistrict, setListDictrict] = useState([
@@ -297,7 +297,7 @@ function AddressUser() {
   async function getAddress() {
     const data = (await axiosApiInstance.get("/api/v1/address/get")).data.data;
     setListAddress([...(data?.address || [])]);
-    setIdAddressDefault(data?.user?.default_address )
+    setIdAddressDefault(data?.user?.default_address);
   }
   function handleChange(e, type) {
     if (type == 0) {
@@ -323,7 +323,11 @@ function AddressUser() {
           ? listAddress.map((item) => {
               return (
                 <div
-                  className={`h-32 flex px-10 text-xl item ${item.id==idAddressDefault ? 'border-orange-700 border-2 rounded':'border-b-2'}`}
+                  className={`h-32 flex px-10 text-xl item ${
+                    item.id == idAddressDefault
+                      ? "border-orange-700 border-2 rounded"
+                      : "border-b-2"
+                  }`}
                   key={item.id}
                 >
                   <div className="w-5/6">
@@ -344,10 +348,21 @@ function AddressUser() {
                     </div>
                   </div>
                   <div className="w-1/6 justify-around items-center flex flex-col">
-                    <button className="border w-full rounded-sm">
+                    <button
+                      className="border w-full rounded-sm"
+                      onClick={() => {setDefaultAddress(item.id).then().catch()}}
+                    >
                       Set default
                     </button>
-                    <button className="border w-full rounded-sm">Delete</button>
+                    <button
+                      className="border w-full rounded-sm"
+                      hidden={item.id==idAddressDefault}
+                      onClick={() => {
+                        handleDelete(item.id).then().catch();
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               );
@@ -355,6 +370,23 @@ function AddressUser() {
           : "You don't have any address yet"}
       </div>
     );
+  }
+  async function setDefaultAddress(id) {
+    const data = (
+      await axiosApiInstance.get(`/api/v1/address/set-default?id=${id}`)
+    ).data;
+    if (data.code.localeCompare("013") == 0) {
+      setIdAddressDefault(id);
+    }
+    toast(lang[data.code]);
+  }
+  async function handleDelete(id) {
+    const data = (await axiosApiInstance.get(`/api/v1/address/delete?id=${id}`))
+      .data;
+    if (data.code.localeCompare("022") == 0) {
+      setListAddress([...listAddress.filter((item) => item.id != id)]);
+    }
+    toast(lang[data.code]);
   }
   async function saveAddress(e) {
     e.preventDefault();

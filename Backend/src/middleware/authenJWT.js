@@ -29,6 +29,7 @@ auth.authenUser = (req, res, next) => {
             console.log(err);
             return res.sendStatus(403)
         }
+        if (data.id_role != 3) return res.status(403).send({ code: '402' });
         req.user = { ...data }
         next()
     })

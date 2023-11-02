@@ -17,6 +17,7 @@ function App(props) {
   useEffect(() => {
     dispatch({ type: "INIT_CART" });
     dispatch({ type: "INIT_AUTH" });
+    dispatch({ type: "LANG_ENG" });
   }, []);
 
   const customStyles = {
