@@ -30,8 +30,9 @@ function UserProfile() {
     }
     call();
   }, []);
+
   return (
-    <Fragment className="h-screen">
+    <Fragment className="h-screen mb-5">
       <Typography
         variant="h3"
         sx={{ textAlign: "center" }}

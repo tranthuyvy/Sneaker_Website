@@ -1,11 +1,10 @@
 .app {
   position: relative;
-  min-height: 270vh;
 }
 
 footer {
-  position: absolute;
   bottom: 0;
   width: 100%;
+  margin-top: auto;
   color: white;
 }
