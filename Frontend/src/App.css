@@ -1,6 +1,7 @@
 .app {
   position: relative;
   min-height: 270vh;
+  background-color: #f0f0f0;
 }
 
 footer {

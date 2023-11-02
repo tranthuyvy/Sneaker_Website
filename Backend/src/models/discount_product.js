@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   return sequelize.define('discount_product', {
     id: {
       autoIncrement: true,
@@ -9,7 +9,11 @@ module.exports = function (sequelize, DataTypes) {
     },
     id_product: {
       type: DataTypes.STRING(15),
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'product',
+        key: 'id'
+      }
     },
     id_discount: {
       type: DataTypes.INTEGER,
@@ -41,6 +45,13 @@ module.exports = function (sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id_discount" },
+        ]
+      },
+      {
+        name: "FK_discount_product_product",
+        using: "BTREE",
+        fields: [
+          { name: "id_product" },
         ]
       },
     ]

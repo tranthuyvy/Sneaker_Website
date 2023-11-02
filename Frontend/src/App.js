@@ -34,7 +34,7 @@ function App(props) {
   };
   return (
     <div className="">
-      <ToastContainer />
+      <ToastContainer autoClose={1000} />
       <Modal
         isOpen={openModal}
         style={customStyles}

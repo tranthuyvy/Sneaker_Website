@@ -27,7 +27,7 @@ function InforUser() {
     call();
   }, []);
   return (
-    <div className="w-2/3">
+    <div className=" w-2/3 bg-white">
       <Typography
         variant="h3"
         sx={{ textAlign: "center" }}

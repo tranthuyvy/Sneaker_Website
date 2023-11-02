@@ -1,0 +1,15 @@
+.btn-add:hover {
+    transform: scale(1.1);
+    transition: all 0.2s ease-in-out;
+}
+.item {
+    animation: slow-show 1.5s forwards;
+  }
+  @keyframes slow-show  {
+    from {
+        opacity: 0; 
+    }
+    to {
+        opacity: 1; 
+    }
+  }

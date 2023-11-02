@@ -1,7 +1,6 @@
+import { fn, col, literal } from 'sequelize';
 import Model from '../config/sequelize';
 import auth from "../middleware/authenJWT";
-const order = Model.order;
-const order_detail = Model.order_detail;
 class address_controller {
     async get(req, res) {
         try {
@@ -10,7 +9,8 @@ class address_controller {
                 where: { email: email }
             })
             const data = await Model.address.findAll({
-                where: { id_user: account.dataValues.id }
+                where: { id_user: account.dataValues.id },
+
             })
             res.send({
                 data: {
@@ -19,8 +19,9 @@ class address_controller {
                 },
                 code: '002'
             })
-        } catch (error) {
-            res.send(error)
+        } catch (err) {
+            console.log(err)
+            res.status(200).send({ code: '002' })
         }
     }
     async create(req, res) {
@@ -39,6 +40,14 @@ class address_controller {
         } catch (error) {
             console.log(error)
             res.send({ code: '001' })
+        }
+    }
+    async modify(req, res) {
+        try {
+            
+        } catch (err) {
+            console.log(err)
+            res.status(200).send({code:'002'})
         }
     }
 }

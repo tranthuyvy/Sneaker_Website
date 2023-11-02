@@ -1,6 +1,378 @@
-
-
-function AddressUser(){
-    return <>address</>
+import React, { useEffect, useState } from "react";
+import Lottie from "lottie-react";
+import { useSelector } from "react-redux";
+import Modal from "react-modal";
+import { toast } from "react-toastify";
+import validator from "validator";
+import axiosApiInstance from "../config/api";
+import "../Styles/AddressUser.css";
+const province_vi = require("../config/province_vi.json");
+function AddressUser() {
+  const [listAddress, setListAddress] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [delay, setDelay] = useState(Math.random() * 4000 + 500);
+  const lang = useSelector((state) => state.lang);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [province, setProvince] = useState(0);
+  const [district, setDistrict] = useState(0);
+  const [ward, setWard] = useState(0);
+  const [idAddressDefault,setIdAddressDefault] = useState(0)
+  const [addressName, setAddressName] = useState("");
+  const [listProvince, setListProvince] = useState([...province_vi]);
+  const [listDistrict, setListDictrict] = useState([
+    ...province_vi[0].districts,
+  ]);
+  const [listWard, setListWard] = useState([
+    ...province_vi[0].districts[0].wards,
+  ]);
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      height: "60%",
+      width: "60%",
+      padding: 0,
+    },
+  };
+  useEffect(() => {
+    function call() {
+      getAddress()
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            call();
+          }, delay);
+        });
+    }
+    call();
+  }, []);
+  return (
+    <div className=" w-2/3 bg-white">
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <form className="w-full min-h-full ml-12">
+          <div className="flex flex-wrap -mx-3 mb-4 h-24">
+            <div className="w-full md:w-1/3 px-3 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Name Address
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                id="grid-first-name"
+                type="text"
+                placeholder="Name address"
+                value={addressName}
+                onChange={(e) => handleChange(e, 2)}
+              />
+            </div>
+            <div className="w-full md:w-1/3 px-3 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Recipient name
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                id="grid-first-name"
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => handleChange(e, 0)}
+              />
+            </div>
+          </div>
+          <div className="flex flex-wrap -mx-3 mb-4">
+            <div className="w-full md:w-1/3 px-3  md:mb-0">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Phone
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                onChange={(e) => handleChange(e, 1)}
+                value={phone}
+              />
+            </div>
+            <div className="w-full md:w-1/3 px-3 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Address
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                id="grid-first-name"
+                type="text"
+                placeholder="97 Man Thiện"
+                value={address}
+                onChange={(e) => handleChange(e, 3)}
+              />
+            </div>
+          </div>
+          <div className="flex flex-wrap -mx-3 mb-2 w-4/5">
+            <div className="w-1/2 md:w-1/3 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 "
+                htmlFor="grid-state"
+              >
+                Province
+              </label>
+              <div className="relative">
+                <select
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-state"
+                  onChange={(e) => {
+                    setProvince(e.target.value);
+                    setListDictrict([
+                      ...province_vi[e.target.value]?.districts,
+                    ]);
+                    setDistrict(0);
+                    setWard(0);
+                    setListWard([
+                      ...province_vi[e.target.value]?.districts[0].wards,
+                    ]);
+                  }}
+                >
+                  {listProvince.length > 0
+                    ? listProvince.map((item, index) => {
+                        return <option value={index}>{item.name}</option>;
+                      })
+                    : null}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-state"
+              >
+                District
+              </label>
+              <div className="relative">
+                <select
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-state"
+                  onClick={(e) => {
+                    setDistrict(e.target.value);
+                    setWard(0);
+                    setListWard([
+                      ...province_vi[province]?.districts[e.target.value].wards,
+                    ]);
+                  }}
+                >
+                  {listDistrict.length > 0
+                    ? listDistrict.map((item, index) => {
+                        return <option value={index}>{item.name}</option>;
+                      })
+                    : null}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-state"
+              >
+                Ward
+              </label>
+              <div className="relative">
+                <select
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-state"
+                  onClick={(e) => {
+                    setWard(e.target.value);
+                  }}
+                >
+                  {listWard.length > 0
+                    ? listWard.map((item, index) => {
+                        return <option value={index}>{item.name}</option>;
+                      })
+                    : null}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap -mx-3 mb-2">
+            <div className="flex justify-around font-bold text-lg">
+              <button
+                className="h-10 w-40 border ml-4 my-4"
+                style={{
+                  backgroundColor: "#9155FD",
+                  borderRadius: 10,
+                  color: "white",
+                }}
+                onClick={(e) =>
+                  saveAddress(e).catch((err) => toast(lang["001"]))
+                }
+              >
+                Save
+              </button>
+            </div>
+            <div className="flex justify-around font-bold text-lg">
+              <button
+                className="h-10 w-40 border ml-4 my-4"
+                style={{
+                  backgroundColor: "#9155FD",
+                  borderRadius: 10,
+                  color: "white",
+                }}
+                onClick={() => setModalIsOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </form>
+      </Modal>
+      {isLoading ? (
+        <Lottie
+          style={{
+            width: "70%",
+            height: "50%",
+            cursor: "pointer",
+          }}
+          animationData={require("../Animation/Loading.json")}
+          loop={true}
+        />
+      ) : null}
+      <div className="h-16 border-b-2 flex justify-between justify-items-center px-10">
+        <div className="text-2xl h-full text-center items-center flex">
+          <p className="text-2xl text-center align-middle">My address</p>
+        </div>
+        <div className="text-2xl h-full justify-items-center items-center flex">
+          <button
+            className="text-2xl h-2/3 border bg-red-600 justify-between content-center w-32 text-white btn-add rounded-md"
+            onClick={() => setModalIsOpen(true)}
+          >
+            Add new
+          </button>
+        </div>
+      </div>
+      <ListAddress />
+    </div>
+  );
+  async function getAddress() {
+    const data = (await axiosApiInstance.get("/api/v1/address/get")).data.data;
+    setListAddress([...(data?.address || [])]);
+    setIdAddressDefault(data?.user?.default_address )
+  }
+  function handleChange(e, type) {
+    if (type == 0) {
+      setName(e.target.value);
+      return;
+    }
+    if (type == 1) {
+      if (validator.isNumeric(e.target.value)) {
+        setPhone(e.target.value);
+      }
+      return;
+    }
+    if (type == 2) {
+      setAddressName(e.target.value);
+      return;
+    }
+    setAddress(e.target.value);
+  }
+  function ListAddress() {
+    return (
+      <div>
+        {listAddress?.length > 0
+          ? listAddress.map((item) => {
+              return (
+                <div
+                  className={`h-32 flex px-10 text-xl item ${item.id==idAddressDefault ? 'border-orange-700 border-2 rounded':'border-b-2'}`}
+                  key={item.id}
+                >
+                  <div className="w-5/6">
+                    <p>{item?.name}</p>
+                    <div className="flex justify-items-center items-center pt-1">
+                      <p>{item?.recipient_name}</p>
+                      <div
+                        className="h-6 bg-slate-300 mx-3"
+                        style={{ width: "1px" }}
+                      ></div>
+                      <p>{item?.phone}</p>
+                    </div>
+                    <div className="text-zinc-400">
+                      <p>{item?.address}</p>
+                      <p>
+                        {item?.ward}, {item?.district}, {item?.province}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="w-1/6 justify-around items-center flex flex-col">
+                    <button className="border w-full rounded-sm">
+                      Set default
+                    </button>
+                    <button className="border w-full rounded-sm">Delete</button>
+                  </div>
+                </div>
+              );
+            })
+          : "You don't have any address yet"}
+      </div>
+    );
+  }
+  async function saveAddress(e) {
+    e.preventDefault();
+    const body = {
+      phone,
+      name: addressName,
+      recipient_name: name,
+      address,
+      ward: province_vi[province].districts[district].wards[ward].name,
+      district: province_vi[province].districts[district].name,
+      province: province_vi[province].name,
+    };
+    // console.log(body)
+    const data = (await axiosApiInstance.post("/api/v1/address/create", body))
+      .data;
+    setListAddress([...listAddress, data.data]);
+    setModalIsOpen(false);
+    toast(lang[data.code]);
+  }
 }
-export default AddressUser
+export default AddressUser;
