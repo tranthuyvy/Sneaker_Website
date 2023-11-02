@@ -26,7 +26,7 @@ export default function run(app) {
        return res.status(500).send({ code: err.code })
       } else if (err) {
         console.log(err)
-       return res.status(500).send({ code: '001' })
+       return res.status(500).send({ code: '006' })
         // An unknown error occurred when uploading.
       }
       next()
