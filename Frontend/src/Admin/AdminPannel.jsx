@@ -47,6 +47,7 @@ import DetailProduct from "./componets/DetailProduct/DetailProduct";
 import ApplyDiscount from "./componets/Discount/applyDiscount";
 import InventoryTable from "./componets/Warehouse/InventoryTable";
 import ImportWarehouse from "./componets/Warehouse/ImportWarehouse";
+import WarehouseDetail from "./componets/Warehouse/WarehouseDetail";
 
 const drawerWidth = 240;
 
@@ -187,6 +188,7 @@ export default function AdminPannel() {
 
             <Route path="/warehouse" element={<InventoryTable />}></Route>
             <Route path="/warehouse/import" element={<ImportWarehouse />}></Route>
+            <Route path="/warehouse/detail/:id" element={<WarehouseDetail />}></Route>
 
             <Route path="/login" element={<Login />}></Route>
             <Route path="/demo" element={<SideBar />} />

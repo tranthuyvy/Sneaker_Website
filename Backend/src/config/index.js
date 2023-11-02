@@ -12,7 +12,9 @@ export default function run(app) {
   const storage = multer.memoryStorage()
   const upload = multer({
     storage: multer.memoryStorage(),
-    fieldSize: 4 * 1024 * 1024
+    limits: {
+      fileSize: 4 * 1024 * 1024 // Giới hạn kích thước tệp tải lên là 4MB
+    }
   });
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: true }));

@@ -7,8 +7,24 @@ class product_detail_controller {
     async create(req, res) {
         try {
             // const image = req.files.length == 0 ? "" : `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${saveImg(req, res)}?alt=media`;
-            const { idProduct, size } = req.body;
+            let { idProduct, size } = req.body;
             const id = generateProductDetailId(idProduct, size)
+            if (!idProduct || !size) {
+                return res.status(500).send({ code: "009" });
+            }
+            size = Number(size)
+            if (size < 1 || size >= 100) {
+                return res.status(500).send({ code: "211" });
+            }
+
+            //Check trùng size
+            // Check xem thằng name có trong db chưa
+            let checkSize = await Model.product_detail.findOne({ where: { size, id_product: idProduct } });
+            console.log(checkSize);
+
+            if (checkSize?.dataValues) {
+                return res.status(500).send({ code: "212" });
+            }
             const product_detail = await Model.product_detail.create({ id, size, id_product: idProduct })
             // const img = await Model.product_image.create({ id_product_detail: product_detail.dataValues.id, image })
             res.status(200).send({ code: "004" })
