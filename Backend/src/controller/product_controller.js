@@ -30,6 +30,9 @@ class product_controller {
     }
     name = name.trim();
     product_price = Number(product_price);
+    if (product_price < 1) {
+      return res.status(500).send({ code: "209" })
+    }
     // Check xem thằng name có trong db chưa
     let checkName = await product.findOne({ where: { name } });
     console.log(checkName);
@@ -51,27 +54,27 @@ class product_controller {
         if (nameBranch && nameBranch.dataValues && nameBranch.dataValues.id) {
           id = generateProductId(name, nameBranch.dataValues.name);
         }
-        // let dataProduct = await product.create({
-        //   id,
-        //   name,
-        //   id_branch,
-        //   id_category,
-        //   create_by,
-        //   product_price,
-        //   description,
-        //   status: 1,
-        // });
+        let dataProduct = await product.create({
+          id,
+          name,
+          id_branch,
+          id_category,
+          create_by,
+          product_price,
+          description,
+          status: 1,
+        });
 
         const listImageName = saveImg(req, res);
         console.log("listImageName: ", listImageName);
-        // if (listImageName.length < 1) {
-        //   return res.status(500).send({ code: "009" });
-        // }
-        // console.log("listImageName: ", listImageName);
-        // const image = req.files.length == 0 ? [] : listImageName.map(item => {
-        //   return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
-        // });
-        // const img = image.length == 0 ? null : await productImage.bulkCreate(image);
+        if (listImageName.length < 1) {
+          return res.status(500).send({ code: "009" });
+        }
+        console.log("listImageName: ", listImageName);
+        const image = req.files.length == 0 ? [] : listImageName.map(item => {
+          return { id_product: id, link: `https://firebasestorage.googleapis.com/v0/b/thuctap-c9a4b.appspot.com/o/${item}?alt=media` }
+        });
+        const img = image.length == 0 ? null : await productImage.bulkCreate(image);
         console.log("Check data product: ", dataProduct.dataValues);
         console.log("Thêm thành công");
         return res.status(200).send({ code: "012" });
@@ -167,7 +170,7 @@ class product_controller {
           if (updataData.id_category) {
             dataProduct.id_category = updataData.id_category;
           }
-          if (updataData.product_price) {
+          if (Number(updataData.product_price) > 0) {
             // isText(updataData.product_price)
             dataProduct.product_price = Number(updataData.product_price);
           }

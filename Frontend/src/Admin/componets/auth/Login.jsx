@@ -36,7 +36,7 @@ function LoginForm() {
     if (!username || !password) {
       if (!username) {
         setUsernameError(errorMessages["100"]);
-      } else if (!password) {
+      } if (!password) {
         setPasswordError(errorMessages["101"]);
       }
       return;

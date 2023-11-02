@@ -64,5 +64,10 @@
     "205": "Xóa thất bại",
     "206": "Vui lòng chọn ảnh",
     "207": "Trùng size",
-    "LIMIT_FILE_SIZE": "Ảnh to quá, Mạnh không cho lưu"
+    "LIMIT_FILE_SIZE": "Ảnh to quá, Mạnh không cho lưu",
+    "208": "Ảnh qua to",
+    "209": "Giá phải lớn hơn 0",
+    "210": "Số lượng phải lớn hơn 0",
+    "211": "Size phải lớn hơn 0 và nhỏ hơn 100",
+    "212": "Size đã tồn tại trong hệ thống"
 }

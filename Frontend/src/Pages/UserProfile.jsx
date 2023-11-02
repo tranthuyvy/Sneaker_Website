@@ -29,6 +29,7 @@ function UserProfile() {
       })
     );
   }
+
   return (
     <Fragment className="max-h-12">
       <div className="px-10 flex flex-row pt-10">
