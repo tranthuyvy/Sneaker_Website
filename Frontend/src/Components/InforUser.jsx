@@ -2,20 +2,19 @@ import React, { useEffect, useState } from "react";
 import { InputAdornment, Typography } from "@mui/material";
 import { Grid, TextField, Button, Avatar } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
-import { Fragment } from "react";
 import Lottie from "lottie-react";
 import validator from "validator";
 import axiosApiInstance from "../config/api";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 function InforUser() {
+  const lang = useSelector((state) => state.lang);
   const [user, setUser] = useState();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [delay, setDelay] = useState(Math.random() * 4000 + 500);
   const [errorName, setErrorName] = useState({ isValid: true, err: "" });
   const [errorPhone, setErrorPhone] = useState({ isValid: true, err: "" });
-  const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     function call() {
@@ -99,7 +98,7 @@ function InforUser() {
               error={!errorName.isValid}
             />
             <p hidden={errorName.isValid} className="text-red-500">
-              {errorName.err}
+              {lang[errorName.err]}
             </p>
           </Grid>
           <Grid item xs={12} sm={5} key={2}>
@@ -125,8 +124,21 @@ function InforUser() {
               type={"text"}
             />
             <p hidden={errorPhone.isValid} className="text-red-500">
-              {errorPhone.err}
+              {lang[errorPhone.err]}
             </p>
+          </Grid>
+          <Grid item xs={12} sm={2} key={3}>
+            <p>Rank</p>
+            <p>S++</p>
+          </Grid>
+          <Grid item xs={12} sm={2} key={3}>
+            <span>Point</span>
+            <TextField
+              fullWidth
+              placeholder="Point"
+              value={user?.point}
+              disabled
+            />
           </Grid>
           <Grid item xs={12}>
             <Button
@@ -135,7 +147,13 @@ function InforUser() {
               className="py-20"
               size="large"
               hidden={!errorName.isValid || !errorPhone.isValid}
-              // onClick={handleEdit}
+              onClick={() =>
+                updateProfile()
+                  .then()
+                  .catch((err) => {
+                    toast(lang["006"]);
+                  })
+              }
             >
               Update Profile
             </Button>
@@ -144,6 +162,16 @@ function InforUser() {
       </div>
     </div>
   );
+  async function updateProfile() {
+    const data = (
+      await axiosApiInstance.put("/api/v1/user/update", {
+        name,
+        phone,
+      })
+    ).data;
+    toast(lang[data.code]);
+    setUser({ ...user, name });
+  }
   async function getUser() {
     const data = (await axiosApiInstance.get("api/v1/user")).data.data;
     setUser(data);
@@ -152,19 +180,21 @@ function InforUser() {
   }
   function handleChangeName(name) {
     if (name.localeCompare("") == 0) {
-      setErrorName({ isValid: false, err: "Name is Empty" });
-    } else setErrorName({ isValid: true, err: "No thing" });
+      setErrorName({ isValid: false, err: "026" });
+    } else {
+      setErrorName({ isValid: true, err: "" });
+    }
     setName(name);
   }
   function handleChangePhone(phone) {
     if (phone.localeCompare("") == 0) {
-      setErrorPhone({ isValid: false, err: "Phone is Empty" });
-    } else if (!validator.isNumeric(phone)) {
-      return setErrorPhone({ isValid: false, err: "Phone must be number" });
+      setErrorPhone({ isValid: false, err: "028" });
+    } else if (!validator.isMobilePhone(phone, "vi-VN")) {
+      setErrorPhone({ isValid: false, err: "029" });
     } else {
-      setPhone(phone);
-      setErrorPhone({ isValid: true, err: "No thing" });
+      setErrorPhone({ isValid: true, err: "" });
     }
+    setPhone(phone);
   }
   function handleChange(event) {
     const { name, value } = event.target;
