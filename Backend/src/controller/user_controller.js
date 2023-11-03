@@ -11,7 +11,20 @@ class user_controller {
         } catch (error) {
             res.status(500).send({ code: '001' })
         }
-
+    }
+    async update(req, res) {
+        try {
+            const email = auth.tokenData(req).email;
+            const user = await Model.user.update({
+                name: req.body.name,
+                phone: req.body.phone
+            }, {
+                where: { email: email }
+            })
+            res.status(200).send({ code: '013' })
+        } catch (error) {
+            res.status(500).send({ code: '001' })
+        }
     }
 }
 export default new user_controller()
