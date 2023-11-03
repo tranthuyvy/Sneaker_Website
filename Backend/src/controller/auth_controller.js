@@ -7,8 +7,19 @@ const account = Model.account;
 const saltRounds = 10;
 class auth_controller {
     async login(req, res) {
-        const { username, password } = req.body;
+        let { username, password } = req.body;
         console.log(username, password);
+
+        if (!username || !password) {
+            return res.status(500).send({ code: "009" });
+        }
+
+        username = username.trim();
+        password = password.trim();
+        if (password.length < 6) {
+            return res.status(500).send({ code: "129" });
+        }
+
         try {
             const acc = await account.findOne({ where: { name: username } });
             if (acc) {

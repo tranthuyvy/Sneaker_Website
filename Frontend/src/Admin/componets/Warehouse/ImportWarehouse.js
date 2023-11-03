@@ -112,8 +112,9 @@ const ImportWarehouse = () => {
     }
 
     const handleOnChange = (value) => {
-        setSearch(value)
-        filterProduct(value)
+        let a = value.toLowerCase();//Nhập vào chữ biến thành chữ thường
+        setSearch(a)
+        filterProduct(a)
     }
 
     const handleInputChange = (id, event, name) => {
