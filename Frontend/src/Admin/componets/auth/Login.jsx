@@ -35,7 +35,7 @@ function LoginForm() {
 
     if (!username || !password) {
       if (!username) {
-        setUsernameError(errorMessages["100"]);
+        setUsernameError(errorMessages["016"]);
       } if (!password) {
         setPasswordError(errorMessages["101"]);
       }
@@ -122,7 +122,7 @@ function LoginForm() {
             <Grid item xs={12}>
               <TextField
                 name="username"
-                label="Account"
+                label="User Name"
                 fullWidth
                 autoComplete="given-name"
                 value={username}

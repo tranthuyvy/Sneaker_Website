@@ -74,12 +74,12 @@ class admin_controller {
             return res.status(200).send({ code: "008" });
           } catch (e) {
             console.log(e);
-            return res.status(500).send({ code: "006" });
+            return res.status(500).send({ code: "103" });
           }
         }
       } catch (e) {
         console.log(e);
-        return res.status(500).send({ code: "005" });
+        return res.status(500).send({ code: "103" });
       }
     }
 
