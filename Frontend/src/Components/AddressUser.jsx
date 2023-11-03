@@ -37,7 +37,7 @@ function AddressUser() {
       transform: "translate(-50%, -50%)",
       height: "60%",
       width: "60%",
-      padding: 0,
+      padding: "2rem",
     },
   };
   useEffect(() => {
@@ -278,9 +278,11 @@ function AddressUser() {
           loop={true}
         />
       ) : null}
-      <div className="h-16 border-b-2 flex justify-between justify-items-center px-10">
+      <div className="h-16 border-b-4 flex justify-between justify-items-center px-10 my-10">
         <div className="text-2xl h-full text-center items-center flex">
-          <p className="text-2xl text-center align-middle">My address</p>
+          <p className="text-2xl text-center align-middle font-bold">
+            My address
+          </p>
         </div>
         <div className="text-2xl h-full justify-items-center items-center flex">
           <button
@@ -350,13 +352,15 @@ function AddressUser() {
                   <div className="w-1/6 justify-around items-center flex flex-col">
                     <button
                       className="border w-full rounded-sm"
-                      onClick={() => {setDefaultAddress(item.id).then().catch()}}
+                      onClick={() => {
+                        setDefaultAddress(item.id).then().catch();
+                      }}
                     >
                       Set default
                     </button>
                     <button
                       className="border w-full rounded-sm"
-                      hidden={item.id==idAddressDefault}
+                      hidden={item.id == idAddressDefault}
                       onClick={() => {
                         handleDelete(item.id).then().catch();
                       }}
