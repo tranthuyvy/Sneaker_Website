@@ -24,7 +24,7 @@ import ProductsTable from "./componets/Products/ProductsTable";
 import CreateProduct from "./componets/Products/CreateProduct";
 import UpdateProduct from "./componets/Products/UpdateProduct";
 import AllOrder from "./componets/Order/allOrder";
-// import OrderDetail from "./componets/Orders/OrderDetail";
+import OrderDetail from "./componets/Order/orderDetail";
 import Customers from "./componets/User/allUser";
 // import ProductReview from "./componets/productReview/ProductReview";
 import AllDiscount from "./componets/Discount/allDiscount";
@@ -162,8 +162,10 @@ export default function AdminPannel() {
             <Route path="/product/create" element={<CreateProduct />}></Route>
             <Route path="/product/update/:id" element={<UpdateProduct />}></Route>
             <Route path="/product/detail/:id" element={<DetailProduct />}></Route>
+
             <Route path="/orders" element={<AllOrder />}></Route>
-            {/* <Route path="/orders/:orderId" element={<OrderDetail/>}></Route> */}
+            <Route path="/orders/:id" element={<OrderDetail/>}></Route>
+
             <Route path="/customers" element={<Customers />}></Route>
 
             <Route path="/brand" element={<AllBrand />}></Route>

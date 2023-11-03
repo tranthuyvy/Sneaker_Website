@@ -5,8 +5,25 @@ import { checkInventory } from "service/order";
 const orderModel = Model.order;
 const orderDetail = Model.order_detail;
 const productDetail = Model.product_detail;
+const order = Model.order;
 
 class order_controller {
+  getOrderById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const foundOrder = await order.findOne({ where: { id } });
+      if (foundOrder) {
+        return res.status(200).send({ code: "002", data: foundOrder });
+      } else {
+        return res.status(404).send({ code: "014" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  };
+
   getAllOrder = async (req, res) => {
     let { status } = req.query;
     const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
@@ -84,32 +101,36 @@ class order_controller {
         }
         let { flag, listProduct } = await checkInventory(listDetail);
         if (flag) {
-          let order = await orderModel.create({
-            total_price: totalPrice,
-            total_item: totalItem,
-            total_discounted_price,
-            status_payment: 0,
-            status: 1,
-            create_at: new Date(),
-            id_user,
-            id_address,
-            payment_method,
-          }, { transaction: t });
+          let order = await orderModel.create(
+            {
+              total_price: totalPrice,
+              total_item: totalItem,
+              total_discounted_price,
+              status_payment: 0,
+              status: 1,
+              create_at: new Date(),
+              id_user,
+              id_address,
+              payment_method,
+            },
+            { transaction: t }
+          );
           let detail = await Promise.all(
             listDetail.map((item) => {
-              return orderDetail.create({
-                ...item,
-                id_order: order.dataValues.id,
-              }, { transaction: t });
+              return orderDetail.create(
+                {
+                  ...item,
+                  id_order: order.dataValues.id,
+                },
+                { transaction: t }
+              );
             })
           );
           res.status(200).send({ code: "019" });
-          
         } else {
           res.status(200).send({ code: "017", data: listProduct });
         }
-
-      })
+      });
     } catch (error) {
       res.status(200).send({ code: "005" });
       console.log(error);

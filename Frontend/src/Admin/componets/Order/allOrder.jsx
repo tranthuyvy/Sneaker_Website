@@ -94,9 +94,10 @@ const AllOrder = () => {
   //   dispatch(deleteOrder(orderId));
   // };
 
-  // const handleOrderClick = (orderId) => {
-  //   navigate(`/admin/orders/${orderId}`);
-  // };
+  const handleOrderClick = (id) => {
+    navigate(`/admin/orders/${id}`);
+  };
+
   const statusLabels = {
     1: "PLACED",
     2: "CONFIRMED",
@@ -157,6 +158,7 @@ const AllOrder = () => {
             <TableBody>
               {orders.map((order, index) => (
                 <TableRow
+                  onClick={() => handleOrderClick(order.id)}
                   hover
                   key={order.id}
                   sx={{ "&:last-of-type td, &:last-of-type th": { border: 0 } }}
