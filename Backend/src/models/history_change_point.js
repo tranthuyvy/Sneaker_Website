@@ -31,6 +31,10 @@ module.exports = function (sequelize, DataTypes) {
     type: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    point_change: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     }
   }, {
     sequelize,

@@ -68,24 +68,25 @@ class order_controller {
   };
   async create(req, res) {
     try {
+      const email = auth.tokenData(req, res).email;
+      const account = await Model.user.findOne({
+        where: { email: email },
+      });
+
+      let id_user = account.dataValues.id;
+      const { id_address, listDetail, payment_method, point } = req.body;
+      let totalPrice = 0,
+        totalItem = 0,
+        total_discounted_price = point;
+      for (let i of listDetail) {
+        totalItem += i.quantity;
+        totalPrice += i.quantity * i.price;
+      }
+      let { flag, listProduct } = await checkInventory(listDetail);
       await sequelize.transaction(async (t) => {
-        const email = auth.tokenData(req, res).email;
-        const account = await Model.user.findOne({
-          where: { email: email },
-        });
-        let id_user = account.dataValues.id;
-        const { id_address, listDetail, payment_method } = req.body;
-        let totalPrice = 0,
-          totalItem = 0,
-          total_discounted_price = 0;
-        for (let i of listDetail) {
-          totalItem += i.quantity;
-          totalPrice += i.quantity * i.price;
-        }
-        let { flag, listProduct } = await checkInventory(listDetail);
         if (flag) {
           let order = await orderModel.create({
-            total_price: totalPrice,
+            total_price: totalPrice - total_discounted_price,
             total_item: totalItem,
             total_discounted_price,
             status_payment: 0,
@@ -95,23 +96,45 @@ class order_controller {
             id_address,
             payment_method,
           }, { transaction: t });
+          const li = []
+          if (point > 0) {
+            li.push({
+              id_user,
+              id_order: order.dataValues.id,
+              point_change: point,
+              type: 0
+            })
+          }
+          li.push({
+            id_user,
+            id_order: order.dataValues.id,
+            point_change: Math.ceil((totalPrice) / 100),
+            type: 1
+          })
+          let historyChangePoint = await Model.history_change_point.bulkCreate(li, { transaction: t }
+          )
+          let update = await Model.user.update({
+            point: account.dataValues.point + Math.ceil(totalPrice / 100) - point
+          }, {
+            where: { email: email },
+            transaction: t
+          })
           let detail = await Promise.all(
-            listDetail.map((item) => {
+            [...listDetail.map((item) => {
               return orderDetail.create({
                 ...item,
                 id_order: order.dataValues.id,
               }, { transaction: t });
             })
-          );
+            ]);
           res.status(200).send({ code: "019" });
-          
         } else {
           res.status(200).send({ code: "017", data: listProduct });
         }
 
       })
     } catch (error) {
-      res.status(200).send({ code: "005" });
+      res.status(500).send({ code: "005" });
       console.log(error);
     }
   }
