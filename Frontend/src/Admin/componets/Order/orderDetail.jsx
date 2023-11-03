@@ -1,18 +1,24 @@
 import {
-    Box,
+    Box, Button,
   } from "@mui/material";
   
-  import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
   
-  import { useNavigate, useParams } from "react-router-dom";
-  import { Grid } from "@mui/material";
-  import axios from "../../../config/axios";
-  import { format } from "date-fns";
+import { useNavigate, useParams } from "react-router-dom";
+import { Grid } from "@mui/material";
+import axios from "../../../config/axios";
+import { format } from "date-fns";
+import { useSelector } from "react-redux";
+import errorMessagesEn from "../../../Lang/en.json";
+import errorMessagesVi from "../../../Lang/vi.json";
+import { toast, ToastContainer } from "react-toastify";
   
   const OrderDetail = () => {
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const { id } = useParams();
+    const lang = useSelector((state) => state);
+    const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
   
     useEffect(() => {
         const fetchOrderData = async () => {
@@ -22,9 +28,9 @@ import {
     
             setOrders(orderData)
           } catch (error) {
-            // toast.error(errorMessages["006"], {
-            //   autoClose: 1000,
-            // });
+            toast.error(errorMessages["006"], {
+              autoClose: 1000,
+            });
           }
         };
     
@@ -84,11 +90,11 @@ import {
               /> */}
             </Grid>
             {/* <Grid item justifyContent="center">
-              {order.order?.orderStatus === "DELIVERED" && (
+              {orders.status === "DELIVERED" && (
                 <Button sx={{ color: "" }} color="error" variant="text"></Button>
               )}
   
-              {order.order?.orderStatus !== "DELIVERED" && (
+              {orders.status !== "DELIVERED" && (
                 <Button sx={{ color: deepPurple[500] }} variant="text"></Button>
               )}
             </Grid> */}
@@ -321,7 +327,7 @@ import {
               >
                 <div>
                   <span className="text-red-600 font-semibold text-2xl">
-                    ${orders.total_discounted_price}
+                    ${orders.total_price}
                   </span>
                 </div>
               </Grid>
@@ -341,6 +347,7 @@ import {
                   <span className="opacity-50">Payment</span>
                 </div>
               </Grid>
+
               <Grid
                 item
                 xs={4}
@@ -361,6 +368,63 @@ import {
                   </span>
                 </div>
               </Grid>
+
+              {orders.status === 1 && (
+              <Grid container justifyContent="flex-end" className="mt-5">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    // onClick={() => handleConfirmedOrder(order.order?.id)}
+                    style={{color:"white", fontWeight:"bold", fontSize:"18px"}}
+                  >
+                    CONFIRM ORDER
+                  </Button>
+                </Grid>
+
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    // onClick={() => handleDeleteOrder(order.order?.id)}
+                    style={{color:"white", fontWeight:"bold", fontSize:"18px", marginLeft:"30px"}}
+                  >
+                    CANCELLED ORDER
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
+
+            {orders.status === 2 && (
+              <Grid container justifyContent="flex-end" className="mt-5">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    // onClick={() => handleShippedOrder(order.order?.id)}
+                    style={{color:"white", fontWeight:"bold", fontSize:"18px"}}
+                  >
+                    SHIPPED
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
+
+            {orders.status === 3 && (
+              <Grid container justifyContent="flex-end" className="mt-5">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    // onClick={() => handleDeliveredOrder(order.order?.id)}
+                    style={{color:"white", fontWeight:"bold", fontSize:"18px"}}
+                  >
+                    DELIVERED
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
+
             </Grid>
           </Grid>
         </div>
