@@ -13,6 +13,7 @@ export default function saveImg(req, res) {
       }
     });
 
+
     blobWriter.on("error", (err) => {
 
       console.log(err);
