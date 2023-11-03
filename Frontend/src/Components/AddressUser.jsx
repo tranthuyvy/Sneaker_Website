@@ -357,7 +357,6 @@ function AddressUser() {
                     <div className="text-red-500 font-semibold rounded-lg mt-2 text-md">
                       {item.id === idAddressDefault ? "Default" : ""}
                     </div>
-                    
                   </div>
                   <div className="w-1/6 justify-around items-center flex flex-col">
                     <button
