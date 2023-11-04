@@ -34,7 +34,7 @@ function UserProfile() {
   return (
     <Fragment className="max-h-12">
       <div className="flex flex-row">
-        <div className="w-1/5 pt-5 h-screen bg-white mr-10 p-6 rounded-md shadow-md">
+        <div className="w-1/5 pt-5 h-screen bg-white mr-5 p-6 rounded-md shadow-md">
           <div className="border-b-4 h-16 text-2xl text-center text-rose-600 font-bold">
             Dashboard
           </div>
