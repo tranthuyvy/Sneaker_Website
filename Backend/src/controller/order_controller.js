@@ -2,6 +2,7 @@ import Model from "../config/sequelize";
 import auth from "../middleware/authenJWT";
 import { sequelize } from "../config/sequelize";
 import { checkInventory } from "service/order";
+import { Op } from "sequelize";
 const orderModel = Model.order;
 const orderDetail = Model.order_detail;
 const productDetail = Model.product_detail;
@@ -9,7 +10,6 @@ const productDetail = Model.product_detail;
 class order_controller {
   getOrderById = async (req, res) => {
     const { id } = req.params;
-
     try {
       const foundOrder = await orderModel.findOne({
         where: { id },
@@ -312,6 +312,69 @@ class order_controller {
       await order.save();
 
       return res.status(200).send({ code: "013" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  }
+  async getByUser(req, res) {
+    const optiton = [
+      {
+        model: Model.address,
+        as: "id_address_address",
+      },
+      {
+        model: orderDetail,
+        as: "order_details",
+        include: [
+          {
+            model: productDetail,
+            as: "id_product_detail_product_detail",
+            include: {
+              model: Model.product,
+              as: "id_product_product",
+              include: [
+                {
+                  model: Model.image,
+                  as: "images",
+                  attributes: ["link"],
+                },
+                {
+                  model: Model.branch,
+                  as: "id_branch_branch",
+                },
+                {
+                  model: Model.category,
+                  as: "id_category_category",
+                },
+                {
+                  model: Model.review,
+                  as: "reviews",
+                },
+              ],
+            },
+          }
+        ],
+      },
+    ]
+    try {
+      const { id, status } = req.query;
+      const email = auth.tokenData(req).email;
+      const account = await Model.user.findOne({
+        where: { email: email }
+      })
+      const foundOrder = id ? await orderModel.findOne({
+        where: { id, id_user: account.dataValues.id },
+        include: optiton
+      }) : await orderModel.findAll({
+        where: { id_user: account.dataValues.id, status: status ? { [Op.eq]: status } : { [Op.ne]: 20 } },
+        include: optiton
+      });
+      if (foundOrder) {
+        return res.status(200).send({ code: "002", data: foundOrder });
+      } else {
+        return res.status(404).send({ code: "014" });
+      }
     } catch (error) {
       console.error(error);
       return res.status(500).send({ code: "006" });

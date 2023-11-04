@@ -40,9 +40,11 @@ const Cart = () => {
       <div className="lg:col-span-2 lg:px-5 ">
         <div className="space-y-3">
           {cart.length > 0 && listCart.length > 0 ? (
-            listCart.map((item, index) => (
-              <CartItem key={index} detail={item} showButton={true} />
-            ))
+            listCart.map((item, index) =>
+            findQuantity(item.id) > 0 ? (
+                <CartItem key={index} detail={item} showButton={true} />
+              ) : null
+            )
           ) : (
             <p
               style={{
