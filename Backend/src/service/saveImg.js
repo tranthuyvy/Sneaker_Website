@@ -12,9 +12,7 @@ export default function saveImg(req, res) {
         contentType: file.mimetype
       }
     });
-
     blobWriter.on("error", (err) => {
-
       console.log(err);
 
     });

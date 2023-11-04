@@ -7,6 +7,43 @@ const orderDetail = Model.order_detail;
 const productDetail = Model.product_detail;
 
 class order_controller {
+  getOrderById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const foundOrder = await orderModel.findOne({
+        where: { id },
+        include: [
+          {
+            model: orderDetail,
+            as: "order_details",
+            include: {
+              model: productDetail,
+              as: "id_product_detail_product_detail",
+              include: {
+                model: Model.product,
+                as: "id_product_product",
+                include: {
+                  model: Model.image,
+                  as: "images",
+                  attributes: ["link"],
+                },
+              },
+            },
+          },
+        ],
+      });
+      if (foundOrder) {
+        return res.status(200).send({ code: "002", data: foundOrder });
+      } else {
+        return res.status(404).send({ code: "014" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  };
+
   getAllOrder = async (req, res) => {
     let { status } = req.query;
     const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
@@ -131,8 +168,7 @@ class order_controller {
         } else {
           res.status(200).send({ code: "017", data: listProduct });
         }
-
-      })
+      });
     } catch (error) {
       res.status(500).send({ code: "005" });
       console.log(error);

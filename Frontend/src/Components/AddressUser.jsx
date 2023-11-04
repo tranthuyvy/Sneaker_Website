@@ -6,6 +6,10 @@ import { toast } from "react-toastify";
 import validator from "validator";
 import axiosApiInstance from "../config/api";
 import "../Styles/AddressUser.css";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
+
 const province_vi = require("../config/province_vi.json");
 function AddressUser() {
   const [listAddress, setListAddress] = useState([]);
@@ -281,15 +285,15 @@ function AddressUser() {
       <div className="h-16 border-b-4 flex justify-between justify-items-center px-10 my-10">
         <div className="text-2xl h-full text-center items-center flex">
           <p className="text-2xl text-center align-middle font-bold">
-            My address
+            MY ADDRESS
           </p>
         </div>
         <div className="text-2xl h-full justify-items-center items-center flex">
           <button
-            className="text-2xl h-2/3 border bg-red-600 justify-between content-center w-32 text-white btn-add rounded-md"
+            className="text-xl h-2/3 border bg-red-600 justify-between content-center w-32 text-white btn-add rounded-md"
             onClick={() => setModalIsOpen(true)}
           >
-            Add new
+            <AddIcon /> NEW
           </button>
         </div>
       </div>
@@ -318,54 +322,61 @@ function AddressUser() {
     }
     setAddress(e.target.value);
   }
+
   function ListAddress() {
     return (
-      <div>
+      <div className="">
         {listAddress?.length > 0
           ? listAddress.map((item) => {
               return (
                 <div
-                  className={`h-32 flex px-10 text-xl item ${
-                    item.id == idAddressDefault
-                      ? "border-orange-700 border-2 rounded"
-                      : "border-b-2"
+                  className={`h-44 flex px-10 text-xl item py-3 mb-4 ${
+                    item.id === idAddressDefault
+                      ? "border-2 border-red-500 rounded-lg shadow-md"
+                      : "border border-gray-500 rounded-lg shadow-md"
                   }`}
                   key={item.id}
                 >
-                  <div className="w-5/6">
-                    <p>{item?.name}</p>
-                    <div className="flex justify-items-center items-center pt-1">
-                      <p>{item?.recipient_name}</p>
+                  <div className="w-full">
+                    <p className="text-2xl font-semibold">{item?.name}</p>
+                    <div className="flex items-center pt-1">
+                      <p className="text-base">{item?.recipient_name}</p>
                       <div
                         className="h-6 bg-slate-300 mx-3"
                         style={{ width: "1px" }}
                       ></div>
-                      <p>{item?.phone}</p>
+                      <p className="text-base">{item?.phone}</p>
                     </div>
-                    <div className="text-zinc-400">
-                      <p>{item?.address}</p>
-                      <p>
+                    <div className="text-gray-500">
+                      <p className="text-base">{item?.address}</p>
+                      <p className="text-base">
                         {item?.ward}, {item?.district}, {item?.province}
                       </p>
+                    </div>
+
+                    <div className="text-red-500 font-semibold rounded-lg mt-2 text-md">
+                      {item.id === idAddressDefault ? "Default" : ""}
                     </div>
                   </div>
                   <div className="w-1/6 justify-around items-center flex flex-col">
                     <button
-                      className="border w-full rounded-sm"
+                      className="bg-green-500 hover:bg-green-700 text-white font-semibold py-1.5 px-2.5 rounded-lg border border-green-500 transition-colors duration-300 ease-in-out"
                       onClick={() => {
                         setDefaultAddress(item.id).then().catch();
                       }}
                     >
-                      Set default
+                      <SettingsApplicationsIcon />
                     </button>
+
                     <button
-                      className="border w-full rounded-sm"
-                      hidden={item.id == idAddressDefault}
+                      className={`bg-red-500 hover:bg-red-700 text-white font-semibold py-1.5 px-2.5 rounded-lg border border-red-500 transition-colors duration-300 ease-in-out ${
+                        item.id === idAddressDefault ? "hidden" : ""
+                      }`}
                       onClick={() => {
                         handleDelete(item.id).then().catch();
                       }}
                     >
-                      Delete
+                      <DeleteIcon />
                     </button>
                   </div>
                 </div>
@@ -375,6 +386,7 @@ function AddressUser() {
       </div>
     );
   }
+
   async function setDefaultAddress(id) {
     const data = (
       await axiosApiInstance.get(`/api/v1/address/set-default?id=${id}`)
@@ -384,14 +396,16 @@ function AddressUser() {
     }
     toast(lang[data.code]);
   }
+
   async function handleDelete(id) {
     const data = (await axiosApiInstance.get(`/api/v1/address/delete?id=${id}`))
       .data;
-    if (data.code.localeCompare("022") == 0) {
-      setListAddress([...listAddress.filter((item) => item.id != id)]);
+    if (data.code.localeCompare("022") === 0) {
+      setListAddress([...listAddress.filter((item) => item.id !== id)]);
     }
     toast(lang[data.code]);
   }
+
   async function saveAddress(e) {
     e.preventDefault();
     const body = {

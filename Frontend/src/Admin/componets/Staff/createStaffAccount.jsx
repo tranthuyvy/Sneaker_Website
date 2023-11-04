@@ -25,7 +25,7 @@ function CreateStaffAccount() {
     if (name === "nameStaff") {
       if (!/^[a-zA-Z\s]*$/.test(value)) {
         setNameStaffError(errorMessages["130"]);
-      }else{
+      } else {
         setNameStaffError("");
       }
       setNameStaff(value);
@@ -49,13 +49,13 @@ function CreateStaffAccount() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     if (!nameStaff || !userName || !password) {
       if (!nameStaff) {
         setNameStaffError(errorMessages["102"]);
       }
       if (!userName) {
-        setUserNameError(errorMessages["100"]);
+        setUserNameError(errorMessages["016"]);
       }
       if (!password) {
         setPasswordError(errorMessages["101"]);
@@ -74,7 +74,7 @@ function CreateStaffAccount() {
         userName,
         password,
       });
-  
+
       if (response.status === 200) {
         toast.success(errorMessages["008"], {
           autoClose: 1000,
@@ -82,11 +82,11 @@ function CreateStaffAccount() {
         dispatch({ type: 'LANG_ENG' });
         navigate("/admin/staff");
       } else {
-        
+
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
-        toast.error(errorMessages[error.response.data.code], 
+        toast.error(errorMessages[error.response.data.code],
           { autoClose: 1000 });
       } else {
         const accountErrorCode = "103";
