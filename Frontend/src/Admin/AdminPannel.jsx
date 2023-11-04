@@ -48,6 +48,7 @@ import ApplyDiscount from "./componets/Discount/applyDiscount";
 import InventoryTable from "./componets/Warehouse/InventoryTable";
 import ImportWarehouse from "./componets/Warehouse/ImportWarehouse";
 import WarehouseDetail from "./componets/Warehouse/WarehouseDetail";
+import ChangePasswordStaff from "./componets/Staff/ChangePasswordStaff";
 
 const drawerWidth = 240;
 
@@ -164,7 +165,7 @@ export default function AdminPannel() {
             <Route path="/product/detail/:id" element={<DetailProduct />}></Route>
 
             <Route path="/orders" element={<AllOrder />}></Route>
-            <Route path="/orders/:id" element={<OrderDetail/>}></Route>
+            <Route path="/orders/:id" element={<OrderDetail />}></Route>
 
             <Route path="/customers" element={<Customers />}></Route>
 
@@ -187,6 +188,7 @@ export default function AdminPannel() {
             <Route path="/staff" element={<AllStaff />}></Route>
             <Route path="/staff/profile" element={<StaffProfile />}></Route>
             <Route path="/staff/create" element={<CreateStaffAccount />}></Route>
+            <Route path="/staff/change-password" element={<ChangePasswordStaff />}></Route>
 
             <Route path="/warehouse" element={<InventoryTable />}></Route>
             <Route path="/warehouse/import" element={<ImportWarehouse />}></Route>

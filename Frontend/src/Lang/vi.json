@@ -69,5 +69,9 @@
     "209": "Giá phải lớn hơn 0",
     "210": "Số lượng phải lớn hơn 0",
     "211": "Size phải lớn hơn 0 và nhỏ hơn 100",
-    "212": "Size đã tồn tại trong hệ thống"
+    "212": "Size đã tồn tại trong hệ thống",
+    "213": "Đổi mật khẩu thành công",
+    "214": "Mật khẩu mới không khớp",
+    "215": "Mật khẩu hiện tại không chính xác",
+    "216": "Đổi mật khẩu thất bại"
 }

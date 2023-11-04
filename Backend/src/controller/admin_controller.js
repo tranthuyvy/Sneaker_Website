@@ -159,6 +159,58 @@ class admin_controller {
       return res.status(500).send({ code: "006" });
     }
   };
+
+  //Đổi mật khẩu
+  changePassword = async (req, res) => {
+    try {
+      let { currentPassword, newPassword1, newPassword2 } = req.body;
+
+      if (!currentPassword || !newPassword1 || !newPassword2) {
+        return res.status(500).send({ code: "009" });
+      }
+      currentPassword = currentPassword.trim();
+      newPassword1 = newPassword1.trim();
+      newPassword2 = newPassword2.trim();
+
+      if (currentPassword.length < 6 || newPassword1.length < 6 || newPassword2.length < 6) {
+        return res.status(500).send({ code: "129" });
+      }
+
+      //Id của người nhân viên
+      let id_account = auth.tokenData(req)?.id;
+      if (id_account) {
+        let checkExist = await account.findOne({ where: { id: id_account } });
+        if (checkExist && checkExist.dataValues) {
+          //Lấy password của id
+          //So sánh password
+          const match = await bcrypt.compare(currentPassword, checkExist.dataValues.password);
+          if (match) {
+            if (newPassword1 == newPassword2) {
+              let hash = hashPassword(newPassword1)
+              checkExist.password = hash;
+              await checkExist.save();
+              return res.status(200).send({ code: "213" });
+            }
+            else {
+              return res.status(500).send({ code: "214" });
+            }
+          }
+          else {
+            return res.status(500).send({ code: "215" })
+          }
+        }
+      }
+      else {
+        return res.status(404).json({ code: "014" });
+      }
+
+    } catch (e) {
+      console.log(e);
+      return res.status(500).send({ code: "216" })
+    }
+  }
+
+
 }
 
 //Băm mật khẩu
@@ -170,5 +222,7 @@ let hashPassword = (password) => {
     return false;
   }
 };
+
+
 
 export default new admin_controller();
