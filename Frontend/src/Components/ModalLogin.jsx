@@ -12,7 +12,7 @@ function ModalLogin(props) {
   const openModal = useSelector((state) => state.openModal);
   const isLogin = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   const handleSuccess = async (response) => {
     const user = await axios.get(
       `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response.access_token}`
