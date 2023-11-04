@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   return sequelize.define('history_change_point', {
     id: {
       autoIncrement: true,
@@ -29,8 +29,12 @@ module.exports = function (sequelize, DataTypes) {
       }
     },
     type: {
+      type: DataTypes.TINYINT,
+      allowNull: true
+    },
+    point_change: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: true
     }
   }, {
     sequelize,
@@ -43,13 +47,6 @@ module.exports = function (sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id" },
-        ]
-      },
-      {
-        name: "FK_historychangepoint_discountuser",
-        using: "BTREE",
-        fields: [
-          { name: "id_discount_user" },
         ]
       },
       {

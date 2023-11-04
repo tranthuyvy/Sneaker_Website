@@ -80,5 +80,6 @@ class auth_controller {
             res.send({ code: "006" });
         }
     }
+    async refreshToken(req,res){}
 }
 export default new auth_controller();

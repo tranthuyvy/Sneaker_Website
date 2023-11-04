@@ -62,8 +62,6 @@ function initModels(sequelize) {
   category.hasMany(product, { as: "products", foreignKey: "id_category"});
   discount_product.belongsTo(discount, { as: "id_discount_discount", foreignKey: "id_discount"});
   discount.hasMany(discount_product, { as: "discount_products", foreignKey: "id_discount"});
-  history_change_point.belongsTo(discount_user, { as: "id_discount_user_discount_user", foreignKey: "id_discount_user"});
-  discount_user.hasMany(history_change_point, { as: "history_change_points", foreignKey: "id_discount_user"});
   history_change_point.belongsTo(order, { as: "id_order_order", foreignKey: "id_order"});
   order.hasMany(history_change_point, { as: "history_change_points", foreignKey: "id_order"});
   order_detail.belongsTo(order, { as: "id_order_order", foreignKey: "id_order"});
@@ -98,8 +96,6 @@ function initModels(sequelize) {
   staff.hasMany(discount, { as: "update_by_discounts", foreignKey: "update_by"});
   discount_user.belongsTo(staff, { as: "create_by_staff", foreignKey: "create_by"});
   staff.hasMany(discount_user, { as: "discount_users", foreignKey: "create_by"});
-  order.belongsTo(staff, { as: "update_by_staff", foreignKey: "update_by"});
-  staff.hasMany(order, { as: "orders", foreignKey: "update_by"});
   product.belongsTo(staff, { as: "create_by_staff", foreignKey: "create_by"});
   staff.hasMany(product, { as: "products", foreignKey: "create_by"});
   product.belongsTo(staff, { as: "update_by_staff", foreignKey: "update_by"});
