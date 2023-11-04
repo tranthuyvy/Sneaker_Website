@@ -5,8 +5,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import { Typography} from '@mui/material';
 
-
-
 const steps = [
   "PLACED",
   'CONFIRMED',
@@ -14,8 +12,6 @@ const steps = [
   'DELIVERED',
   'SUCCESS'
 ];
-
-
 
 export default function OrderTraker({activeStep}) {
     
@@ -25,7 +21,7 @@ export default function OrderTraker({activeStep}) {
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label) => (
           <Step key={label}>
-            <StepLabel  sx={{ color: '#9155FD',fontSize: '45px' }}  className={``}>{label}</StepLabel>
+            <StepLabel  sx={{ color: '#9155FD', fontSize: '45px' }}  className={``}>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>

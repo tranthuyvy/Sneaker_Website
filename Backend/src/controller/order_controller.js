@@ -15,21 +15,41 @@ class order_controller {
         where: { id },
         include: [
           {
+            model: Model.address,
+            as: "id_address_address",
+          },
+          {
             model: orderDetail,
             as: "order_details",
-            include: {
-              model: productDetail,
-              as: "id_product_detail_product_detail",
-              include: {
-                model: Model.product,
-                as: "id_product_product",
+            include: [
+              {
+                model: productDetail,
+                as: "id_product_detail_product_detail",
                 include: {
-                  model: Model.image,
-                  as: "images",
-                  attributes: ["link"],
+                  model: Model.product,
+                  as: "id_product_product",
+                  include: [
+                    {
+                      model: Model.image,
+                      as: "images",
+                      attributes: ["link"],
+                    },
+                    {
+                      model: Model.branch,
+                      as: "id_branch_branch",
+                    },
+                    {
+                      model: Model.category,
+                      as: "id_category_category",
+                    },
+                    {
+                      model: Model.review,
+                      as: "reviews",
+                    },
+                  ],
                 },
               },
-            },
+            ],
           },
         ],
       });
@@ -103,6 +123,7 @@ class order_controller {
       .status(200)
       .send({ code: "002", data: paginatedProducts, totalPage });
   };
+
   async create(req, res) {
     try {
       const email = auth.tokenData(req, res).email;
@@ -174,6 +195,7 @@ class order_controller {
       console.log(error);
     }
   }
+
   async checkInventory(req, res) {
     try {
       // const id_user = auth.tokenData(req).id;
@@ -183,6 +205,116 @@ class order_controller {
     } catch (error) {
       console.log(error);
       res.status(500).send({ code: "005" });
+    }
+  }
+
+  async confirmOrder(req, res) {
+    const { id } = req.params;
+
+    try {
+      const order = await orderModel.findOne({
+        where: { id },
+      });
+
+      if (!order) {
+        return res.status(404).send({ code: "014" });
+      }
+
+      order.status = 2;
+      await order.save();
+
+      return res.status(200).send({ code: "013" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  }
+
+  async shippedOrder(req, res) {
+    const { id } = req.params;
+
+    try {
+      const order = await orderModel.findOne({
+        where: { id },
+      });
+
+      if (!order) {
+        return res.status(404).send({ code: "014" });
+      }
+
+      order.status = 3;
+      await order.save();
+
+      return res.status(200).send({ code: "013" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  }
+
+  async deliveryOrder(req, res) {
+    const { id } = req.params;
+
+    try {
+      const order = await orderModel.findOne({
+        where: { id },
+      });
+
+      if (!order) {
+        return res.status(404).send({ code: "014" });
+      }
+
+      order.status = 4;
+      await order.save();
+
+      return res.status(200).send({ code: "013" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  }
+
+  async successOrder(req, res) {
+    const { id } = req.params;
+
+    try {
+      const order = await orderModel.findOne({
+        where: { id },
+      });
+
+      if (!order) {
+        return res.status(404).send({ code: "014" });
+      }
+
+      order.status = 5;
+      await order.save();
+
+      return res.status(200).send({ code: "013" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  }
+
+  async deleteOrder(req, res) {
+    const { id } = req.params;
+
+    try {
+      const order = await orderModel.findOne({
+        where: { id },
+      });
+
+      if (!order) {
+        return res.status(404).send({ code: "014" });
+      }
+
+      order.status = 6;
+      await order.save();
+
+      return res.status(200).send({ code: "013" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
     }
   }
 }
