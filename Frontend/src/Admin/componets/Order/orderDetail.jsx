@@ -20,44 +20,105 @@ const OrderDetail = () => {
   const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
   useEffect(() => {
-    const fetchOrderData = async () => {
-      try {
-        const response = await axios.get(`/api/v1/order/get/${id}`);
-        const orderData = response.data.data;
-
-        setOrders(orderData);
-      } catch (error) {
-        toast.error(errorMessages["006"], {
-          autoClose: 1000,
-        });
-      }
-    };
-
     fetchOrderData();
   }, [id]);
 
-  // const handleConfirmedOrder = (orderId, index) => {
+  const fetchOrderData = async () => {
+    try {
+      const response = await axios.get(`/api/v1/order/get/${id}`);
+      const orderData = response.data.data;
 
-  //   dispatch(confirmOrder(orderId));
-  //   setOrderStatus("CONFIRMED");
-  // };
+      setOrders(orderData);
+    } catch (error) {
+      toast.error(errorMessages["006"], {
+        autoClose: 1000,
+      });
+    }
+  };
 
-  // const handleShippedOrder = (orderId, index) => {
+  const handleConfirmOrder = async () => {
+    try {
+      const response = await axios.put(`/api/v1/order/get/${id}/confirm`);
+      
+      if (response.status === 200) {
+        
+        fetchOrderData();
+        toast.success(errorMessages["013"], {
+          autoClose: 900,
+        });
+        
+      } else {
+        
+      }
+    } catch (error) {
+      toast.error(errorMessages["006"], {
+        autoClose: 900,
+      });
+    }
+  };
 
-  //   dispatch(shipOrder(orderId));
-  //   setOrderStatus("SHIPPED");
-  // };
+  const handleShippedOrder = async () => {
+    try {
+      const response = await axios.put(`/api/v1/order/get/${id}/shipped`);
+      
+      if (response.status === 200) {
 
-  // const handleDeliveredOrder = (orderId, index) => {
+        fetchOrderData();
+        toast.success(errorMessages["013"], {
+          autoClose: 900,
+        });
+        
+      } else {
+        
+      }
+    } catch (error) {
+      toast.error(errorMessages["006"], {
+        autoClose: 1000,
+      });
+    }
+  };
 
-  //   dispatch(deliveredOrder(orderId));
-  //   setOrderStatus("DELIVERED");
-  // };
+  const handleDeliveredOrder = async () => {
+    try {
+      const response = await axios.put(`/api/v1/order/get/${id}/delivery`);
+      
+      if (response.status === 200) {
 
-  // const handleDeleteOrder = (orderId) => {
+        fetchOrderData();
+        toast.success(errorMessages["013"], {
+          autoClose: 900,
+        });
+        
+      } else {
+        
+      }
+    } catch (error) {
+      toast.error(errorMessages["006"], {
+        autoClose: 1000,
+      });
+    }
+  };
 
-  //   dispatch(deleteOrder(orderId));
-  // };
+  const handleDeleteOrder = async () => {
+    try {
+      const response = await axios.put(`/api/v1/order/get/${id}/delete`);
+      
+      if (response.status === 200) {
+
+        fetchOrderData();
+        toast.success(errorMessages["013"], {
+          autoClose: 900,
+        });
+        
+      } else {
+        
+      }
+    } catch (error) {
+      toast.error(errorMessages["006"], {
+        autoClose: 1000,
+      });
+    }
+  };
 
   const statusLabels = {
     1: "PLACED",
@@ -394,7 +455,7 @@ const OrderDetail = () => {
                   <Button
                     variant="contained"
                     color="info"
-                    // onClick={() => handleConfirmedOrder(order.order?.id)}
+                    onClick={handleConfirmOrder}
                     style={{
                       color: "white",
                       fontWeight: "bold",
@@ -409,7 +470,7 @@ const OrderDetail = () => {
                   <Button
                     variant="contained"
                     color="secondary"
-                    // onClick={() => handleDeleteOrder(order.order?.id)}
+                    onClick={handleDeleteOrder}
                     style={{
                       color: "white",
                       fontWeight: "bold",
@@ -429,7 +490,7 @@ const OrderDetail = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    // onClick={() => handleShippedOrder(order.order?.id)}
+                    onClick={handleShippedOrder}
                     style={{
                       color: "white",
                       fontWeight: "bold",
@@ -448,7 +509,7 @@ const OrderDetail = () => {
                   <Button
                     variant="contained"
                     color="success"
-                    // onClick={() => handleDeliveredOrder(order.order?.id)}
+                    onClick={handleDeliveredOrder}
                     style={{
                       color: "white",
                       fontWeight: "bold",

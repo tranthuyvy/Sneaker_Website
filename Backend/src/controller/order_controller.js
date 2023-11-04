@@ -277,6 +277,28 @@ class order_controller {
       return res.status(500).send({ code: "006" });
     }
   }
+
+  async deleteOrder(req, res) {
+    const { id } = req.params;
+
+    try {
+      const order = await orderModel.findOne({
+        where: { id },
+      });
+
+      if (!order) {
+        return res.status(404).send({ code: "014" });
+      }
+
+      order.status = 6;
+      await order.save();
+
+      return res.status(200).send({ code: "013" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  }
 }
 
 export default new order_controller();
