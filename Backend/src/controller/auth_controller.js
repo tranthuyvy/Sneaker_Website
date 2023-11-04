@@ -77,7 +77,7 @@ class auth_controller {
             }
         } catch (error) {
             console.log(error);
-            res.send({ code: "006" });
+            res.send({ code: "001" });
         }
     }
     async refreshToken(req,res){}

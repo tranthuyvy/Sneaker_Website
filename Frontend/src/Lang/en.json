@@ -73,5 +73,9 @@
     "209": "Price must be greater than 0",
     "210": "The quantity must be greater than 0",
     "211": "Size must be greater than 0 and less than 100",
-    "212": "Size already exists in the system"
+    "212": "Size already exists in the system",
+    "213": "Password changed successfully",
+    "214": "New password does not match",
+    "215": "Current password is incorrect",
+    "216": "Password change failed"
 }
