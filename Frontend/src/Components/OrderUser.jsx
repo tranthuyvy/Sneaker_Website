@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import axiosApiInstance from "../config/api";
+import OrderItem from "./OrderItem";
 function OrderUser() {
-  const styleLi = "text-center pt-3 cursor-pointer";
+  const [listOrder, setListOrder] = useState([]);
+  const lang = useSelector((state) => state.lang);
+  const [status, setStatus] = useState(1);
   const [listLi, setListLi] = useState([
     { isActive: true, name: "Placed" },
     { isActive: false, name: "Confirmed" },
@@ -10,20 +16,27 @@ function OrderUser() {
     { isActive: false, name: "Cancelled" },
     { isActive: false, name: "Return" },
   ]);
-
+  useEffect(() => {
+    getData()
+      .then()
+      .catch((err) => {
+        toast(lang["006"]);
+      });
+  }, [status]);
+  const styleLi = "text-center pt-3 cursor-pointer h-8";
   return (
-    <div className=" w-4/5 bg-white relative h-screen">
-      <ul className="absolute h-16 w-full top-0 grid-cols-7 grid border-b-2 text-xl">
+    <div className=" w-4/5 bg-white h-screen grid grid-rows-6 mr-4 ">
+      <ul className="row-span-1 w-full grid grid-cols-7 border-b-2 text-xl">
         {listLi?.map((item, index) => (
           <li
             key={index}
             onClick={() => {
+              setStatus(index + 1);
               setListLi([
                 ...listLi.map((i, ind) => {
                   return { ...i, isActive: ind == index };
                 }),
               ]);
-              console.log(listLi);
             }}
             className={styleLi}
             style={{ color: item.isActive ? "#E76BFB" : "black" }}
@@ -32,8 +45,21 @@ function OrderUser() {
           </li>
         ))}
       </ul>
-      <div className="h-28 w-full bg-red-500 bottom-0 absolute"></div>
+      <div className="w-full row-span-5  overflow-auto">
+        {listOrder.length > 0
+          ? listOrder.map((item) => {
+              return <OrderItem order={item}></OrderItem>;
+            })
+          : null}
+      </div>
     </div>
   );
+  async function getData() {
+    const data = (
+      await axiosApiInstance.get(`/api/v1/order/get/user?status=${status}`)
+    ).data;
+    setListOrder([...data.data]);
+    console.log(listOrder);
+  }
 }
 export default OrderUser;
