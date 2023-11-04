@@ -71,29 +71,6 @@ const AllOrder = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // const handleConfirmedOrder = (orderId, index) => {
-
-  //   dispatch(confirmOrder(orderId));
-  //   setOrderStatus("CONFIRMED");
-  // };
-
-  // const handleShippedOrder = (orderId, index) => {
-
-  //   dispatch(shipOrder(orderId));
-  //   setOrderStatus("SHIPPED");
-  // };
-
-  // const handleDeliveredOrder = (orderId, index) => {
-
-  //   dispatch(deliveredOrder(orderId));
-  //   setOrderStatus("DELIVERED");
-  // };
-
-  // const handleDeleteOrder = (orderId) => {
-
-  //   dispatch(deleteOrder(orderId));
-  // };
-
   const handleOrderClick = (id) => {
     navigate(`/admin/orders/${id}`);
   };
@@ -176,43 +153,9 @@ const AllOrder = () => {
                         />
                       ))}
                     </AvatarGroup>{" "}
-                    {/* <Typography
-                          sx={{
-                            fontWeight: 500,
-                            fontSize: "0.875rem !important",
-                          }}
-                        >
-                          {order?.order_details.map((item) => (
-                            <span className=""> {item.id_product_detail_product_detail.color},</span>
-                          ))}
-                        </Typography> */}
+                    
                   </TableCell>
 
-                  {/* <TableCell
-                    //   onClick={() => handleOrderClick(order.id)}
-                      sx={{ py: (theme) => `${theme.spacing(0.5)} !important` }}
-                    >
-                      <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <Typography
-                          sx={{
-                            fontWeight: 500,
-                            fontSize: "0.875rem !important",
-                          }}
-                        >
-                          {order?.order_details.map((item) => (
-                            <span className=""> {order.product.title},</span>
-                          ))}
-                        </Typography>
-                        <Typography variant="caption">
-                          {order?.order_details.map((order) => (
-                            <span className="opacity-60">
-                              {" "}
-                              {order.product.brand},
-                            </span>
-                          ))}
-                        </Typography>
-                      </Box>
-                    </TableCell> */}
                   <TableCell
                     sx={{ textAlign: "center" }}
                     style={{ color: "white", fontStyle: "bold" }}
