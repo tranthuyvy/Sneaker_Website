@@ -143,48 +143,60 @@ class order_controller {
       let { flag, listProduct } = await checkInventory(listDetail);
       await sequelize.transaction(async (t) => {
         if (flag) {
-          let order = await orderModel.create({
-            total_price: totalPrice - total_discounted_price,
-            total_item: totalItem,
-            total_discounted_price,
-            status_payment: 0,
-            status: 1,
-            create_at: new Date(),
-            id_user,
-            id_address,
-            payment_method,
-          }, { transaction: t });
-          const li = []
+          let order = await orderModel.create(
+            {
+              total_price: totalPrice - total_discounted_price,
+              total_item: totalItem,
+              total_discounted_price,
+              status_payment: 0,
+              status: 1,
+              create_at: new Date(),
+              id_user,
+              id_address,
+              payment_method,
+            },
+            { transaction: t }
+          );
+          const li = [];
           if (point > 0) {
             li.push({
               id_user,
               id_order: order.dataValues.id,
               point_change: point,
-              type: 0
-            })
+              type: 0,
+            });
           }
           li.push({
             id_user,
             id_order: order.dataValues.id,
-            point_change: Math.ceil((totalPrice) / 100),
-            type: 1
-          })
-          let historyChangePoint = await Model.history_change_point.bulkCreate(li, { transaction: t }
-          )
-          let update = await Model.user.update({
-            point: account.dataValues.point + Math.ceil(totalPrice / 100) - point
-          }, {
-            where: { email: email },
-            transaction: t
-          })
-          let detail = await Promise.all(
-            [...listDetail.map((item) => {
-              return orderDetail.create({
-                ...item,
-                id_order: order.dataValues.id,
-              }, { transaction: t });
-            })
-            ]);
+            point_change: Math.ceil(totalPrice / 100),
+            type: 1,
+          });
+          let historyChangePoint = await Model.history_change_point.bulkCreate(
+            li,
+            { transaction: t }
+          );
+          let update = await Model.user.update(
+            {
+              point:
+                account.dataValues.point + Math.ceil(totalPrice / 100) - point,
+            },
+            {
+              where: { email: email },
+              transaction: t,
+            }
+          );
+          let detail = await Promise.all([
+            ...listDetail.map((item) => {
+              return orderDetail.create(
+                {
+                  ...item,
+                  id_order: order.dataValues.id,
+                },
+                { transaction: t }
+              );
+            }),
+          ]);
           res.status(200).send({ code: "019" });
         } else {
           res.status(200).send({ code: "017", data: listProduct });
@@ -208,7 +220,117 @@ class order_controller {
     }
   }
 
-  async confirmOrder(req, res) {
+  // async confirmOrder(req, res) {
+  //   const { id } = req.params;
+
+  //   try {
+  //     const order = await orderModel.findOne({
+  //       where: { id },
+  //     });
+
+  //     if (!order) {
+  //       return res.status(404).send({ code: "014" });
+  //     }
+
+  //     order.status = 2;
+  //     await order.save();
+
+  //     return res.status(200).send({ code: "013" });
+  //   } catch (error) {
+  //     console.error(error);
+  //     return res.status(500).send({ code: "006" });
+  //   }
+  // }
+
+  // async shippedOrder(req, res) {
+  //   const { id } = req.params;
+
+  //   try {
+  //     const order = await orderModel.findOne({
+  //       where: { id },
+  //     });
+
+  //     if (!order) {
+  //       return res.status(404).send({ code: "014" });
+  //     }
+
+  //     order.status = 3;
+  //     await order.save();
+
+  //     return res.status(200).send({ code: "013" });
+  //   } catch (error) {
+  //     console.error(error);
+  //     return res.status(500).send({ code: "006" });
+  //   }
+  // }
+
+  // async deliveryOrder(req, res) {
+  //   const { id } = req.params;
+
+  //   try {
+  //     const order = await orderModel.findOne({
+  //       where: { id },
+  //     });
+
+  //     if (!order) {
+  //       return res.status(404).send({ code: "014" });
+  //     }
+
+  //     order.status = 4;
+  //     await order.save();
+
+  //     return res.status(200).send({ code: "013" });
+  //   } catch (error) {
+  //     console.error(error);
+  //     return res.status(500).send({ code: "006" });
+  //   }
+  // }
+
+  // async successOrder(req, res) {
+  //   const { id } = req.params;
+
+  //   try {
+  //     const order = await orderModel.findOne({
+  //       where: { id },
+  //     });
+
+  //     if (!order) {
+  //       return res.status(404).send({ code: "014" });
+  //     }
+
+  //     order.status = 5;
+  //     await order.save();
+
+  //     return res.status(200).send({ code: "013" });
+  //   } catch (error) {
+  //     console.error(error);
+  //     return res.status(500).send({ code: "006" });
+  //   }
+  // }
+
+  // async deleteOrder(req, res) {
+  //   const { id } = req.params;
+
+  //   try {
+  //     const order = await orderModel.findOne({
+  //       where: { id },
+  //     });
+
+  //     if (!order) {
+  //       return res.status(404).send({ code: "014" });
+  //     }
+
+  //     order.status = 6;
+  //     await order.save();
+
+  //     return res.status(200).send({ code: "013" });
+  //   } catch (error) {
+  //     console.error(error);
+  //     return res.status(500).send({ code: "006" });
+  //   }
+  // }
+
+  async updateOrderStatus(req, res, newStatus) {
     const { id } = req.params;
 
     try {
@@ -220,7 +342,7 @@ class order_controller {
         return res.status(404).send({ code: "014" });
       }
 
-      order.status = 2;
+      order.status = newStatus;
       await order.save();
 
       return res.status(200).send({ code: "013" });
@@ -230,93 +352,6 @@ class order_controller {
     }
   }
 
-  async shippedOrder(req, res) {
-    const { id } = req.params;
-
-    try {
-      const order = await orderModel.findOne({
-        where: { id },
-      });
-
-      if (!order) {
-        return res.status(404).send({ code: "014" });
-      }
-
-      order.status = 3;
-      await order.save();
-
-      return res.status(200).send({ code: "013" });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({ code: "006" });
-    }
-  }
-
-  async deliveryOrder(req, res) {
-    const { id } = req.params;
-
-    try {
-      const order = await orderModel.findOne({
-        where: { id },
-      });
-
-      if (!order) {
-        return res.status(404).send({ code: "014" });
-      }
-
-      order.status = 4;
-      await order.save();
-
-      return res.status(200).send({ code: "013" });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({ code: "006" });
-    }
-  }
-
-  async successOrder(req, res) {
-    const { id } = req.params;
-
-    try {
-      const order = await orderModel.findOne({
-        where: { id },
-      });
-
-      if (!order) {
-        return res.status(404).send({ code: "014" });
-      }
-
-      order.status = 5;
-      await order.save();
-
-      return res.status(200).send({ code: "013" });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({ code: "006" });
-    }
-  }
-
-  async deleteOrder(req, res) {
-    const { id } = req.params;
-
-    try {
-      const order = await orderModel.findOne({
-        where: { id },
-      });
-
-      if (!order) {
-        return res.status(404).send({ code: "014" });
-      }
-
-      order.status = 6;
-      await order.save();
-
-      return res.status(200).send({ code: "013" });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({ code: "006" });
-    }
-  }
   async getByUser(req, res) {
     const optiton = [
       {
@@ -353,23 +388,28 @@ class order_controller {
                 },
               ],
             },
-          }
+          },
         ],
       },
-    ]
+    ];
     try {
       const { id, status } = req.query;
       const email = auth.tokenData(req).email;
       const account = await Model.user.findOne({
-        where: { email: email }
-      })
-      const foundOrder = id ? await orderModel.findOne({
-        where: { id, id_user: account.dataValues.id },
-        include: optiton
-      }) : await orderModel.findAll({
-        where: { id_user: account.dataValues.id, status: status ? { [Op.eq]: status } : { [Op.ne]: 20 } },
-        include: optiton
+        where: { email: email },
       });
+      const foundOrder = id
+        ? await orderModel.findOne({
+            where: { id, id_user: account.dataValues.id },
+            include: optiton,
+          })
+        : await orderModel.findAll({
+            where: {
+              id_user: account.dataValues.id,
+              status: status ? { [Op.eq]: status } : { [Op.ne]: 20 },
+            },
+            include: optiton,
+          });
       if (foundOrder) {
         return res.status(200).send({ code: "002", data: foundOrder });
       } else {
