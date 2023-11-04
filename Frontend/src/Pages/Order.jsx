@@ -11,11 +11,10 @@ import CartItem from "../Components/CartItem";
 import axios from "../config/axios";
 import OrderTraker from "../Components/OrderTracker";
 import axiosApiInstance from "../config/api";
-
 const province_vi = require("../config/province_vi.json");
 const OrderSummary = (order) => {
   const navigate = useNavigate();
-  const isLogin = useSelector(state=>state.auth)
+  const isLogin = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -33,6 +32,8 @@ const OrderSummary = (order) => {
   const [province, setProvince] = useState(0);
   const [district, setDistrict] = useState(0);
   const [ward, setWard] = useState(0);
+  const [userPoint, setUserPoint] = useState(0);
+  const [point, setPoint] = useState(0);
   const [addressName, setAddressName] = useState("");
   const [listProvince, setListProvince] = useState([...province_vi]);
   const [listDistrict, setListDictrict] = useState([
@@ -54,9 +55,9 @@ const OrderSummary = (order) => {
         toast(lang["003"]);
       })
       .finally(() => {});
-      console.log(isLogin)
+    console.log(isLogin);
   }, [isLogin]);
-   
+
   // const handleCreatePayment=()=>{
   //   const data={orderId:order.order?.id,jwt}
   //   dispatch(createPayment(data))
@@ -305,20 +306,18 @@ const OrderSummary = (order) => {
         <OrderTraker activeStep={2}></OrderTraker>
       </div>
 
-      <div className="lg:grid grid-cols-1 relative justify-between">
-        <div className="p-5 shadow-lg rounded-md border mt-3 mx-5">
-          
-          <div className="font-bold mb-3">THÔNG TIN GIAO HÀNG</div>
-          
+      <div className="lg:grid relative grid-cols-12  justify-between p-4">
+        <div className="p-4 shadow-lg rounded-md border mt-3 col-start-2 col-end-9">
+          <div className="font-bold mb-3">Delivery detail</div>
           <select
             className="w-full my-2 my-custom-select"
             style={{
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-              backgroundColor: '#f4f4f4',
-              color: 'black',
-              transition: 'all 0.3s',
+              padding: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              backgroundColor: "#f4f4f4",
+              color: "black",
+              transition: "all 0.3s",
             }}
             onChange={(e) => setAddressSelect(e.target.value)}
           >
@@ -349,6 +348,24 @@ const OrderSummary = (order) => {
           >
             ADD ADDRESS
           </button>
+        </div>
+        <div className="p-4 shadow-lg rounded-md border ml-4 mt-3 col-start-9 col-end-12">
+          <div className="font-bold mb-3">Use point</div>
+          <div className="font-bold mb-3">
+            You can use {Math.min(Math.floor(total / 10), userPoint)} point
+          </div>
+          <input
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+            id="grid-first-name"
+            type="number"
+            max={Math.min(Math.floor(total / 10), userPoint)}
+            min={0}
+            placeholder="Point"
+            value={point}
+            onChange={(e) => {
+              handleChange(e, 3);
+            }}
+          />
         </div>
       </div>
 
@@ -487,6 +504,15 @@ const OrderSummary = (order) => {
       setAddressName(e.target.value);
       return;
     }
+    if (type == 3) {
+      if (
+        validator.isNumeric(e.target.value) &&
+        e.target.value <= Math.min(Math.floor(total / 10), userPoint)
+      ) {
+        setPoint(e.target.value);
+      }
+      return;
+    }
     setAddress(e.target.value);
   }
   function getTotal() {
@@ -526,6 +552,8 @@ const OrderSummary = (order) => {
     setAddressSelect(data.address[0]?.id);
     setName(data.user?.name || "");
     setPhone(data.user?.phone || "");
+    setUserPoint(data.user?.point || 0);
+    setPoint(Math.min(Math.floor(total / 10), data?.user?.point));
   }
   async function saveAddress(e) {
     e.preventDefault();
@@ -549,6 +577,7 @@ const OrderSummary = (order) => {
     const body = {
       id_address: Number.parseInt(addressSelect),
       payment_method: 1,
+      point,
       listDetail: [
         ...listCart.map((item) => {
           return {
@@ -562,11 +591,13 @@ const OrderSummary = (order) => {
     const data = (await axiosApiInstance.post("/api/v1/order/create", body))
       .data;
     toast(lang[data.code], { autoClose: 1000 });
-    setCart([]);
-    dispatch({ type: "DELETE_CART" });
-    setTimeout(() => {
-      navigate("/home");
-    }, 1100);
+    if (data.code.localeCompare("019") == 0) {
+      setCart([]);
+      dispatch({ type: "DELETE_CART" });
+      setTimeout(() => {
+        navigate("/home");
+      }, 1100);
+    }
   }
 };
 

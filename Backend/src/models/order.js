@@ -32,18 +32,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     },
-    update_by: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'staff',
-        key: 'id'
-      }
-    },
-    update_at: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
     delivery_date: {
       type: DataTypes.DATEONLY,
       allowNull: true
@@ -90,13 +78,6 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id_user" },
-        ]
-      },
-      {
-        name: "FK_order_staff",
-        using: "BTREE",
-        fields: [
-          { name: "update_by" },
         ]
       },
       {
