@@ -101,6 +101,11 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
     navigate("/admin/staff/profile");
   };
 
+  const handleChangePassword = () => {
+    // dispatch(handleMenuClose);
+    handleMenuClose();
+    navigate("/admin/staff/change-password")
+  }
   const menuId = "account-menu";
   const renderMenu = (
     <Menu
@@ -120,6 +125,7 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
     >
       <MenuItem onClick={handleAccount}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
     </Menu>
   );
 
