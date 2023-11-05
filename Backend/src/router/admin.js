@@ -5,5 +5,6 @@ const admin_router = Router();
 admin_router.post("/create-staff", admin_controller.createNewStaff);
 admin_router.get("/get", admin_controller.getAllUser);
 admin_router.put("/change-status", admin_controller.changeStatus);
-admin_router.put("/change-password", admin_controller.changePassword)
+admin_router.put("/change-password", admin_controller.changePassword);
+
 export default admin_router;

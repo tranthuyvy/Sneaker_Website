@@ -8,6 +8,7 @@ const account = Model.account;
 const user = Model.user;
 const { Op } = require("sequelize");
 
+
 class admin_controller {
   //Admin tạo tài khoản cho nhân viên
   createNewStaff = async (req, res) => {
@@ -209,6 +210,7 @@ class admin_controller {
       return res.status(500).send({ code: "216" })
     }
   }
+
 
 
 }
