@@ -6,6 +6,7 @@ var _category = require("./category");
 var _discount = require("./discount");
 var _discount_product = require("./discount_product");
 var _discount_user = require("./discount_user");
+var _forgot_password = require("./forgot_password");
 var _history_change_point = require("./history_change_point");
 var _image = require("./image");
 var _order = require("./order");
@@ -20,6 +21,7 @@ var _refund_image = require("./refund_image");
 var _review = require("./review");
 var _role = require("./role");
 var _staff = require("./staff");
+var _status_order = require("./status_order");
 var _supplier = require("./supplier");
 var _user = require("./user");
 
@@ -31,6 +33,7 @@ function initModels(sequelize) {
   var discount = _discount(sequelize, DataTypes);
   var discount_product = _discount_product(sequelize, DataTypes);
   var discount_user = _discount_user(sequelize, DataTypes);
+  var forgot_password = _forgot_password(sequelize, DataTypes);
   var history_change_point = _history_change_point(sequelize, DataTypes);
   var image = _image(sequelize, DataTypes);
   var order = _order(sequelize, DataTypes);
@@ -45,6 +48,7 @@ function initModels(sequelize) {
   var review = _review(sequelize, DataTypes);
   var role = _role(sequelize, DataTypes);
   var staff = _staff(sequelize, DataTypes);
+  var status_order = _status_order(sequelize, DataTypes);
   var supplier = _supplier(sequelize, DataTypes);
   var user = _user(sequelize, DataTypes);
 
@@ -121,6 +125,7 @@ function initModels(sequelize) {
     discount,
     discount_product,
     discount_user,
+    forgot_password,
     history_change_point,
     image,
     order,
@@ -135,6 +140,7 @@ function initModels(sequelize) {
     review,
     role,
     staff,
+    status_order,
     supplier,
     user,
   };

@@ -35,41 +35,19 @@ const OrderDetail = () => {
       });
     }
   };
-
-  const handleConfirmOrder = async () => {
+  
+  const updateOrderStatus = async (id, newStatus) => {
     try {
-      const response = await axios.put(`/api/v1/order/get/${id}/confirm`);
+      const response = await axios.put(`http://localhost:8081/api/v1/order/get/${id}/update-status/${newStatus}`);
       
       if (response.status === 200) {
-        
         fetchOrderData();
         toast.success(errorMessages["013"], {
-          autoClose: 900,
+          autoClose: 1000,
         });
-        
-      } else {
-        
-      }
-    } catch (error) {
-      toast.error(errorMessages["006"], {
-        autoClose: 900,
-      });
-    }
-  };
 
-  const handleShippedOrder = async () => {
-    try {
-      const response = await axios.put(`/api/v1/order/get/${id}/shipped`);
-      
-      if (response.status === 200) {
-
-        fetchOrderData();
-        toast.success(errorMessages["013"], {
-          autoClose: 900,
-        });
-        
       } else {
-        
+
       }
     } catch (error) {
       toast.error(errorMessages["006"], {
@@ -77,47 +55,28 @@ const OrderDetail = () => {
       });
     }
   };
-
-  const handleDeliveredOrder = async () => {
-    try {
-      const response = await axios.put(`/api/v1/order/get/${id}/delivery`);
-      
-      if (response.status === 200) {
-
-        fetchOrderData();
-        toast.success(errorMessages["013"], {
-          autoClose: 900,
-        });
-        
-      } else {
-        
-      }
-    } catch (error) {
-      toast.error(errorMessages["006"], {
-        autoClose: 1000,
-      });
-    }
+  
+  const handleConfirmOrder = () => {
+    const newStatus = 2;
+    updateOrderStatus(orders?.id, newStatus);
+    
   };
 
-  const handleDeleteOrder = async () => {
-    try {
-      const response = await axios.put(`/api/v1/order/get/${id}/delete`);
-      
-      if (response.status === 200) {
+  const handleShippedOrder = () => {
+    const newStatus = 3;
+    updateOrderStatus(orders?.id, newStatus);
+  };
 
-        fetchOrderData();
-        toast.success(errorMessages["013"], {
-          autoClose: 900,
-        });
-        
-      } else {
-        
-      }
-    } catch (error) {
-      toast.error(errorMessages["006"], {
-        autoClose: 1000,
-      });
-    }
+  const handleDeliveredOrder = () => {
+    const newStatus = 4;
+    updateOrderStatus(orders?.id, newStatus);
+ 
+  };
+
+  const handleCancelledOrder = () => {
+    const newStatus = 6;
+    updateOrderStatus(orders?.id, newStatus);
+    fetchOrderData();
   };
 
   const statusLabels = {
@@ -470,7 +429,7 @@ const OrderDetail = () => {
                   <Button
                     variant="contained"
                     color="secondary"
-                    onClick={handleDeleteOrder}
+                    onClick={handleCancelledOrder}
                     style={{
                       color: "white",
                       fontWeight: "bold",

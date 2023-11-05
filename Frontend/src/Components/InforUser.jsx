@@ -7,6 +7,7 @@ import validator from "validator";
 import axiosApiInstance from "../config/api";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+const animationLoading = require("../Animation/Loading.json")
 function InforUser() {
   const lang = useSelector((state) => state.lang);
   const [user, setUser] = useState();
@@ -35,10 +36,10 @@ function InforUser() {
         <Lottie
           style={{
             width: "70%",
-            height: "50%",
+            height: "80%",
             cursor: "pointer",
           }}
-          animationData={require("../Animation/Loading.json")}
+          animationData={animationLoading}
           loop={true}
         />
       ) : null}

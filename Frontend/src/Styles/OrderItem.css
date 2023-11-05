@@ -1,0 +1,12 @@
+.link-hover {
+    transform:  scale(1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .link-hover:hover {
+    transform:  scale(1.05);
+    border-width: 1px;
+    border: 1;
+    border-color: rgb(238, 81, 20);
+    border-style: solid ;
+  }
