@@ -29,7 +29,7 @@ import { format } from "date-fns";
 
 const AllOrder = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ status: "", sort: "" });
+  const [formData, setFormData] = useState({ status: "" });
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -83,7 +83,7 @@ const AllOrder = () => {
     5: "FAILED",
     6: "CANCELLED",
     7: "RETURN",
-  }
+  };
 
   return (
     <Box>
@@ -107,13 +107,11 @@ const AllOrder = () => {
                 label="Status"
                 onChange={handleChange}
               >
-                <MenuItem value={1}>PLACED</MenuItem>
-                <MenuItem value={2}>CONFIRMED</MenuItem>
-                <MenuItem value={3}>DELIVERING</MenuItem>
-                <MenuItem value={4}>SUCCESS</MenuItem>
-                <MenuItem value={5}>FAILED</MenuItem>
-                <MenuItem value={6}>CANCLED</MenuItem>
-                <MenuItem value={7}>RETURN</MenuItem>
+                {Object.keys(statusLabels).map((statusValue) => (
+                  <MenuItem key={statusValue} value={statusValue}>
+                    {statusLabels[statusValue]}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -157,7 +155,6 @@ const AllOrder = () => {
                         />
                       ))}
                     </AvatarGroup>{" "}
-                    
                   </TableCell>
 
                   <TableCell
