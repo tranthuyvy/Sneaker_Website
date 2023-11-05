@@ -78,11 +78,12 @@ const AllOrder = () => {
   const statusLabels = {
     1: "PLACED",
     2: "CONFIRMED",
-    3: "SHIPPED",
-    4: "DELIVERED",
-    5: "SUCCESS",
+    3: "DELIVERING",
+    4: "SUCCESS",
+    5: "FAILED",
     6: "CANCELLED",
-  };
+    7: "RETURN",
+  }
 
   return (
     <Box>
@@ -106,10 +107,13 @@ const AllOrder = () => {
                 label="Status"
                 onChange={handleChange}
               >
-                <MenuItem value={"PLACED"}>PLACED</MenuItem>
-                <MenuItem value={"CONFIRMED"}>CONFIRMED</MenuItem>
-                <MenuItem value={"DELIVERED"}>DELIVERED</MenuItem>
-                <MenuItem value={"CANCELD"}>CANCLED</MenuItem>
+                <MenuItem value={1}>PLACED</MenuItem>
+                <MenuItem value={2}>CONFIRMED</MenuItem>
+                <MenuItem value={3}>DELIVERING</MenuItem>
+                <MenuItem value={4}>SUCCESS</MenuItem>
+                <MenuItem value={5}>FAILED</MenuItem>
+                <MenuItem value={6}>CANCLED</MenuItem>
+                <MenuItem value={7}>RETURN</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -220,8 +224,6 @@ const AllOrder = () => {
                           ? "info"
                           : order.status === 3
                           ? "primary"
-                          : order.status === 5
-                          ? "success"
                           : "secondary"
                       }
                       className="text-white"

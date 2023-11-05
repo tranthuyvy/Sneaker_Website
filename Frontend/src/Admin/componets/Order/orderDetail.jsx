@@ -82,10 +82,11 @@ const OrderDetail = () => {
   const statusLabels = {
     1: "PLACED",
     2: "CONFIRMED",
-    3: "SHIPPED",
-    4: "DELIVERED",
-    5: "SUCCESS",
+    3: "DELIVERING",
+    4: "SUCCESS",
+    5: "FAILED",
     6: "CANCELLED",
+    7: "RETURN",
   };
 
   return (
@@ -106,7 +107,7 @@ const OrderDetail = () => {
                     ? 3
                     : orders?.status === 4
                     ? 4
-                    : 5
+                    : 4
                 }
               />
           </Grid>

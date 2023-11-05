@@ -8,9 +8,8 @@ import { Typography} from '@mui/material';
 const steps = [
   "PLACED",
   'CONFIRMED',
-  'SHIPPED',
-  'DELIVERED',
-  'SUCCESS'
+  "DELIVERING",
+  'SUCCESS',
 ];
 
 export default function OrderTraker({activeStep}) {
