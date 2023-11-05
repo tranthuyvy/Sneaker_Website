@@ -73,5 +73,11 @@
     "213": "Đổi mật khẩu thành công",
     "214": "Mật khẩu mới không khớp",
     "215": "Mật khẩu hiện tại không chính xác",
-    "216": "Đổi mật khẩu thất bại"
+    "216": "Đổi mật khẩu thất bại",
+    "217": "Gửi mail thành công",
+    "218": "Gửi mail thất bại",
+    "219": "Email không tồn tại trong hệ thống",
+    "220": "Mã code còn hiệu lực. Vui lòng kiểm tra email",
+    "221": "Mã code hết hiệu lực",
+    "222": "Mã code không hợp lệ"
 }

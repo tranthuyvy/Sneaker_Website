@@ -77,5 +77,11 @@
     "213": "Password changed successfully",
     "214": "New password does not match",
     "215": "Current password is incorrect",
-    "216": "Password change failed"
+    "216": "Password change failed",
+    "217": "Email sent successfully",
+    "218": "Sending email failed",
+    "219": "Email does not exist in the system",
+    "220": "The code is still valid. Please check your email",
+    "221": "The code is expired",
+    "222": "The code is invalid"
 }
