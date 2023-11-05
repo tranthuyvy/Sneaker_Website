@@ -79,7 +79,7 @@ class order_controller {
             model: orderDetail,
             as: "order_details",
             include: {
-              model: orderDetail,
+              model: productDetail,
               as: "id_product_detail_product_detail",
               include: {
                 model: Model.product,

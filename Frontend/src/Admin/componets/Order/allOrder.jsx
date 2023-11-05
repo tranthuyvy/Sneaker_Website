@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Avatar,
   AvatarGroup,
@@ -7,10 +9,12 @@ import {
   CardHeader,
   Chip,
   FormControl,
+  Grid,
   InputLabel,
   Menu,
   MenuItem,
   Pagination,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -19,34 +23,38 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-
-import React, { useEffect, useState } from "react";
-
-import { useNavigate } from "react-router-dom";
-import { Grid, Select } from "@mui/material";
-import api from "../../../config/api";
 import { format } from "date-fns";
+import api from "../../../config/api";
 
 const AllOrder = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ status: "" });
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 9;
 
-  const fetchOrders = (page) => {
-    api
-      .get(`api/v1/order/get?page=${page}&pageSize=${pageSize}`)
+  const statusLabels = {
+    ALL: "ALL",
+    1: "PLACED",
+    2: "CONFIRMED",
+    3: "DELIVERING",
+    4: "SUCCESS",
+    5: "FAILED",
+    6: "CANCELLED",
+    7: "RETURN",
+  };
+
+  const fetchOrders = (page, status = selectedStatus || formData.status) => {
+    const url = status === "ALL"
+      ? `api/v1/order/get?page=${page}&pageSize=${pageSize}`
+      : `api/v1/order/get?page=${page}&pageSize=${pageSize}&status=${status}`;
+
+    api.get(url)
       .then((response) => {
-        const ordersArray = Array.isArray(response.data.data)
-          ? response.data.data
-          : [];
-
-        ordersArray.sort(
-          (a, b) => new Date(b.create_at) - new Date(a.create_at)
-        );
-
+        const ordersArray = Array.isArray(response.data.data) ? response.data.data : [];
+        ordersArray.sort((a, b) => new Date(b.create_at) - new Date(a.create_at));
         setOrders(ordersArray);
         setCurrentPage(page);
         setTotalPages(response.data.totalPage);
@@ -67,22 +75,18 @@ const AllOrder = () => {
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-
-    setFormData({ ...formData, [name]: value });
+    if (value === 0) {
+      setFormData({ ...formData, [name]: "" });
+      setSelectedStatus("");
+    } else {
+      setSelectedStatus(value);
+      setFormData({ ...formData, [name]: value });
+      fetchOrders(currentPage, value);
+    }
   };
 
   const handleOrderClick = (id) => {
     navigate(`/admin/orders/${id}`);
-  };
-
-  const statusLabels = {
-    1: "PLACED",
-    2: "CONFIRMED",
-    3: "DELIVERING",
-    4: "SUCCESS",
-    5: "FAILED",
-    6: "CANCELLED",
-    7: "RETURN",
   };
 
   return (
