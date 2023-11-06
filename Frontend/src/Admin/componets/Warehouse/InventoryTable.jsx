@@ -135,7 +135,7 @@ const InventoryTable = () => {
 
                                             item && item.product_batch_items && item.product_batch_items.length > 0 && item.product_batch_items.map((item, index) => {
                                                 quantity += Number(item.quantity);
-                                                console.log("quantity");
+                                                console.log("quantity: " + index, quantity);
                                             })}
                                         {quantity}
                                     </TableCell>
@@ -152,9 +152,11 @@ const InventoryTable = () => {
                                         </Button>
                                     </TableCell>
                                     <TableCell style={{}} sx={{ textAlign: "center" }}>
-                                        {quantity > 0 ? "Still" : "SOLD OUT"}
+                                        {quantity > 0 ? <p style={{ color: "#00e676", }}>STILL</p> : <p style={{ color: "#dd2c00", }}>SOLD OUT</p>}
                                     </TableCell>
+                                    <div style={{ display: "none" }}>{quantity = 0} </div>
                                 </TableRow>
+
                             ))}
                         </TableBody>
                     </Table>

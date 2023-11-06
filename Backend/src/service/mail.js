@@ -1,18 +1,19 @@
 import nodemailer from 'nodemailer';
-
+const path = require('path');
+require('dotenv').config();
 let mail = {}
 
 let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'huynhthanhphong12a1@gmail.com',
-        pass: 'ahjzocagubfjvaiu'
+        user: process.env.mail,
+        pass: process.env.password_mail
     }
 });
 
 mail.sendVerification = (userEmail, verification) => {
     let mailOptions = {
-        from: 'huynhthanhphong12a1',
+        from: `"CEO của cửa tiệm" <${process.env.mail}>`,
         to: userEmail,
         subject: 'Xin lại mật khẩu',
         text: 'Mã xác nhận của bạn là: ' + verification,
