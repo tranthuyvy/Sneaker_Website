@@ -5,7 +5,7 @@ import "../Styles/OrderItem.css";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-
+import { useNavigate } from "react-router-dom";
 const statusLabels = {
   1: "PLACED",
   2: "CONFIRMED",
@@ -17,6 +17,7 @@ const statusLabels = {
 };
 
 function OrderItem({ order }) {
+  const navigate = useNavigate();
   const listDetail = order.order_details || [];
   return (
     <div className=" mx-5 my-3 font-medium text-xl border border-gray-500 rounded-lg shadow-lg flex flex-col justify-center items-center ">
@@ -51,8 +52,12 @@ function OrderItem({ order }) {
       </div>
       {listDetail.map((item) => {
         return (
-          <Link
-            to={`/product/?id=${item.id_product_detail_product_detail.id_product_product.id}`}
+          <div
+            onClick={() =>
+              navigate(
+                `/product/?id=${item.id_product_detail_product_detail.id_product_product.id}`
+              )
+            }
             className="h-4/6 flex w-5/6 border rounded-md shadow-md border-black py-4 border-t-2 border-b-2 hover:cursor-pointer hover:text-black link-hover my-4"
           >
             <div className="">
@@ -75,7 +80,7 @@ function OrderItem({ order }) {
                       .name
                   }
                 </p>
-                
+
                 <p className="text-base">
                   <span className="opacity-70">size: </span>
                   <span className="text-black">
@@ -116,7 +121,7 @@ function OrderItem({ order }) {
                 </span>
               </p>
             </div>
-          </Link>
+          </div>
         );
       })}
       <div className="grid grid-cols-12">
