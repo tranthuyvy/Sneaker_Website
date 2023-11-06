@@ -157,7 +157,7 @@ class auth_controller {
             }
             email = email.trim();
             code = code.trim();
-            newPassword.trim();
+            newPassword = newPassword.trim();
 
             if (newPassword.length < 6) {
                 return res.status(500).send({ code: "129" });
