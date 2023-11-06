@@ -23,10 +23,10 @@ function OrderUser() {
         toast(lang["006"]);
       });
   }, [status]);
-  const styleLi = "text-center pt-3 cursor-pointer h-8";
+  const styleLi = "text-center pt-5 cursor-pointer h-8";
   return (
     <div className=" w-4/5 bg-white h-screen grid grid-rows-6 mr-4 ">
-      <ul className="row-span-1 w-full grid grid-cols-7 border-b-2 text-xl">
+      <ul className="row-span-1 w-full h-[7rem] grid grid-cols-7 border-b-4 text-xl font-semibold">
         {listLi?.map((item, index) => (
           <li
             key={index}
@@ -34,12 +34,12 @@ function OrderUser() {
               setStatus(index + 1);
               setListLi([
                 ...listLi.map((i, ind) => {
-                  return { ...i, isActive: ind == index };
+                  return { ...i, isActive: ind === index };
                 }),
               ]);
             }}
             className={styleLi}
-            style={{ color: item.isActive ? "#E76BFB" : "black" }}
+            style={{ color: item.isActive ? "#9155FD" : "black" }}
           >
             <span>{item.name}</span>
           </li>
