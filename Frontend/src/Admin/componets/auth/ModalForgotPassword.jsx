@@ -168,7 +168,7 @@ const ModalForgotPassword = (props) => {
                 shouldCloseOnOverlayClick={true} // Đóng modal khi nhấn ra ngoài
             >
                 {/* <form style={{ width: "50%" }} onSubmit={handleSubmit}> */}
-                <Grid item xs={12} style={{ textAlign: "center" }}>
+                <Grid item xs={12} style={{ textAlign: "center", fontSize: "1.5rem", fontWeight: "bold" }}>
                     FORGOT PASSWORD</Grid>
                 <Grid container spacing={3}>
                     <Grid item xs={12} style={{ borderColor: "white" }}>
@@ -243,7 +243,7 @@ const ModalForgotPassword = (props) => {
                     <Grid item xs={12} style={{ display: "flex", position: "relative", bottom: 0, right: 0 }}>
                         <Grid item xs={3} style={{ position: "absolute", bottom: 0, right: "220px", width: "100px" }}>
                             <Button
-                                className="bg-[#9155FD] w-full"
+                                className="bg-[#9155FD] w-full button-close"
                                 type="submit"
                                 variant="contained"
                                 style={{ backgroundColor: "#78909c" }}

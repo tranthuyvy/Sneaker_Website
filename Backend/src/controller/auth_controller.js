@@ -102,7 +102,7 @@ class auth_controller {
                     where: { id_staff },
                     order: [
                         ['expiration_date', 'desc']
-                    ], limit: 1
+                    ]
                 });
                 console.log("checkCodeExist: ", checkCodeExist);
                 if (checkCodeExist && checkCodeExist.dataValues && checkCodeExist.dataValues.id) {
