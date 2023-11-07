@@ -123,9 +123,11 @@ const ModalForgotPassword = (props) => {
 
         } catch (e) {
             console.log(e);
-            toast.error(errorMessages["218"], {
-                autoClose: 1000,
-            });
+            if (e && e.response && e.response.data && e.response.data.code) {
+                toast.error(errorMessages[e.response.data.code], {
+                    autoClose: 1000,
+                });
+            }
         }
     }
     const validateEmail = (email) => {
