@@ -41,7 +41,7 @@ const Cart = () => {
         <div className="space-y-3">
           {cart.length > 0 && listCart.length > 0 ? (
             listCart.map((item, index) =>
-            findQuantity(item.id) > 0 ? (
+              findQuantity(item.id) > 0 ? (
                 <CartItem key={index} detail={item} showButton={true} />
               ) : null
             )
