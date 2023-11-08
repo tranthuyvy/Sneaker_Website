@@ -67,17 +67,17 @@ class address_controller {
             res.status(500).send({ code: '006' })
         }
     }
-    async setDefault(req,res) {
+    async setDefault(req, res) {
         try {
             const email = auth.tokenData(req).email;
             const id = req.query.id;
             const account = await Model.user.update({ default_address: id }, {
                 where: { email: email }
             });
-            res.status(200).send({code:'013'})
+            res.status(200).send({ code: '013' })
         } catch (error) {
             console.log(error)
-            res.status(200).send({code:'025'})
+            res.status(200).send({ code: '025' })
         }
 
 

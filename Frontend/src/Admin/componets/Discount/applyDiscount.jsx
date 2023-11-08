@@ -225,11 +225,11 @@ function ApplyDiscount() {
                         return (
                             <div style={{ display: "flex", position: "relative" }} >
                                 <div
-                                    style={{ display: "flex", backgroundColor: "white", color: "black", width: "550px", padding: "8px", border: "1px solid green", borderRadius: "6px", margin: "6px" }}
+                                    style={{ display: "flex", backgroundColor: "white", color: "black", width: "570px", padding: "8px", border: "1px solid green", borderRadius: "6px", margin: "6px" }}
                                 >
                                     <div style={{ flex: 2.5 }}><b>{index + 1} - Id: </b><span style={{ color: "#a855f7" }}>{item.id}</span> </div>
                                     <div style={{ flex: 2 }}>  <b>Name:</b> <span style={{ color: "#a855f7" }}>{item.name}</span></div>
-                                </div>&nbsp; <div onClick={() => handleRemoveSelect(item)} style={{ color: "red", cursor: "pointer", position: "absolute", top: "8px", left: "530px" }}>X</div>
+                                </div>&nbsp; <div onClick={() => handleRemoveSelect(item)} style={{ color: "red", cursor: "pointer", position: "absolute", top: "8px", left: "550px" }}>X</div>
                             </div>
                         )
                     }) : <div>

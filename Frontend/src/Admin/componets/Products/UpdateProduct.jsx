@@ -149,11 +149,12 @@ const UpdateProduct = () => {
         try {
             let res = await api.put(`/api/v1/product/update?id=${id}`, formData
             );
-
+            setImage([])
+            setImageNew([])
             toast.success(errorMessages[res.data.code], {
                 autoClose: 1000,
             });
-            // navigate("/admin/products")
+            navigate("/admin/products")
         } catch (error) {
             if (error.response && error.response.status === 500) {
                 toast.error(errorMessages[error.response.data.code],
