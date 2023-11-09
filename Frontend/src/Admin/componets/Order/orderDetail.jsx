@@ -67,17 +67,17 @@ const OrderDetail = () => {
     updateOrderStatus(orders?.id, newStatus);
   };
 
-  const handleDeliveredOrder = () => {
-    const newStatus = 4;
-    updateOrderStatus(orders?.id, newStatus);
+  // const handleDeliveredOrder = () => {
+  //   const newStatus = 4;
+  //   updateOrderStatus(orders?.id, newStatus);
  
-  };
+  // };
 
-  const handleCancelledOrder = () => {
-    const newStatus = 6;
-    updateOrderStatus(orders?.id, newStatus);
-    fetchOrderData();
-  };
+  // const handleCancelledOrder = () => {
+  //   const newStatus = 6;
+  //   updateOrderStatus(orders?.id, newStatus);
+  //   fetchOrderData();
+  // };
 
   const statusLabels = {
     1: "PLACED",
@@ -426,7 +426,7 @@ const OrderDetail = () => {
                   </Button>
                 </Grid>
 
-                <Grid item>
+                {/* <Grid item>
                   <Button
                     variant="contained"
                     color="secondary"
@@ -440,7 +440,7 @@ const OrderDetail = () => {
                   >
                     CANCELLED ORDER
                   </Button>
-                </Grid>
+                </Grid> */}
               </Grid>
             )}
 
@@ -457,13 +457,13 @@ const OrderDetail = () => {
                       fontSize: "20px",
                     }}
                   >
-                    SHIPPED
+                    DELIVERING
                   </Button>
                 </Grid>
               </Grid>
             )}
 
-            {orders.status === 3 && (
+            {/* {orders.status === 3 && (
               <Grid container justifyContent="flex-end" className="p-5">
                 <Grid item>
                   <Button
@@ -480,7 +480,7 @@ const OrderDetail = () => {
                   </Button>
                 </Grid>
               </Grid>
-            )}
+            )} */}
           </Grid>
         </Grid>
       </div>
