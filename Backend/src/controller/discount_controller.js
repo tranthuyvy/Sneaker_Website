@@ -23,40 +23,18 @@ class discount_controller {
     if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
       create_by = dataStaff.dataValues.id;
     }
-    //Điều chỉnh múi giờ cho đúng
-    const dateObject = new Date(expiration_date);
-    const utcDateExpiration = new Date(
-      Date.UTC(
-        dateObject.getFullYear(),
-        dateObject.getMonth(),
-        dateObject.getDate()
-      )
-    );
+
+
     // console.log("Múi giờ: ", utcDate);
 
     //Điều chỉnh múi giờ cho đúng
-    const dateObjectNew = new Date(start_date);
-    const utcDateStart = new Date(
-      Date.UTC(
-        dateObjectNew.getFullYear(),
-        dateObjectNew.getMonth(),
-        dateObjectNew.getDate()
-      )
-    );
-    // console.log("Múi giờ: ", utcDateNew);
-    console.log("Start: ", utcDateStart.getFullYear(), "End:", utcDateExpiration.getFullYear());
-    if (utcDateStart.getFullYear() > utcDateExpiration.getFullYear()) {
+    const startDate = new Date(start_date);
+
+    //Điều chỉnh múi giờ cho đúng
+    const expirationDate = new Date(expiration_date);
+
+    if (startDate > expirationDate) {
       return res.status(200).send({ code: "203" });
-    } else {
-      if (utcDateStart.getMonth() > utcDateExpiration.getMonth()) {
-        return res.status(200).send({ code: "203" });
-      } else {
-        if (utcDateStart.getDay() >= utcDateExpiration.getDay()) {
-          return res.status(200).send({ code: "203" });
-        } else {
-          console.log("Hợp lệ");
-        }
-      }
     }
     // console.log(">>> Check id của staff: ", dataStaff.dataValues);
     type = Number(type);
@@ -73,8 +51,8 @@ class discount_controller {
       let id_discount = await discount.create({
         value,
         type,
-        expiration_date: utcDateExpiration,
-        start_date: utcDateStart,
+        expiration_date: expirationDate,
+        start_date: startDate,
         create_by,
         status: 1,
       });
