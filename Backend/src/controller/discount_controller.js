@@ -24,34 +24,9 @@ class discount_controller {
       create_by = dataStaff.dataValues.id;
     }
 
-
     // console.log("Múi giờ: ", utcDate);
 
     //Điều chỉnh múi giờ cho đúng
-<<<<<<< HEAD
-    const dateObjectNew = new Date(start_date);
-    const utcDateStart = new Date(
-      Date.UTC(
-        dateObjectNew.getFullYear(),
-        dateObjectNew.getMonth(),
-        dateObjectNew.getDate()
-      )
-    );
-    // console.log("Múi giờ: ", utcDateNew);
-    console.log("Start: ", utcDateStart, "End:", utcDateExpiration);
-    if (utcDateStart.getFullYear() > utcDateExpiration.getFullYear()) {
-      return res.status(200).send({ code: "203" });
-    } else {
-      if (utcDateStart.getMonth() > utcDateExpiration.getMonth()) {
-        return res.status(200).send({ code: "203" });
-      } else {
-        if (utcDateStart.getDate() >= utcDateExpiration.getDate()) {
-          return res.status(200).send({ code: "203" });
-        } else {
-          console.log("Hợp lệ");
-        }
-      }
-=======
     const startDate = new Date(start_date);
 
     //Điều chỉnh múi giờ cho đúng
@@ -59,7 +34,6 @@ class discount_controller {
 
     if (startDate > expirationDate) {
       return res.status(200).send({ code: "203" });
->>>>>>> c1e26906e6cb296e770318ba1544868bb8d08b7d
     }
     // console.log(">>> Check id của staff: ", dataStaff.dataValues);
     type = Number(type);
