@@ -47,18 +47,13 @@ class discount_controller {
     console.log("Start: ", utcDateStart.getFullYear(), "End:", utcDateExpiration.getFullYear());
     if (utcDateStart.getFullYear() > utcDateExpiration.getFullYear()) {
       return res.status(200).send({ code: "203" });
-    }
-    else {
-
+    } else {
       if (utcDateStart.getMonth() > utcDateExpiration.getMonth()) {
         return res.status(200).send({ code: "203" });
-      }
-      else {
-
+      } else {
         if (utcDateStart.getDay() >= utcDateExpiration.getDay()) {
           return res.status(200).send({ code: "203" });
-        }
-        else {
+        } else {
           console.log("Hợp lệ");
         }
       }
@@ -111,7 +106,6 @@ class discount_controller {
     }
   };
 
-
   disableDiscount = async (req, res) => {
     let id = req.query.id;
     let checkIdDiscount = await discount.findOne({ where: { id } });
@@ -137,17 +131,21 @@ class discount_controller {
     let id_discount = req.query.id;
     try {
       if (listProduct.length > 0) {
-
         for (let i = 0; i < listProduct.length; i++) {
-          let checkExist = await discount_product.findOne({ where: { id_discount, id_product: listProduct[i].id } })
+          let checkExist = await discount_product.findOne({
+            where: { id_discount, id_product: listProduct[i].id },
+          });
           console.log(checkExist);
           if (checkExist && checkExist.dataValues && checkExist.dataValues.id) {
             console.log("Sản phẩm đã có trong db");
+          } else {
+            await discount_product.create({
+              id_discount,
+              id_product: listProduct[i].id,
+              status: 1,
+            });
           }
-          else {
-            await discount_product.create({ id_discount, id_product: listProduct[i].id, status: 1 })
-          }
-          // 
+          //
         }
         return res.status(200).send({ code: "004" });
       }
@@ -155,25 +153,23 @@ class discount_controller {
       console.log(error);
       return res.status(404).send({ code: "005" });
     }
-
-  }
+  };
   deleteProductByIdDiscount = async (req, res) => {
-
     try {
       let id_discount = req.query.id;
       if (id_discount) {
         await discount_product.destroy({
           where: {
-            id: id_discount
+            id: id_discount,
           },
-        })
+        });
         return res.status(200).send({ code: "204" });
       }
     } catch (error) {
       console.log(error);
       return res.status(404).send({ code: "205" });
     }
-  }
+  };
   getApplyDiscount = async (req, res) => {
     try {
       let id_discount = req.query.id;
@@ -185,24 +181,27 @@ class discount_controller {
         {
           model: Model.product,
           as: "id_product_product",
-          include: [{
-            model: Model.branch,
-            as: 'id_branch_branch'
-          },
-          {
-            model: Model.image,
-            as: "images"
-          },
-          {
-            model: Model.category,
-            as: "id_category_category"
-          }]
-
-        }
-      ]
+          include: [
+            {
+              model: Model.branch,
+              as: "id_branch_branch",
+            },
+            {
+              model: Model.image,
+              as: "images",
+            },
+            {
+              model: Model.category,
+              as: "id_category_category",
+            },
+          ],
+        },
+      ];
       if (id_discount) {
-
-        let data = await discount_product.findAll({ where: { id_discount, status: 1 }, include: option });
+        let data = await discount_product.findAll({
+          where: { id_discount, status: 1 },
+          include: option,
+        });
         const paginatedProducts = data.slice(startIndex, endIndex);
         const totalPage = Math.ceil(data.length / pageSize);
         return res
@@ -211,12 +210,9 @@ class discount_controller {
       }
     } catch (error) {
       console.log(error);
-      return res
-        .status(500)
-        .send({ code: "003" });
+      return res.status(500).send({ code: "003" });
     }
-
-  }
+  };
 }
 
 export default new discount_controller();
