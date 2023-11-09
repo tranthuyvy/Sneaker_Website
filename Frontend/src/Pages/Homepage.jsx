@@ -7,6 +7,7 @@ import axios from "../config/axios";
 import { getImage } from "../config/common";
 import Filter from "../Components/Filter";
 import { sortOptions } from "../Components/FilterData";
+import HomeCarousel from "../Components/HomeCarousel";
 
 const Homepage = (props) => {
   const lang = useSelector((state) => state.lang);
@@ -57,13 +58,17 @@ const Homepage = (props) => {
   };
 
   return (
-    <div className="flex">
-      <div className="flex-grow">
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
+      <HomeCarousel />
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <div
           className="grid grid-cols-10"
           style={{ display: "grid", placeItems: "center" }}
         >
           <div className="flex-none col-span-9 border h-100"></div>
+
           <div className="flex-none col-span-1 border h-100">
             <Card className="">
               <Button onClick={handleSortMenuOpen} className="absolute top-0">
@@ -105,7 +110,7 @@ const Homepage = (props) => {
                       imageUrl:
                         item.images.length > 0
                           ? [...item.images]
-                          : [{link:getImage(item)}],
+                          : [{ link: getImage(item) }],
                     };
                     return <ItemProduct product={product}></ItemProduct>;
                   })
