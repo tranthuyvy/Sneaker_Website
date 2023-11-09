@@ -4,7 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 const ProductCard = ({ product }) => {
-  const [delay,setDelay]= useState(Math.random()*1000)
+  const [isHovered, setIsHovered] = useState(false);
+  const [delay, setDelay] = useState(Math.random() * 1000);
   const {
     id,
     title,
@@ -17,7 +18,13 @@ const ProductCard = ({ product }) => {
   } = product;
   const navigate = useNavigate();
   const items = [
-    ...imageUrl.map((item) => <img style={{height:"320px", width:"100%"}} src={item.link} role="presentation" />)
+    ...imageUrl.map((item) => (
+      <img
+        style={{ height: "320px", width: "100%" }}
+        src={item.link}
+        role="presentation"
+      />
+    )),
   ];
 
   return (
@@ -25,15 +32,19 @@ const ProductCard = ({ product }) => {
       to={`/product/?id=${product.id}`}
       className="productCard w-[20rem] border m-3 transition-all cursor-pointer "
     >
-      <div className="h-[20rem]">
+      <div
+        className="h-[20rem]"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <AliceCarousel
           mouseTracking
           items={items}
-          autoPlay={true}
+          autoPlay={isHovered}
           disableButtonsControls={true}
           disableDotsControls
-          infinite={items.length>1}
-          animationDuration={800+delay}
+          infinite={items.length > 1}
+          animationDuration={500}
         />
       </div>
 
