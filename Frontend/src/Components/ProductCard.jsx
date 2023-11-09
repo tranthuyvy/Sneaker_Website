@@ -17,7 +17,7 @@ const ProductCard = ({ product }) => {
   } = product;
   const navigate = useNavigate();
   const items = [
-    ...imageUrl.map((item) => <img src={item.link} role="presentation" />)
+    ...imageUrl.map((item) => <img style={{height:"320px", width:"100%"}} src={item.link} role="presentation" />)
   ];
 
   return (

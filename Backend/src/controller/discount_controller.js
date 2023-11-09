@@ -44,14 +44,14 @@ class discount_controller {
       )
     );
     // console.log("Múi giờ: ", utcDateNew);
-    console.log("Start: ", utcDateStart.getFullYear(), "End:", utcDateExpiration.getFullYear());
+    console.log("Start: ", utcDateStart, "End:", utcDateExpiration);
     if (utcDateStart.getFullYear() > utcDateExpiration.getFullYear()) {
       return res.status(200).send({ code: "203" });
     } else {
       if (utcDateStart.getMonth() > utcDateExpiration.getMonth()) {
         return res.status(200).send({ code: "203" });
       } else {
-        if (utcDateStart.getDay() >= utcDateExpiration.getDay()) {
+        if (utcDateStart.getDate() >= utcDateExpiration.getDate()) {
           return res.status(200).send({ code: "203" });
         } else {
           console.log("Hợp lệ");
