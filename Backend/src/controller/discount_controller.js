@@ -45,7 +45,7 @@ class discount_controller {
     );
     // console.log("Múi giờ: ", utcDateNew);
     console.log("Start: ", utcDateStart.getFullYear(), "End:", utcDateExpiration.getFullYear());
-    if (Number(utcDateStart.getFullYear()) > Number(utcDateExpiration.getFullYear())) {
+    if (utcDateStart.getFullYear() > utcDateExpiration.getFullYear()) {
       return res.status(200).send({ code: "203" });
     }
     else {
@@ -78,8 +78,8 @@ class discount_controller {
       let id_discount = await discount.create({
         value,
         type,
-        expiration_date: utcDate,
-        start_date: utcDateNew,
+        expiration_date: utcDateExpiration,
+        start_date: utcDateStart,
         create_by,
         status: 1,
       });
