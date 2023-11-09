@@ -5,6 +5,7 @@ import "../Styles/OrderItem.css";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const statusLabels = {
   1: "PLACED",
@@ -75,7 +76,7 @@ function OrderItem({ order }) {
                       .name
                   }
                 </p>
-                
+
                 <p className="text-base">
                   <span className="opacity-70">size: </span>
                   <span className="text-black">
@@ -120,10 +121,53 @@ function OrderItem({ order }) {
         );
       })}
       <div className="grid grid-cols-12">
-        <p className="col-start-11 col-span-1 my-4 flex">
+        <p className="col-start-8 col-span-1 my-4 flex">
           <span className="mr-1">Total: </span>
           <span className="text-red-500 font-bold">${order?.total_price}</span>
         </p>
+
+        <div className="col-start-11 my-4 flex mb-3">
+          {order?.payment_method === 2 && (
+            <PayPalScriptProvider
+              options={{
+                "client-id":
+                  "AVR129jGmpPplO0U5gNQnlPlfCeRffQ1r6E0GUJkJGyRTUP8Ce16qs3xocDzt7OwphQaRHDB0XdEuzzC",
+              }}
+            >
+              <PayPalButtons
+                style={{
+                  color: "gold",
+                  shape: "rect",
+                  layout: "horizontal",
+                  label: "paypal",
+                  height: 50,
+                  width: 200,
+                }}
+                createOrder={(data, actions) => {
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        description: "Sneaker",
+                        amount: {
+                          currency_code: "USD",
+                          value: (order?.total_price).toString(),
+                        },
+                      },
+                    ],
+                  });
+                }}
+                onApprove={(data, actions) => {
+                  return actions.order.capture().then(function (details) {
+                    //success
+                  });
+                }}
+                onError={(data, actions) => {
+                  //failed
+                }}
+              />
+            </PayPalScriptProvider>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import CartItem from "../Components/CartItem";
 import axios from "../config/axios";
 import OrderTraker from "../Components/OrderTracker";
 import axiosApiInstance from "../config/api";
+
 const province_vi = require("../config/province_vi.json");
 const OrderSummary = (order) => {
   const navigate = useNavigate();
@@ -63,18 +64,16 @@ const OrderSummary = (order) => {
   //   dispatch(createPayment(data))
   // };
 
-  const handlePaymentSuccess = () => {
-    // const {payer} = details;
-    setSuccess(true);
+  // const handlePayment = () => {
+  //   handleOrder();
+  //   setSuccess(true);
+  //   navigate("/");
+  // };
 
-    // dispatch(updatePaymentStatus(order.order?.id));
+  // const handlePaymentFailed = () => {
+  //   setErrorMessage("Payment Failed");
+  // };
 
-    navigate("/account/order");
-  };
-
-  const handlePaymentFailed = () => {
-    setErrorMessage("Payment Failed");
-  };
   const customStyles = {
     content: {
       top: "50%",
@@ -419,70 +418,18 @@ const OrderSummary = (order) => {
                   <button
                     className="h-10 w-40 border"
                     style={{
-                      backgroundColor: "#c9db34d4",
+                      backgroundColor: "#ffc439",
                       borderRadius: 10,
-                      color: "white",
+                      color: "#033286",
+                      fontStyle: "italic"
                     }}
+                    onClick={handlePaypal}
                   >
-                    Digital Wallets
+                    PayPal
                   </button>
                 </div>
+                
               </div>
-              {/* <PayPalScriptProvider
-              options={{
-                "client-id": "AVR129jGmpPplO0U5gNQnlPlfCeRffQ1r6E0GUJkJGyRTUP8Ce16qs3xocDzt7OwphQaRHDB0XdEuzzC"
-              }}
-            >
-              <PayPalButtons
-                createOrder={(data, actions) => {
-                  return actions.order.create({
-                    purchase_units: [
-                      {
-                        description: 'Sneaker',
-                        amount: {
-                          currency_code: 'USD',
-                          value: order.order?.totalDiscountedPrice.toString(),
-                        },
-                      },
-                    ],
-                    application_context: {
-                      shipping_preference:'NO_SHIPPING'
-                    }
-                  })
-                  .then((orderId) => {
-                    return orderId
-                  })
-                }}
-                onApprove={(data, actions) => {
-                  return actions.order.capture().then(function (details) {
-                    handlePaymentSuccess();
-                  });
-                }}
-
-              onError = {(data, actions) => {
-                handlePaymentFailed();
-              }}
-              
-              />
-              <Modal
-                isOpen = {success}
-                contentLabel="Payment Successful"
-                onRequestClose={() => setSuccess(false)}
-                shouldCloseOnOverlayClick = {true}
-                closeTimeoutMS={5000}
-              >
-                <h1>Payment Successful</h1>
-              </Modal>
-            </PayPalScriptProvider> */}
-
-              {/* <Button
-              onClick={handleCreatePayment}
-              variant="contained"
-              type="submit"
-              sx={{ padding: ".8rem 2rem", marginTop: "2rem", width: "100%" }}
-            >
-              PAYMENT HI
-            </Button> */}
             </div>
           </div>
         </div>
@@ -577,6 +524,33 @@ const OrderSummary = (order) => {
     const body = {
       id_address: Number.parseInt(addressSelect),
       payment_method: 1,
+      point,
+      listDetail: [
+        ...listCart.map((item) => {
+          return {
+            id_product_detail: item.id,
+            quantity: item.quantity,
+            price: item.id_product_product.product_price,
+          };
+        }),
+      ],
+    };
+    const data = (await axiosApiInstance.post("/api/v1/order/create", body))
+      .data;
+    toast(lang[data.code], { autoClose: 1000 });
+    if (data.code.localeCompare("019") == 0) {
+      setCart([]);
+      dispatch({ type: "DELETE_CART" });
+      setTimeout(() => {
+        navigate("/home");
+      }, 1100);
+    }
+  }
+
+  async function handlePaypal() {
+    const body = {
+      id_address: Number.parseInt(addressSelect),
+      payment_method: 2,
       point,
       listDetail: [
         ...listCart.map((item) => {
