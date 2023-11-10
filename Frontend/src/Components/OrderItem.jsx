@@ -5,6 +5,7 @@ import "../Styles/OrderItem.css";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { Button } from "@mui/material";
 
 const statusLabels = {
   1: "PLACED",
@@ -75,7 +76,7 @@ function OrderItem({ order }) {
                       .name
                   }
                 </p>
-                
+
                 <p className="text-base">
                   <span className="opacity-70">size: </span>
                   <span className="text-black">
@@ -115,6 +116,7 @@ function OrderItem({ order }) {
                   ${item.quantity * item.price}
                 </span>
               </p>
+
             </div>
           </Link>
         );
@@ -124,6 +126,8 @@ function OrderItem({ order }) {
           <span className="mr-1">Total: </span>
           <span className="text-red-500 font-bold">${order?.total_price}</span>
         </p>
+
+
       </div>
     </div>
   );
