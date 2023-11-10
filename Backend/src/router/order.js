@@ -5,6 +5,10 @@ const order_router = Router();
 order_router.get("/get", order_controller.getAllOrder);
 order_router.get("/get/user", auth.authenUser, order_controller.getByUser);
 order_router.get("/get/:id", order_controller.getOrderById);
+order_router.put(
+  "/get/:id/update-payment",
+  order_controller.updatePaymentStatus
+);
 order_router.put("/get/:id/update-status/:status", (req, res) => {
   const { id, status } = req.params;
   order_controller.updateOrderStatus(req, res, parseInt(status));

@@ -24,7 +24,6 @@ class discount_controller {
       create_by = dataStaff.dataValues.id;
     }
 
-
     // console.log("Múi giờ: ", utcDate);
 
     //Điều chỉnh múi giờ cho đúng

@@ -220,6 +220,28 @@ class order_controller {
     }
   }
 
+  async updatePaymentStatus(req, res) {
+    const { id } = req.params;
+
+    try {
+      const order = await orderModel.findOne({
+        where: { id },
+      });
+
+      if (!order) {
+        return res.status(404).send({ code: "014" });
+      }
+
+      order.status_payment = 1;
+      await order.save();
+
+      return res.status(200).send({ code: "013" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ code: "006" });
+    }
+  }
+
   async updateOrderStatus(req, res, newStatus) {
     const { id } = req.params;
 

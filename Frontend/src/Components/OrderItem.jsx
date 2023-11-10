@@ -5,7 +5,10 @@ import "../Styles/OrderItem.css";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import { Button } from "@mui/material";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import axios from "../config/axios";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const statusLabels = {
   1: "PLACED",
@@ -18,6 +21,7 @@ const statusLabels = {
 };
 
 function OrderItem({ order }) {
+  const lang = useSelector((state) => state.lang);
   const listDetail = order.order_details || [];
   return (
     <div className=" mx-5 my-3 font-medium text-xl border border-gray-500 rounded-lg shadow-lg flex flex-col justify-center items-center ">
@@ -121,13 +125,14 @@ function OrderItem({ order }) {
           </Link>
         );
       })}
+
       <div className="grid grid-cols-12">
-        <p className="col-start-11 col-span-1 my-4 flex">
-          <span className="mr-1">Total: </span>
+        <p className="col-start-8 col-span-3 my-4 flex">
+          <span className="mr-1 font-bold text-red-500">
+            {order?.status_payment === 1 ? "Đã Thanh Toán: " : "Total: "}
+          </span>
           <span className="text-red-500 font-bold">${order?.total_price}</span>
         </p>
-
-
       </div>
     </div>
   );
