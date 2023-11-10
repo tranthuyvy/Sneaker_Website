@@ -18,7 +18,10 @@ const OrderSummary = (order) => {
   const isLogin = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [success, setSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errNameAddress, setErrNameAddress]= useState({ isValid: true, err: "" });
+  const [errNameReci, setErrNameReci]= useState({ isValid: true, err: "" });
+  const [errPhone, setErrPhone]= useState({ isValid: true, err: "" });
+  const [errAddress,setErrAddress]= useState({ isValid: true, err: "" });
   const [total, setTotal] = useState(0);
   const [discount, setDisCount] = useState(0);
   const [listCart, setListCart] = useState([]);
@@ -83,7 +86,7 @@ const OrderSummary = (order) => {
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
       height: "65%",
-      width: "40%",
+      width: "50%",
       padding: 0,
     },
   };

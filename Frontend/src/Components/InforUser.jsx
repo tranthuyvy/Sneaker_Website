@@ -123,6 +123,7 @@ function InforUser() {
               value={phone}
               onChange={handleChange}
               type={"text"}
+              error={!errorPhone.isValid}
             />
             <p hidden={errorPhone.isValid} className="text-red-500">
               {lang[errorPhone.err]}

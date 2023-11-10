@@ -15,6 +15,7 @@ order_router.put("/get/:id/update-status/:status", (req, res) => {
 });
 // auth.authenUser
 order_router.post("/create", auth.authenUser, order_controller.create);
+order_router.post("/create/v2", auth.authenUser, order_controller.createV2);
 order_router.post("/checkInventory", order_controller.checkInventory);
 
 export default order_router;
