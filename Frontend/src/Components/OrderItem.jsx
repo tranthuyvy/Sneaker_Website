@@ -5,6 +5,7 @@ import "../Styles/OrderItem.css";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "../config/axios";
 import { toast } from "react-toastify";
@@ -21,6 +22,7 @@ const statusLabels = {
 };
 
 function OrderItem({ order }) {
+  const navigate = useNavigate();
   const lang = useSelector((state) => state.lang);
   const listDetail = order.order_details || [];
   return (
@@ -56,8 +58,12 @@ function OrderItem({ order }) {
       </div>
       {listDetail.map((item) => {
         return (
-          <Link
-            to={`/product/?id=${item.id_product_detail_product_detail.id_product_product.id}`}
+          <div
+            onClick={() =>
+              navigate(
+                `/product/?id=${item.id_product_detail_product_detail.id_product_product.id}`
+              )
+            }
             className="h-4/6 flex w-5/6 border rounded-md shadow-md border-black py-4 border-t-2 border-b-2 hover:cursor-pointer hover:text-black link-hover my-4"
           >
             <div className="">
@@ -121,7 +127,7 @@ function OrderItem({ order }) {
                 </span>
               </p>
             </div>
-          </Link>
+          </div>
         );
       })}
 
