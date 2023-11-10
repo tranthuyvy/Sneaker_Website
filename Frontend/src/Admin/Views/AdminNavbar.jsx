@@ -124,8 +124,9 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleAccount}>Profile</MenuItem>
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
       <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+
     </Menu>
   );
 

@@ -89,19 +89,16 @@ const AllStaff = () => {
           <Table sx={{ minWidth: 390 }} aria-label="table in dashboard">
             <TableHead>
               <TableRow>
-                <TableCell>STT</TableCell>
+                
                 <TableCell style={{ textAlign: "center" }}>Avatar</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Name</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Email</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Phone</TableCell>
                 <TableCell style={{ textAlign: "center" }}>CCCD</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Birthday</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Sex</TableCell>
-                <TableCell style={{ textAlign: "center" }}>
-                  Bank Number
-                </TableCell>
-                <TableCell style={{ textAlign: "center" }}>
-                  Start Work
-                </TableCell>
+                <TableCell style={{ textAlign: "center" }}>Bank Number</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Start Work</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Status</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Action</TableCell>
               </TableRow>
@@ -117,17 +114,19 @@ const AllStaff = () => {
                         "&:last-of-type td, &:last-of-type th": { border: 0 },
                       }}
                     >
+                      
                       <TableCell style={{ textAlign: "center" }}>
-                        {staff.id}
-                      </TableCell>
-                      <TableCell style={{ textAlign: "center" }}>
-                        <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                        <Avatar sx={{ bgcolor: deepPurple[500], textAlign: "center" }}>
                           {staff.name.charAt(0).toUpperCase()}
                         </Avatar>
                       </TableCell>
 
                       <TableCell style={{ textAlign: "center" }}>
-                        {staff.name}
+                        {staff.staffs[0]?.name}
+                      </TableCell>
+
+                      <TableCell style={{ textAlign: "center" }}>
+                        {staff.staffs[0]?.email}
                       </TableCell>
 
                       <TableCell style={{ textAlign: "center" }}>

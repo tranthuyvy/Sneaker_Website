@@ -21,6 +21,7 @@ import api from '../../../config/api'
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
 import { toast, ToastContainer } from "react-toastify";
+import "./ProductDetail.css"
 
 const DetailProduct = () => {
     const isLargeScreen = useMediaQuery("(min-width:1200px)");
@@ -77,7 +78,9 @@ const DetailProduct = () => {
             const item = inputs[i];
             if (!item.value) {
                 check = false;
-                alert("Bạn nhập thiếu!");
+                toast.error(errorMessages["009"], {
+                    autoClose: 1000,
+                });
                 break; // Dừng vòng lặp khi gặp một giá trị không hợp lệ
             }
         }
@@ -87,26 +90,31 @@ const DetailProduct = () => {
                 console.log(`Input ID: ${item.id}, Value: ${item.value}`);
                 //Gọi api thêm 
                 try {
-                    const response = await api.post("/api/v1/product_detail/create", {
+                    const res = await api.post("/api/v1/product_detail/create", {
                         idProduct: id,
                         size: item.value,
                     });
-                    if (response && (response.status === 200)) {
-                        toast.success(errorMessages["008"], {
-                            autoClose: 1000,
-                        });
-                        dispatch({ type: "LANG_ENG" });
-                        fetchApi();
-                        setInputs([{ id: 1, value: '' }]);
+                    if (res && res.data && res.data.code) {
+                        let errCode = res.data.code;
+                        if (errCode == "004") {
+                            toast.success(errorMessages[errCode], {
+                                autoClose: 1000,
+                            });
+                            fetchApi();
+                            setInputs([{ id: 1, value: '' }]);
+                        }
+                        else {
+                            toast.error(errorMessages[errCode], {
+                                autoClose: 1000,
+                            });
+                        }
+
                         //   navigate("/admin/supplier");
                     }
-                } catch (error) {
-                    if (error.response && (error.response.status === 500)) {
-                        toast.error(errorMessages[error.response.data.code], {
-                            autoClose: 1000,
-                        });
-                    } else {
-                        toast.error(errorMessages["103"], {
+                } catch (e) {
+                    console.log(e);
+                    if (e && e.response && e.response.data && e.response.data.code) {
+                        toast.error(errorMessages[e.response.data.code], {
                             autoClose: 1000,
                         });
                     }
@@ -140,11 +148,11 @@ const DetailProduct = () => {
                 <input
                     value={input.value}
                     onChange={e => handleInputChange(input.id, e)}
-                    style={{ color: "red" }}
+                    style={{ color: "black", fontSize: "1rem", outline: "none", border: "1px solid gray", padding: "16.5px 14px", borderRadius: "6px" }}
                 />
-                <AddCircleOutlineIcon style={{ color: "lightgreen" }} className="mx-3 cursor-pointer " onClick={handleAddInput} />
+                <AddCircleOutlineIcon style={{ color: "lightgreen" }} className="mx-3 cursor-pointer mt-3" onClick={handleAddInput} />
                 {index > 0 && (
-                    <DeleteIcon style={{ color: "red" }} className="cursor-pointer" onClick={() => handleRemoveInput(input.id)} />
+                    <DeleteIcon style={{ color: "red" }} className="cursor-pointer mt-3" onClick={() => handleRemoveInput(input.id)} />
                     // <button onClick={() => handleRemoveInput(input.id)}>DeleteIcon</button>
                 )}
             </div>
@@ -175,21 +183,27 @@ const DetailProduct = () => {
                 >
                     <div>
                         <img
-                            className="w-[5rem] lg:w-[15rem] rounded-md"
+                            className="w-[5rem] lg:w-[12rem] rounded-md"
                             src={customersProduct?.images && customersProduct.images[0]?.link}
                             alt=""
                         />
                     </div>
 
                     <div className="ml-3 lg:ml-5 space-y-2 lg:space-y-4">
-                        <p className="lg:text-lg font-bold">
+                        <p className="lg:text-lg font-bold" style={{
+                            fontSize: "1.2rem"
+                        }}>
                             {customersProduct?.name}
                         </p>
-                        <p className="opacity-50 font-semibold text-sm">
+                        <p className="opacity-50 font-semibold text-sm" style={{
+                            fontSize: "1.2rem"
+                        }}>
                             {customersProduct?.id_branch_branch && customersProduct.id_branch_branch.name}
                         </p>
 
-                        <div className="flex space-x-2 items-center">
+                        <div className="flex space-x-2 items-center" style={{
+                            fontSize: "1.2rem"
+                        }}>
                             {/* <p className="text-red-600 font-semibold text-lg">
                                 ${customersProduct?.product_price}
                             </p> */}
@@ -204,15 +218,18 @@ const DetailProduct = () => {
                                 </p>
                             }
                         </div>
-                        <p className="font-semibold text-sm">
+                        <div className="font-semibold text-sm" style={{
+                            fontSize: "1.2rem"
+                        }}>
                             Size:&nbsp;
-                            {customersProduct?.product_details && customersProduct.product_details.map((item, index) => {
-                                return (
-                                    item.size + " "
-                                )
-                            })
-                            }
-                        </p>
+                            <div style={{ width: "19rem", overflowX: "scroll", height: "100px", marginTop: "20px", display: "flex" }} >
+                                {customersProduct?.product_details && customersProduct.product_details.map((item, index) => {
+                                    return (
+                                        <div style={{ border: "1px solid white", padding: "20px", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: index % 2 == 0 ? "#c51162" : "#2196f3" }} className={index % 2 == 0 ? "animation-size-up" : "animation-size-down"}>{item.size}</div>
+                                    )
+                                })
+                                }</div>
+                        </div>
 
                         <div className="flex items-center space-x-3">
                             <Rating
@@ -220,12 +237,17 @@ const DetailProduct = () => {
                                 value={listReview && listReview.length > 0 && calStar(listReview)}
                                 precision={0.5}
                                 readOnly
+
                             />
 
-                            <p className="opacity-60 text-sm hover:text-indigo-500">
+                            <p className="opacity-60 text-sm hover:text-indigo-500" style={{
+                                fontSize: "1rem"
+                            }}>
                                 {listReview && listReview.length > 0 && calStar(listReview)} Ratings
                             </p>
-                            <p className="ml-3 text-sm font-medium hover:text-indigo-500">
+                            <p className="ml-3 text-sm font-medium hover:text-indigo-500" style={{
+                                fontSize: "1rem"
+                            }}>
                                 {listReview && listReview.length} reviews
                             </p>
                         </div>
@@ -235,12 +257,12 @@ const DetailProduct = () => {
 
                 <Grid item xs={12} lg={4}>
                     <div className={`${!isLargeScreen ? "py-10" : ""} space-y-5`}>
-                        <div className="shadow-md border rounded-md p-5" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                        <div className="shadow-md border rounded-md p-3" style={{ maxHeight: '500px', overflowY: 'auto' }}>
                             <Typography className="font-semibold" component="legend">
                                 {listReview && listReview.length > 0 ?
                                     (listReview.map((item) => (
-                                        <div className="p-5">
-                                            <Grid container spacing={2} gap={4}>
+                                        <div className="p-3">
+                                            <Grid container spacing={2} gap={4} style={{ borderBottom: "1px solid white", padding: "10px" }}>
                                                 <Grid item xs={1}>
                                                     <Box>
                                                         <Avatar
@@ -292,7 +314,7 @@ const DetailProduct = () => {
 
             </Grid>
             <Grid className="shadow-md border rounded-md p-5">
-                <div className="mt-3"> NHẬP SIZE:</div>
+                <div className="mt-3" style={{ fontSize: "1rem" }}> ENTER SIZE:</div>
                 <div style={{ display: "flex", flexDirection: "row" }}>
                     {/* {renderInputs()}<div onClick={handleAddInput}>Thêm</div> */}
                 </div>
@@ -301,6 +323,7 @@ const DetailProduct = () => {
                     onClick={() => handlePrintValues()}
                     variant="contained"
                     color="primary"
+                    style={{ fontSize: "1.2rem" }}
                 >
                     ADD SIZE
                 </Button>

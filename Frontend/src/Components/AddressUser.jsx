@@ -108,6 +108,7 @@ function AddressUser() {
               </label>
               <input
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                placeholder="Your phone number"
                 onChange={(e) => handleChange(e, 1)}
                 value={phone}
               />
@@ -306,17 +307,17 @@ function AddressUser() {
     setIdAddressDefault(data?.user?.default_address);
   }
   function handleChange(e, type) {
-    if (type == 0) {
+    if (type === 0) {
       setName(e.target.value);
       return;
     }
-    if (type == 1) {
+    if (type === 1) {
       if (validator.isNumeric(e.target.value)) {
         setPhone(e.target.value);
       }
       return;
     }
-    if (type == 2) {
+    if (type === 2) {
       setAddressName(e.target.value);
       return;
     }

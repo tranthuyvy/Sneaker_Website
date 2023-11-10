@@ -6,6 +6,11 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useNavigate } from "react-router-dom";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import axios from "../config/axios";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+
 const statusLabels = {
   1: "PLACED",
   2: "CONFIRMED",
@@ -18,6 +23,7 @@ const statusLabels = {
 
 function OrderItem({ order }) {
   const navigate = useNavigate();
+  const lang = useSelector((state) => state.lang);
   const listDetail = order.order_details || [];
   return (
     <div className=" mx-5 my-3 font-medium text-xl border border-gray-500 rounded-lg shadow-lg flex flex-col justify-center items-center ">
@@ -124,11 +130,69 @@ function OrderItem({ order }) {
           </div>
         );
       })}
+
       <div className="grid grid-cols-12">
-        <p className="col-start-11 col-span-1 my-4 flex">
-          <span className="mr-1">Total: </span>
+        <p className="col-start-8 col-span-3 my-4 flex">
+          <span className="mr-1 font-bold text-red-500">
+            {order?.status_payment === 1 ? "Đã Thanh Toán: " : "Total: "}
+          </span>
           <span className="text-red-500 font-bold">${order?.total_price}</span>
         </p>
+
+        <div className="col-start-11 my-4 flex mb-3">
+
+          {order?.payment_method === 2 && order?.status_payment === 0 && (
+            <PayPalScriptProvider
+              options={{
+                "client-id":
+                  "AVR129jGmpPplO0U5gNQnlPlfCeRffQ1r6E0GUJkJGyRTUP8Ce16qs3xocDzt7OwphQaRHDB0XdEuzzC",
+              }}
+            >
+              <PayPalButtons
+                style={{
+                  color: "gold",
+                  shape: "rect",
+                  layout: "horizontal",
+                  label: "paypal",
+                  height: 50,
+                  width: 200,
+                }}
+                createOrder={(data, actions) => {
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        description: "Sneaker",
+                        amount: {
+                          currency_code: "USD",
+                          value: (order?.total_price).toString(),
+                        },
+                      },
+                    ],
+                  });
+                }}
+                onApprove={(data, actions) => {
+                  return actions.order.capture().then(function (details) {
+                    axios
+                      .put(`/api/v1/order/get/${order?.id}/update-payment`)
+                      .then((response) => {
+                        if (response.status === 200) {
+                          toast(lang["132"]);
+                        } else {
+                          toast.error(lang["133"]);
+                        }
+                      })
+                      .catch((error) => {
+                        toast.error(lang["006"]);
+                      });
+                  });
+                }}
+                onError={(data, actions) => {
+                  toast.error(lang["133"]);
+                }}
+              />
+            </PayPalScriptProvider>
+          )}
+        </div>
       </div>
     </div>
   );

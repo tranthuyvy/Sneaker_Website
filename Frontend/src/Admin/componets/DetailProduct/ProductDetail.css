@@ -1,0 +1,37 @@
+.animation-size-down {
+    animation-name: slide-down;
+    /* Áp dụng animation slide-down */
+    animation-duration: 1s;
+    /* Thời gian thực hiện animation là 2 giây */
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(-100%);
+        /* Bắt đầu từ vị trí trên cùng */
+    }
+
+    to {
+        transform: translateY(0);
+        /* Kết thúc ở vị trí hiện tại */
+    }
+}
+
+.animation-size-up {
+    animation-name: slide-up;
+    /* Áp dụng animation slide-up */
+    animation-duration: 1s;
+    /* Thời gian thực hiện animation là 2 giây */
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        /* Bắt đầu từ vị trí dưới cùng */
+    }
+
+    to {
+        transform: translateY(0);
+        /* Kết thúc ở vị trí hiện tại */
+    }
+}

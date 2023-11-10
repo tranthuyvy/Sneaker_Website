@@ -14,9 +14,11 @@ function CreateDiscount() {
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [type, setType] = useState("");
+  const [startDate, setStartDate] = useState(null);
   const [expirationDate, setExpirationDate] = useState(null);
   const [valueError, setValueError] = useState("");
   const [typeError, setTypeError] = useState("");
+  const [startDateError, setStartDateError] = useState("");
   const [expirationDateError, setExpirationDateError] = useState("");
 
   const lang = useSelector((state) => state);
@@ -38,6 +40,11 @@ function CreateDiscount() {
     setExpirationDateError("");
   };
 
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+    setStartDateError("");
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     let valid = true;
@@ -57,12 +64,22 @@ function CreateDiscount() {
       valid = false;
     }
 
+    if (!startDate) {
+      setStartDateError(errorMessages["116"]);
+      valid = false;
+    }
+
     if (value < 0 || value > 100) {
       setValueError(errorMessages["117"]);
       valid = false;
     }
 
-    if (expirationDate < new Date()) {
+    if (startDate < new Date()) {
+      setStartDateError(errorMessages["118"]);
+      valid = false;
+    }
+
+    if (expirationDate <= startDate) {
       setExpirationDateError(errorMessages["118"]);
       valid = false;
     }
@@ -76,6 +93,7 @@ function CreateDiscount() {
         value,
         type,
         expiration_date: expirationDate,
+        start_date: startDate,
       });
 
       if (response.status === 200) {
@@ -102,7 +120,7 @@ function CreateDiscount() {
   return (
     <React.Fragment>
       <form style={{ width: "50%" }} onSubmit={handleSubmit}>
-        <Grid container spacing={3}>
+        <Grid container spacing={5}>
           <Grid item xs={12}>
             <TextField
               name="value"
@@ -116,7 +134,8 @@ function CreateDiscount() {
               helperText={valueError}
             />
           </Grid>
-          <Grid item xs={6}>
+
+          <Grid item xs={12}>
             <Select
               name="type"
               label="Type"
@@ -130,6 +149,30 @@ function CreateDiscount() {
               <MenuItem value={2}>Discount %</MenuItem>
             </Select>
           </Grid>
+
+          <Grid item xs={6}>
+            <DatePicker
+              name="startDate"
+              selected={startDate}
+              onChange={handleStartDateChange}
+              dateFormat="dd/MM/yyyy"
+              customInput={
+                <TextField
+                  style={{ width: "152%" }}
+                  fullWidth
+                  label="Start Date"
+                  value={
+                    startDate
+                      ? startDate.toLocaleDateString("en-GB")
+                      : ""
+                  }
+                  error={!!startDateError}
+                  helperText={startDateError}
+                />
+              }
+            />
+          </Grid>
+
           <Grid item xs={6}>
             <DatePicker
               name="expirationDate"
@@ -138,7 +181,7 @@ function CreateDiscount() {
               dateFormat="dd/MM/yyyy"
               customInput={
                 <TextField
-                  style={{ width: "100%" }}
+                  style={{ width: "152%" }}
                   fullWidth
                   label="Expiration Date"
                   value={
