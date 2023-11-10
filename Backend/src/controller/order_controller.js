@@ -137,7 +137,7 @@ class order_controller {
         totalItem = 0,
         total_discounted_price = point || 0;
       const listPrice = await getPrice(listDetail)
-      listDetail= listDetail.map((item, index) => {
+      listDetail = listDetail.map((item, index) => {
         return { ...item, price: listPrice[index].price }
       })
       for (let i = 0; i < listDetail.length; i++) {
