@@ -63,6 +63,7 @@
     "131": "Username cannot contain spaces",
     "132": "Payment Via PayPal Successful",
     "133": "Payment Via PayPal Failed",
+    "134": "Cannot Be Left Blank",
     "201": "Updated failed",
     "202": "Disable failed",
     "203": "Promotion period is not valid",
