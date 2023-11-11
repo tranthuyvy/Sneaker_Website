@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import "../Styles/OrderItem.css";
@@ -10,6 +10,8 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "../config/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { Button } from "@mui/material";
+import Modal from "react-modal";
 
 const statusLabels = {
   1: "PLACED",
@@ -25,6 +27,47 @@ function OrderItem({ order }) {
   const navigate = useNavigate();
   const lang = useSelector((state) => state.lang);
   const listDetail = order.order_details || [];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const updateOrderStatus = async (id, newStatus) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8081/api/v1/order/get/${id}/update-status/${newStatus}`
+      );
+
+      if (response.status === 200) {
+        // fetchOrderData();
+        toast.success("SUCCESS", {
+          autoClose: 1000,
+        });
+      } else {
+      }
+    } catch (error) {
+      toast.error(lang["006"], {
+        autoClose: 1000,
+      });
+    }
+  };
+
+  const handleSuccessOrder = () => {
+    const newStatus = 4;
+    updateOrderStatus(order?.id, newStatus);
+  };
+
+  const handleCancelledOrder = () => {
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    const newStatus = 6;
+    updateOrderStatus(order?.id, newStatus);
+    setIsModalOpen(false);
+  };
+
+  const cancelDelete = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className=" mx-5 my-3 font-medium text-xl border border-gray-500 rounded-lg shadow-lg flex flex-col justify-center items-center ">
       <div className="grid grid-cols-12 mt-4">
@@ -132,15 +175,95 @@ function OrderItem({ order }) {
       })}
 
       <div className="grid grid-cols-12">
-        <p className="col-start-8 col-span-3 my-4 flex">
+        <p className="col-start-2 col-span-2 my-4 flex">
           <span className="mr-1 font-bold text-red-500">
-            {order?.status_payment === 1 ? "Đã Thanh Toán: " : "Total: "}
+            {order?.status_payment === 1 ? "Paid: " : "Total: "}
           </span>
           <span className="text-red-500 font-bold">${order?.total_price}</span>
         </p>
 
-        <div className="col-start-11 my-4 flex mb-3">
+        <div className="col-start-5 col-span-3 flex mb-3 mt-2">
+          {order?.status === 3 && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleSuccessOrder}
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "18px",
+                height: "50px",
+                width: "150px",
+              }}
+            >
+              RECEIVED
+            </Button>
+          )}
+        </div>
 
+        <div className="col-start-8 col-span-3 flex mt-2 mb-3">
+          {order?.status === 1 && order?.status_payment === 0 && (
+            <>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleCancelledOrder}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  height: "50px",
+                  width: "150px",
+                }}
+              >
+                CANCELL
+              </Button>
+              <Modal
+                isOpen={isModalOpen}
+                onRequestClose={cancelDelete}
+                contentLabel="Xác nhận xóa"
+                style={{
+                  overlay: {
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    zIndex: 1000,
+                  },
+                  content: {
+                    width: "250px",
+                    height: "140px",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    padding: "20px",
+                    backgroundColor: "white",
+                  },
+                }}
+              >
+                <h2 className="font-bold text-red-500 p-2 mt-2">
+                  ARE YOU SURE CANCEL ?
+                </h2>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={confirmDelete}
+                  style={{ marginRight: "10px" }}
+                >
+                  CONFIRM
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={cancelDelete}
+                >
+                  CANCEL
+                </Button>
+              </Modal>
+            </>
+          )}
+        </div>
+
+        <div className="col-start-11 flex mb-3 mt-2">
           {order?.payment_method === 2 && order?.status_payment === 0 && (
             <PayPalScriptProvider
               options={{
@@ -154,7 +277,7 @@ function OrderItem({ order }) {
                   shape: "rect",
                   layout: "horizontal",
                   label: "paypal",
-                  height: 50,
+                  height: 55,
                   width: 200,
                 }}
                 createOrder={(data, actions) => {
