@@ -13,7 +13,8 @@ export default function socket(server) {
             })
         })
         socket.on('filter', data => {
-            filter(data.minPrice, data.maxPrice, data.size).then(data => {
+            console.log(data)
+            filter(data.minPrice, data.maxPrice, data.listSize).then(data => {
                 io.local.emit('filter',data)
             })
         })

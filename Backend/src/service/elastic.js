@@ -26,7 +26,13 @@ async function initData() {
     ]
     let data = await Model.product.findAll({ include: option });
     data = data.map(item => {
-        let newitem = { ...item.dataValues, branch: item.id_branch_branch.dataValues.name, category: item.id_category_category.name }
+        let newitem = {
+            ...item.dataValues, branch: item.id_branch_branch.dataValues.name, category: item.id_category_category.name,
+            size: item.product_details.map(i => {
+                return i.dataValues.size
+            })
+
+        }
         return newitem
     })
     const result = await client.helpers.bulk({
@@ -59,20 +65,26 @@ async function search(query) {
         return item._source
     })
 }
-async function filter(minPrice = 0, maxPrice = 999, size = 0) {
+
+async function filter(minPrice = 0, maxPrice = 99999, listSize = []) {
     const option = [
-        {
-            "match": {
-                "product.product_details.size": size == 0 ? {
-                    "lte": 99
-                } : size
-            }
-        },
+        // listSize.length == 0 ? {
+        //     "range": {
+        //         "size": {
+        //             "lte": 99
+        //         }
+        //     }
+        // } : {
+        //     "terms": {
+        //         "size": listSize,
+
+        //     }
+        // },
         {
             "range": {
                 "product_price": {
-                    "gte": price_min,
-                    "lte": price_max
+                    "gte": minPrice,
+                    "lte": maxPrice
                 }
             }
         }

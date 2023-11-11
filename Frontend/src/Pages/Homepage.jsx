@@ -13,6 +13,7 @@ import socket from "../config/elastic";
 const Homepage = (props) => {
   const lang = useSelector((state) => state.lang);
   var searchStr = useSelector((state) => state.searchStr);
+  const { minPrice, maxPrice, listSize } = useSelector((state) => state.filter);
   const [listStore, setListStore] = useState([]);
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,7 +27,7 @@ const Homepage = (props) => {
         const productsArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
-        setListProduct(productsArray);
+        setListProduct([...productsArray]);
         setCurrentPage(page);
         setTotalPages(response.data.totalPage);
         setListStore([...productsArray]);
@@ -48,6 +49,15 @@ const Homepage = (props) => {
       setListProduct([...listStore]);
     }
   }, [searchStr.length]);
+  useEffect(() => {
+    console.log(minPrice, maxPrice,listSize)
+    if (minPrice != 0 && maxPrice != 0) {
+      socket.emit("filter", { minPrice, maxPrice,listSize });
+      socket.on("filter", (data) => {
+        setListProduct([...data]);
+      });
+    } else setListProduct([...listStore]);
+  }, [minPrice + maxPrice,listSize.lenght]);
   const handlePaginationChange = (event, page) => {
     fetchProducts(page);
   };

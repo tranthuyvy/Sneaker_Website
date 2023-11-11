@@ -18,21 +18,39 @@ import { filters, singleFilter, sortOptions } from "./FilterData";
 
 function ProductFilter() {
   const [listSize, setListSize] = useState([]);
-  const [price, setPrice] = useState({});
+  const [price, setPrice] = useState({ minPrice: 0, maxPrice: 0 });
   const dispatch = useDispatch();
   function handleFilter(e, sectionId) {
     if (e.target.name.localeCompare("size") == 0) {
       if (e.target.checked) setListSize([...listSize, e.target.value]);
       else setListSize([...listSize.filter((item) => item != e.target.value)]);
+      // setTimeout(() => {
+      //   dispatch({
+      //     type: "FILTER",
+      //     data: {
+      //       minPrice: price.minPrice,
+      //       maxPrice: price.maxPrice,
+      //       listSize: listSize,
+      //     },
+      //   });
+      // }, 500);
     }
   }
   function handleRadioFilterChange(e, sectionId) {
-    const [minPrice, Maxprice] = e.target.value.split("-").map(Number);
-    setPrice({ minPrice, Maxprice });
+    const [minPrice, maxPrice] = e.target.value.split("-").map(Number);
+    setPrice({ minPrice, maxPrice });
+   
   }
   useEffect(() => {
-    console.log(listSize, price);
-  }, [listSize.length, price.minPrice + price.Maxprice]);
+    dispatch({
+      type: "FILTER",
+      data: {
+        minPrice: price.minPrice,
+        maxPrice: price.maxPrice,
+        listSize: listSize,
+      },
+    });
+  }, [listSize.length, price.minPrice + price.maxPrice]);
   return (
     <form className="hidden lg:block rounded-md p-4 ml-2">
       <h2 className="py-3 font-semibold opacity-60 text-lg">Filters</h2>
@@ -52,7 +70,13 @@ function ProductFilter() {
                   </span>
                   <span className="ml-6 flex items-center">
                     {open ? (
-                      <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                      <MinusIcon
+                        className="h-5 w-5"
+                        aria-hidden="true"
+                        onClick={(e) => {
+                          setListSize([]);
+                        }}
+                      />
                     ) : (
                       <PlusIcon className="h-5 w-5" aria-hidden="true" />
                     )}
@@ -102,7 +126,13 @@ function ProductFilter() {
                   </span>
                   <span className="ml-6 flex items-center">
                     {open ? (
-                      <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                      <MinusIcon
+                        className="h-5 w-5"
+                        aria-hidden="true"
+                        onClick={(e) => {
+                          setPrice({ minPrice: 0, maxPrice: 0 });
+                        }}
+                      />
                     ) : (
                       <PlusIcon className="h-5 w-5" aria-hidden="true" />
                     )}

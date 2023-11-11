@@ -47,7 +47,7 @@ export const color = [
       id: "price",
       name: "Price",
       options: [
-        { value: "0-99", label: "$0 - $99" },
+        { value: "1-99", label: "$1 - $99" },
         { value: "99-399", label: "$99 - $399" },
         { value: "399-999", label: "$399 - $999" },
         { value: "999-1999", label: "$999 - $1999" },
