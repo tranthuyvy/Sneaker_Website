@@ -135,7 +135,7 @@ const UpdateProduct = () => {
         // formData.append(`listImageDelete${}`, commonIds);
         // return commonIds;
         // }
-        if (imageNew.length > 0) {
+        if (imageNew && imageNew.length > 0) {
             console.log("Ảnh mới");
             console.log(imageNew);
             for (let i = 0; i < imageNew.length; i++) {
@@ -173,17 +173,22 @@ const UpdateProduct = () => {
         const files = Array.from(e.target.files);
         // setImages(files);
         //Nếu mà còn ảnh thì khỏi setImage
-
-        if (files) {
-            // setImage(files);
-            setImageNew(files);
-            // setSelectedImage(URL.createObjectURL(files));
-        } else {
-            // setImage(null);
-            setImageNew(null);
-            // setSelectedImage(null);
-        }
-    };
+        if (files.length > 0) {
+            const isImage = files.every(file => file.type.startsWith('image/'));
+            if (isImage) {
+                // setImage(files);
+                setImageNew(files);
+                // setSelectedImage(URL.createObjectURL(files));
+            } else {
+                toast.error(errorMessages[224], {
+                    autoClose: 1000,
+                });
+                // setImage(null);
+                setImageNew(null);
+                // setSelectedImage(null);
+            }
+        };
+    }
 
 
     const handleRemoveImage = (index) => {

@@ -40,9 +40,11 @@ const ImportWarehouse = () => {
     const [result, setResult] = useState([])
     const [listSelect, setListSelect] = useState([]);
     const [listSupplier, setListSupplier] = useState([]);
-    const [id_supplier, setIdSupplier] = useState([]);
+    const [id_supplier, setIdSupplier] = useState("");
     const [productBatchName, setProductBatchName] = useState("")
     const [id_list_select, setIdListSelect] = useState(0)
+    const [supplierError, setSupplierError] = useState('');
+    const [productBatchNameError, setProductBatchNameError] = useState('');
     const pageSize = 8;
 
     const lang = useSelector((state) => state);
@@ -68,7 +70,7 @@ const ImportWarehouse = () => {
     const fetchApiSupplier = async () => {
         try {
 
-            let res = await axios.get("/api/v1/supplier/get");
+            let res = await axios.get("/api/v1/supplier/get?pageSize=20&status=1");
             console.log("res: ", res);
             if (res && res.data && res.data.data) {
                 setListSupplier(res.data.data)
@@ -117,6 +119,18 @@ const ImportWarehouse = () => {
         filterProduct(a)
     }
 
+    const handleInputChangeNew = (e) => {
+        let { name, value } = e.target;
+        if (name == "productBatchName") {
+            setProductBatchName(value);
+            setProductBatchNameError("");
+        }
+        if (name == "id_supplier") {
+            setIdSupplier(value);
+            setSupplierError("");
+        }
+    }
+
     const handleInputChange = (id, event, name) => {
         const newInputs = listSelect.map(item => {
             let value = event.target.value
@@ -155,7 +169,14 @@ const ImportWarehouse = () => {
     }
 
     const handleImport = async () => {
-        console.log("Test xem list select: ", listSelect);
+        console.log("Test xem list select: ", listSelect, id_supplier, productBatchName);
+
+        if (!id_supplier) {
+            setSupplierError(errorMessages["226"]);
+        }
+        if (!productBatchName) {
+            setProductBatchNameError(errorMessages["225"]);
+        }
         if (listSelect.length > 0) {
             try {
                 let res = await axiosApiInstance.post(`http://localhost:8081/api/v1/product-batch/create`, { arrProductBatch: listSelect, id_supplier, name: productBatchName });
@@ -178,6 +199,11 @@ const ImportWarehouse = () => {
                     //     });
                 }
             }
+        }
+        else {
+            toast.error(errorMessages["009"], {
+                autoClose: 1000,
+            });
         }
     }
 
@@ -237,13 +263,16 @@ const ImportWarehouse = () => {
                     </div>
                     <FormControl fullWidth style={{ marginTop: "200px" }}>
 
-                        <InputLabel id="demo-simple-select-label">Select supplier</InputLabel>
+                        <InputLabel>Select supplier</InputLabel>
                         <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
+
                             value={id_supplier}
+                            name="id_supplier"
                             label="Age"
-                            onChange={(e) => setIdSupplier(e.target.value)}
+                            error={supplierError}
+                            helperText={supplierError}
+                            onChange={(e) => handleInputChangeNew(e)}
+
                         >
                             {listSupplier.length > 0 && listSupplier.map((item, indexDetail) => {
                                 return (
@@ -255,7 +284,10 @@ const ImportWarehouse = () => {
                         </Select>
                         <TextField className="my-3" label="Product Batch Name" variant="outlined"
                             value={productBatchName}
-                            onChange={(e) => setProductBatchName(e.target.value)}
+                            name="productBatchName"
+                            error={productBatchNameError}
+                            onChange={(e) => handleInputChangeNew(e)}
+                            helperText={productBatchNameError}
                         />
                     </FormControl>
 

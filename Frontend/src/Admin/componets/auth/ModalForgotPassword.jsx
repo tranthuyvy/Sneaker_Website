@@ -51,13 +51,13 @@ const ModalForgotPassword = (props) => {
                 toast.error(errorMessages["010"], {
                     autoClose: 1000,
                 });
-                return
+                return;
             }
             if (passwordError) {
                 toast.error(errorMessages["129"], {
                     autoClose: 1000,
                 });
-                return
+                return;
             }
             let res = await axios.put("/api/v1/auth/change-password-forgot", { email, code, newPassword: password });
             console.log("res: ", res);

@@ -20,7 +20,7 @@ import { toast, ToastContainer } from "react-toastify";
 import errorMessagesEn from "../../../Lang/en.json";
 import errorMessagesVi from "../../../Lang/vi.json";
 import { useSelector } from "react-redux";
-import axios from "../../../config/axios";
+import axios from "../../../config/api";
 
 const AllSupplier = () => {
   const navigate = useNavigate();
@@ -57,9 +57,9 @@ const AllSupplier = () => {
     fetchSuppliers(currentPage);
   }, []);
 
-    const handlePaginationChange = (event, page) => {
-      fetchSuppliers(page);
-    };
+  const handlePaginationChange = (event, page) => {
+    fetchSuppliers(page);
+  };
 
   const handleDeleteSupplier = (id) => {
     axios

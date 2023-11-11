@@ -213,19 +213,26 @@ const CreateProduct = () => {
 
   const handleImageChangeGPT = (e) => {
     const files = Array.from(e.target.files);
-    // setImages(files);
-    if (files) {
-      setProductData((prevState) => ({
-        ...prevState,
-        image: files,
-      }));
-      // setSelectedImage(URL.createObjectURL(files));
-    } else {
-      setProductData((prevState) => ({
-        ...prevState,
-        image: null,
-      }));
-      // setSelectedImage(null);
+    if (files.length > 0) {
+      const isImage = files.every(file => file.type.startsWith('image/'));
+      // setImages(files);
+
+      if (isImage) {
+        setProductData((prevState) => ({
+          ...prevState,
+          image: files,
+        }));
+        // setSelectedImage(URL.createObjectURL(files));
+      } else {
+        toast.error(errorMessages[224], {
+          autoClose: 1000,
+        });
+        setProductData((prevState) => ({
+          ...prevState,
+          image: null,
+        }));
+        // setSelectedImage(null);
+      }
     }
   };
 

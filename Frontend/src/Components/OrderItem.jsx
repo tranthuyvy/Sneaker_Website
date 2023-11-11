@@ -9,6 +9,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "../config/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { Button } from "@mui/material";
 
 const statusLabels = {
   1: "PLACED",
@@ -74,6 +75,7 @@ function OrderItem({ order }) {
             </div>
             <div className="flex items-center mx-10">
               <div className="align-text-top">
+                <p>Id: 01</p>
                 <p className="flex text-2xl">
                   {
                     item.id_product_detail_product_detail.id_product_product
@@ -133,7 +135,20 @@ function OrderItem({ order }) {
           </span>
           <span className="text-red-500 font-bold">${order?.total_price}</span>
         </p>
+        <p style={{ fontSize: "16px" }}>Status payment: has been paid</p>
       </div>
+      <Button
+        variant="contained"
+        color="primary"
+        // onClick={handleShippedOrder}
+        style={{
+          color: "white",
+          fontWeight: "bold",
+          fontSize: "20px",
+        }}
+      >
+        CANCELLED ORDER
+      </Button>
     </div>
   );
 }

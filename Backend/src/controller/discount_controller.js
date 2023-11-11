@@ -18,6 +18,10 @@ class discount_controller {
       return res.status(500).send({ code: "009" });
     }
 
+    value = Number(value);
+    if (value < 1 || value > 100) {
+      return res.status(500).send({ code: "223" })
+    }
     //Lấy id của staff
     let dataStaff = await staff.findOne({ where: { id_account } });
     if (dataStaff && dataStaff.dataValues && dataStaff.dataValues.id) {
@@ -67,16 +71,27 @@ class discount_controller {
 
   getAllDiscount = async (req, res) => {
     try {
-      const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
-      const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu discount trong 1 trang
-      let startIndex = (page - 1) * pageSize;
-      let endIndex = startIndex + pageSize;
-      let data = await discount.findAll();
-      const paginatedProducts = data.slice(startIndex, endIndex);
-      const totalPage = Math.ceil(data.length / pageSize);
-      return res
-        .status(200)
-        .send({ code: "002", data: paginatedProducts, totalPage });
+      const id = req.query.id;
+      if (id) {
+
+        let data = await discount.findOne({ where: { id } });
+        return res
+          .status(200)
+          .send({ code: "002", data });
+
+      }
+      else {
+        const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
+        const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu discount trong 1 trang
+        let startIndex = (page - 1) * pageSize;
+        let endIndex = startIndex + pageSize;
+        let data = await discount.findAll();
+        const paginatedProducts = data.slice(startIndex, endIndex);
+        const totalPage = Math.ceil(data.length / pageSize);
+        return res
+          .status(200)
+          .send({ code: "002", data: paginatedProducts, totalPage });
+      }
     } catch (e) {
       console.log(e);
       return res.status(500).send({ code: "003" });
@@ -115,13 +130,24 @@ class discount_controller {
           console.log(checkExist);
           if (checkExist && checkExist.dataValues && checkExist.dataValues.id) {
             console.log("Sản phẩm đã có trong db");
-          } else {
-            await discount_product.create({
-              id_discount,
-              id_product: listProduct[i].id,
-              status: 1,
-            });
+            return res.status(500).send({ code: "227" })
           }
+        }
+        for (let i = 0; i < listProduct.length; i++) {
+          let checkExist = await discount_product.findOne({
+            where: { id_discount, id_product: listProduct[i].id },
+          });
+          console.log(checkExist);
+          // if (checkExist && checkExist.dataValues && checkExist.dataValues.id) {
+          //   console.log("Sản phẩm đã có trong db");
+          //   return res.status(500).send({ code: "227" })
+          // } else {
+          await discount_product.create({
+            id_discount,
+            id_product: listProduct[i].id,
+            status: 1,
+          });
+          // }
           //
         }
         return res.status(200).send({ code: "004" });

@@ -19,8 +19,8 @@ class product_batch_controller {
     getAllBatchProduct = async (req, res) => {
         try {
             let { id_product_batch } = req.query;
-            const page = parseInt(req.query.page); //Trang bao nhiêu
-            const pageSize = parseInt(req.query.pageSize); // bao nhiêu sản phẩm trong 1 trang
+            const page = parseInt(req.query.page) || 1; //Trang bao nhiêu
+            const pageSize = parseInt(req.query.pageSize) || 5; // bao nhiêu sản phẩm trong 1 trang
 
             let option = [{
                 model: product_batch_item,
