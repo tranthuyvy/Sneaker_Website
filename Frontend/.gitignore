@@ -7,7 +7,6 @@
 
 # testing
 /coverage
-/src/config/*
 # production
 /build
 .env
