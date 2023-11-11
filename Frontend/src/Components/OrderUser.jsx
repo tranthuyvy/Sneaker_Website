@@ -15,6 +15,7 @@ function OrderUser() {
     { isActive: false, name: "Failed" },
     { isActive: false, name: "Cancelled" },
     { isActive: false, name: "Return" },
+    { isActive: false, name: "Wait for pay" }
   ]);
   useEffect(() => {
     getData()
@@ -26,7 +27,7 @@ function OrderUser() {
   const styleLi = "text-center pt-5 cursor-pointer h-8";
   return (
     <div className=" w-4/5 bg-white h-screen grid grid-rows-6 mr-4 ">
-      <ul className="row-span-1 w-full h-[7rem] grid grid-cols-7 border-b-4 text-xl font-semibold">
+      <ul className="row-span-1 w-full h-[7rem] grid grid-cols-8 border-b-4 text-xl font-semibold">
         {listLi?.map((item, index) => (
           <li
             key={index}

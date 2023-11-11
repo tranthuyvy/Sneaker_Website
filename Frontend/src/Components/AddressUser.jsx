@@ -9,7 +9,6 @@ import "../Styles/AddressUser.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-
 const province_vi = require("../config/province_vi.json");
 function AddressUser() {
   const [listAddress, setListAddress] = useState([]);
@@ -17,6 +16,16 @@ function AddressUser() {
   const [delay, setDelay] = useState(Math.random() * 4000 + 500);
   const lang = useSelector((state) => state.lang);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [errNameAddress, setErrNameAddress] = useState({
+    isValid: false,
+    err: "026",
+  });
+  const [errNameReci, setErrNameReci] = useState({
+    isValid: false,
+    err: "026",
+  });
+  const [errPhone, setErrPhone] = useState({ isValid: false, err: "028" });
+  const [errAddress, setErrAddress] = useState({ isValid: false, err: "030" });
   const [address, setAddress] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -39,8 +48,8 @@ function AddressUser() {
       right: "auto",
       bottom: "auto",
       transform: "translate(-50%, -50%)",
-      height: "60%",
-      width: "60%",
+      height: "65%",
+      width: "50%",
       padding: "2rem",
     },
   };
@@ -58,6 +67,7 @@ function AddressUser() {
     }
     call();
   }, []);
+
   return (
     <div className=" w-2/3 bg-white">
       <Modal
@@ -76,13 +86,18 @@ function AddressUser() {
                 Name Address
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                className={`appearance-none block w-full bg-gray-200 text-gray-700 ${
+                  errNameAddress.isValid ? "" : "border-2 border-red-500"
+                } rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white`}
                 id="grid-first-name"
                 type="text"
                 placeholder="Name address"
                 value={addressName}
                 onChange={(e) => handleChange(e, 2)}
               />
+              <p hidden={errNameAddress.isValid} className="text-red-500 h-4">
+                {lang[errNameAddress.err]}
+              </p>
             </div>
             <div className="w-full md:w-1/3 px-3 md:mb-0">
               <label
@@ -92,13 +107,18 @@ function AddressUser() {
                 Recipient name
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                className={`appearance-none block w-full bg-gray-200 text-gray-700 ${
+                  errNameReci.isValid ? "" : "border-2 border-red-500"
+                } rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white`}
                 id="grid-first-name"
                 type="text"
                 placeholder="Your name"
                 value={name}
                 onChange={(e) => handleChange(e, 0)}
               />
+              <p hidden={errNameReci.isValid} className="text-red-500">
+                {lang[errNameReci.err]}
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap -mx-3 mb-4">
@@ -107,10 +127,16 @@ function AddressUser() {
                 Phone
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className={`appearance-none block w-full bg-gray-200 text-gray-700 ${
+                  errPhone.isValid ? "" : "border-2 border-red-500"
+                } rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white`}
+                placeholder="Your phone number"
                 onChange={(e) => handleChange(e, 1)}
                 value={phone}
               />
+              <p hidden={errPhone.isValid} className="text-red-500">
+                {lang[errPhone.err]}
+              </p>
             </div>
             <div className="w-full md:w-1/3 px-3 md:mb-0">
               <label
@@ -120,13 +146,18 @@ function AddressUser() {
                 Address
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                className={`appearance-none block w-full bg-gray-200 text-gray-700 ${
+                  errAddress.isValid ? "" : "border-2 border-red-500"
+                } rounded py-3 px-4 mb-2 leading-tight focus:outline-none focus:bg-white`}
                 id="grid-first-name"
                 type="text"
                 placeholder="97 Man Thiện"
                 value={address}
                 onChange={(e) => handleChange(e, 3)}
               />
+              <p hidden={errAddress.isValid} className="text-red-500">
+                {lang[errAddress.err]}
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap -mx-3 mb-2 w-4/5">
@@ -251,6 +282,12 @@ function AddressUser() {
                 onClick={(e) =>
                   saveAddress(e).catch((err) => toast(lang["001"]))
                 }
+                hidden={
+                  !errAddress.isValid ||
+                  !errNameAddress.isValid ||
+                  !errNameReci.isValid ||
+                  !errPhone.isValid
+                }
               >
                 Save
               </button>
@@ -305,22 +342,54 @@ function AddressUser() {
     setListAddress([...(data?.address || [])]);
     setIdAddressDefault(data?.user?.default_address);
   }
+  function handleChangeNameReci(name) {
+    if (name.localeCompare("") == 0) {
+      setErrNameReci({ isValid: false, err: "026" });
+    } else {
+      setErrNameReci({ isValid: true, err: "" });
+    }
+    setName(name);
+  }
+  function handleChangeNameAddress(name) {
+    if (name.localeCompare("") == 0) {
+      setErrNameAddress({ isValid: false, err: "026" });
+    } else {
+      setErrNameAddress({ isValid: true, err: "" });
+    }
+    setAddressName(name);
+  }
+  function handleChangeAddress(name) {
+    if (name.localeCompare("") == 0) {
+      setErrAddress({ isValid: false, err: "030" });
+    } else {
+      setErrAddress({ isValid: true, err: "" });
+    }
+    setAddress(name);
+  }
+  function handleChangePhone(phone) {
+    if (phone.localeCompare("") == 0) {
+      setErrPhone({ isValid: false, err: "028" });
+    } else if (!validator.isMobilePhone(phone, "vi-VN")) {
+      setErrPhone({ isValid: false, err: "029" });
+    } else {
+      setErrPhone({ isValid: true, err: "" });
+    }
+    setPhone(phone);
+  }
   function handleChange(e, type) {
-    if (type == 0) {
-      setName(e.target.value);
+    if (type === 0) {
+      handleChangeNameReci(e.target.value);
       return;
     }
-    if (type == 1) {
-      if (validator.isNumeric(e.target.value)) {
-        setPhone(e.target.value);
-      }
+    if (type === 1) {
+      handleChangePhone(e.target.value);
       return;
     }
-    if (type == 2) {
-      setAddressName(e.target.value);
+    if (type === 2) {
+      handleChangeNameAddress(e.target.value);
       return;
     }
-    setAddress(e.target.value);
+    handleChangeAddress(e.target.value);
   }
 
   function ListAddress() {

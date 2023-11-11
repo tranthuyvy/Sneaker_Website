@@ -196,9 +196,9 @@ const AllOrder = () => {
                       className="font-semibold text-md"
                       style={{ color: "cyan" }}
                     >
-                      {order.status_payment === 1
+                      {order.payment_method === 1
                         ? "Cash On Delivery"
-                        : order.status_payment === 2
+                        : order.payment_method === 2
                         ? "Payment via Paypal"
                         : "Unknown Payment Method"}
                     </span>

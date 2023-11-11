@@ -286,11 +286,11 @@ const OrderDetail = () => {
               }}
             >
               <div>
-                <span className="text-indigo-600">Free</span>
+                <span className="text-indigo-500">Free</span>
               </div>
             </Grid>
 
-            <Grid
+            {/* <Grid
               item
               xs={8}
               style={{
@@ -315,9 +315,9 @@ const OrderDetail = () => {
               <div>
                 <span>- 0$</span>
               </div>
-            </Grid>
+            </Grid> */}
 
-            <Grid
+            {/* <Grid
               item
               xs={8}
               style={{
@@ -342,7 +342,7 @@ const OrderDetail = () => {
               <div>
                 <span>- ${orders.total_discounted_price}</span>
               </div>
-            </Grid>
+            </Grid> */}
 
             <Grid
               item
@@ -399,12 +399,46 @@ const OrderDetail = () => {
               }}
             >
               <div>
-                <span className="text-green-600 font-semibold text-md">
-                  {orders.status_payment === 0
+                <span className="text-green-400 font-semibold text-md">
+                  {orders?.payment_method === 1
                     ? "Cash On Delivery"
-                    : orders.status_payment === 1
+                    : orders.payment_method === 2
                     ? "Payment via Paypal"
                     : "Unknown Payment Method"}
+                </span>
+              </div>
+            </Grid>
+
+            <Grid
+              item
+              xs={8}
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                padding: "10px",
+              }}
+            >
+              <div>
+                <span className="opacity-50">Payment Status</span>
+              </div>
+            </Grid>
+
+            <Grid
+              item
+              xs={4}
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                padding: "10px",
+              }}
+            >
+              <div>
+                <span className="text-cyan-400 font-semibold text-md">
+                  {orders.status_payment === 0
+                    ? "Wait For Pay"
+                    : orders.status_payment === 1
+                    ? "Paid via PayPal"
+                    : "Unknown"}
                 </span>
               </div>
             </Grid>

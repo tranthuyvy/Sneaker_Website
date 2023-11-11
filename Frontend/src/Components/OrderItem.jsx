@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import "../Styles/OrderItem.css";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "../config/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
+import Modal from "react-modal";
 
 const statusLabels = {
   1: "PLACED",
@@ -22,8 +24,50 @@ const statusLabels = {
 };
 
 function OrderItem({ order }) {
+  const navigate = useNavigate();
   const lang = useSelector((state) => state.lang);
   const listDetail = order.order_details || [];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const updateOrderStatus = async (id, newStatus) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8081/api/v1/order/get/${id}/update-status/${newStatus}`
+      );
+
+      if (response.status === 200) {
+        // fetchOrderData();
+        toast.success("SUCCESS", {
+          autoClose: 1000,
+        });
+      } else {
+      }
+    } catch (error) {
+      toast.error(lang["006"], {
+        autoClose: 1000,
+      });
+    }
+  };
+
+  const handleSuccessOrder = () => {
+    const newStatus = 4;
+    updateOrderStatus(order?.id, newStatus);
+  };
+
+  const handleCancelledOrder = () => {
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    const newStatus = 6;
+    updateOrderStatus(order?.id, newStatus);
+    setIsModalOpen(false);
+  };
+
+  const cancelDelete = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className=" mx-5 my-3 font-medium text-xl border border-gray-500 rounded-lg shadow-lg flex flex-col justify-center items-center ">
       <div className="grid grid-cols-12 mt-4">
@@ -57,8 +101,12 @@ function OrderItem({ order }) {
       </div>
       {listDetail.map((item) => {
         return (
-          <Link
-            to={`/product/?id=${item.id_product_detail_product_detail.id_product_product.id}`}
+          <div
+            onClick={() =>
+              navigate(
+                `/product/?id=${item.id_product_detail_product_detail.id_product_product.id}`
+              )
+            }
             className="h-4/6 flex w-5/6 border rounded-md shadow-md border-black py-4 border-t-2 border-b-2 hover:cursor-pointer hover:text-black link-hover my-4"
           >
             <div className="">
@@ -124,18 +172,152 @@ function OrderItem({ order }) {
               </p>
 
             </div>
-          </Link>
+          </div>
         );
       })}
 
       <div className="grid grid-cols-12">
-        <p className="col-start-8 col-span-3 my-4 flex">
+        <p className="col-start-2 col-span-2 my-4 flex">
           <span className="mr-1 font-bold text-red-500">
-            {order?.status_payment === 1 ? "Đã Thanh Toán: " : "Total: "}
+            {order?.status_payment === 1 ? "Paid: " : "Total: "}
           </span>
           <span className="text-red-500 font-bold">${order?.total_price}</span>
         </p>
-        <p style={{ fontSize: "16px" }}>Status payment: has been paid</p>
+
+        <div className="col-start-5 col-span-3 flex mb-3 mt-2">
+          {order?.status === 3 && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleSuccessOrder}
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "18px",
+                height: "50px",
+                width: "150px",
+              }}
+            >
+              RECEIVED
+            </Button>
+          )}
+        </div>
+
+        <div className="col-start-8 col-span-3 flex mt-2 mb-3">
+          {order?.status === 1 && order?.status_payment === 0 && (
+            <>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleCancelledOrder}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  height: "50px",
+                  width: "150px",
+                }}
+              >
+                CANCELL
+              </Button>
+              <Modal
+                isOpen={isModalOpen}
+                onRequestClose={cancelDelete}
+                contentLabel="Xác nhận xóa"
+                style={{
+                  overlay: {
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    zIndex: 1000,
+                  },
+                  content: {
+                    width: "250px",
+                    height: "140px",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    padding: "20px",
+                    backgroundColor: "white",
+                  },
+                }}
+              >
+                <h2 className="font-bold text-red-500 p-2 mt-2">
+                  ARE YOU SURE CANCEL ?
+                </h2>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={confirmDelete}
+                  style={{ marginRight: "10px" }}
+                >
+                  CONFIRM
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={cancelDelete}
+                >
+                  CANCEL
+                </Button>
+              </Modal>
+            </>
+          )}
+        </div>
+
+        <div className="col-start-11 flex mb-3 mt-2">
+          {order?.payment_method === 2 && order?.status_payment === 0 && (
+            <PayPalScriptProvider
+              options={{
+                "client-id":
+                  "AVR129jGmpPplO0U5gNQnlPlfCeRffQ1r6E0GUJkJGyRTUP8Ce16qs3xocDzt7OwphQaRHDB0XdEuzzC",
+              }}
+            >
+              <PayPalButtons
+                style={{
+                  color: "gold",
+                  shape: "rect",
+                  layout: "horizontal",
+                  label: "paypal",
+                  height: 55,
+                  width: 200,
+                }}
+                createOrder={(data, actions) => {
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        description: "Sneaker",
+                        amount: {
+                          currency_code: "USD",
+                          value: (order?.total_price).toString(),
+                        },
+                      },
+                    ],
+                  });
+                }}
+                onApprove={(data, actions) => {
+                  return actions.order.capture().then(function (details) {
+                    axios
+                      .put(`/api/v1/order/get/${order?.id}/update-payment`)
+                      .then((response) => {
+                        if (response.status === 200) {
+                          toast(lang["132"]);
+                        } else {
+                          toast.error(lang["133"]);
+                        }
+                      })
+                      .catch((error) => {
+                        toast.error(lang["006"]);
+                      });
+                  });
+                }}
+                onError={(data, actions) => {
+                  toast.error(lang["133"]);
+                }}
+              />
+            </PayPalScriptProvider>
+          )}
+        </div>
       </div>
       <Button
         variant="contained"
