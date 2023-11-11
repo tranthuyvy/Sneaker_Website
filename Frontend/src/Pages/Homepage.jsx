@@ -8,23 +8,18 @@ import { getImage } from "../config/common";
 import Filter from "../Components/Filter";
 import { sortOptions } from "../Components/FilterData";
 import HomeCarousel from "../Components/HomeCarousel";
-
+import React from "react";
+import socket from "../config/elastic";
 const Homepage = (props) => {
   const lang = useSelector((state) => state.lang);
+  var searchStr = useSelector((state) => state.searchStr);
+  const { minPrice, maxPrice, listSize } = useSelector((state) => state.filter);
+  const [listStore, setListStore] = useState([]);
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const pageSize = 12;
   const [sortMenuOpen, setSortMenuOpen] = useState(null);
-
-  // useEffect(() => {
-
-  //   getProduct().catch(err => {
-  //     toast(lang['003']);
-  //     console.error(err)
-  //   })
-  // }, [])
-
   const fetchProducts = (page) => {
     axios
       .get(`api/v1/product/get?page=${page}&pageSize=${pageSize}`)
@@ -32,19 +27,37 @@ const Homepage = (props) => {
         const productsArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
-        setListProduct(productsArray);
+        setListProduct([...productsArray]);
         setCurrentPage(page);
         setTotalPages(response.data.totalPage);
+        setListStore([...productsArray]);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
       });
   };
-
   useEffect(() => {
     fetchProducts(currentPage);
-  }, []);
-
+  }, [currentPage]);
+  useEffect(() => {
+    if (searchStr.length != 0) {
+      socket.emit("search", searchStr);
+      socket.on("search", (data) => {
+        setListProduct([...data]);
+      });
+    } else {
+      setListProduct([...listStore]);
+    }
+  }, [searchStr.length]);
+  useEffect(() => {
+    console.log(minPrice, maxPrice,listSize)
+    if (minPrice != 0 && maxPrice != 0) {
+      socket.emit("filter", { minPrice, maxPrice,listSize });
+      socket.on("filter", (data) => {
+        setListProduct([...data]);
+      });
+    } else setListProduct([...listStore]);
+  }, [minPrice + maxPrice,listSize.lenght]);
   const handlePaginationChange = (event, page) => {
     fetchProducts(page);
   };
@@ -136,16 +149,16 @@ const Homepage = (props) => {
       </div>
     </div>
   );
-  // async function getProduct() {
-  //   let data = (await axios.get(`/api/v1/product/get?page=${currentPage}`)).data;
+  async function getProduct() {
+    let data = (await axios.get(`/api/v1/product/get?page=${currentPage}`))
+      .data;
 
-  //   if (data.code.localeCompare("002") != 0) {
-  //     toast(lang[data.code])
-  //   }
-  //   else {
-  //     setListProduct([...data.data])
-  //   }
-  // }
+    if (data.code.localeCompare("002") != 0) {
+      toast(lang[data.code]);
+    } else {
+      setListProduct([...data.data]);
+    }
+  }
 };
 
 export default Homepage;
