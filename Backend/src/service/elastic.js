@@ -53,7 +53,6 @@ async function search(query) {
                     "fields": ["description", "name", 'category', 'branch'],
                 },
             },
-        
         },
     });
     return response.hits.hits.map(item=>{

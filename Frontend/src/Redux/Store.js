@@ -2,27 +2,14 @@ import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
 import thunk from "redux-thunk";
 import langReducer from "./langReducer";
 import cartReducer from "./Customers/cartReducer";
-// import customerProductReducer from "./Customers/Product/Reducer";
-// import productReducer from "./Admin/Product/Reducer";
-// import cartReducer from "./Customers/Cart/Reducer";
-// import { orderReducer } from "./Customers/Order/Reducer";
-// import usersReducer from "./Admin/Users/Reducer";
-// import adminOrderReducer from "./Admin/Orders/Reducer";
-// import ReviewReducer from "./Customers/Review/Reducer";
 import { authReducer, modalLoginReducer } from "./auth";
+import searchReducer from "./searchReducer";
 const rootReducers = combineReducers({
   lang: langReducer,
   cart: cartReducer,
   auth: authReducer,
   openModal: modalLoginReducer,
-  // customersProduct: customerProductReducer,
-  // cart: cartReducer,
-  // order: orderReducer,
-  // review: ReviewReducer,
-  // admin
-  // adminsProduct: productReducer,
-  // adminsOrder: adminOrderReducer,
-  // adminsUser: usersReducer,
+  searchStr: searchReducer,
 });
 
 export const store = legacy_createStore(rootReducers, applyMiddleware(thunk));

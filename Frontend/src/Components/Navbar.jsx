@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "../config/axios";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
+import { useDispatch } from "react-redux";
 import "./Navbar.css";
 
 function Navbar() {
   // const [isNavigation, setIsNavigation] = useState(false);
+  const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const [listCategory, setListCategory] = useState([]);
   const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -57,7 +59,6 @@ function Navbar() {
         }
       }
     });
-
     return sortedCategories;
   };
 
@@ -120,13 +121,14 @@ function Navbar() {
             </ul>
 
             {/* Search bar */}
-            <form className="hidden md:block flex-grow max-w-sm">
+            <form className="hidden md:block flex-grow max-w-sm"  onSubmit={e => { e.preventDefault(); }}>
               <div className="relative w-full">
                 <input
                   type="search"
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
+                    dispatch({ type: "SEARCH", data: e.target.value });
                   }}
                   className="block w-full border border-gray-300 rounded-md py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 focus:text-gray-900 sm:text-sm"
                   placeholder="Search"

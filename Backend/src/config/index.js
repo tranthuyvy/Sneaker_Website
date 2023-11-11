@@ -6,10 +6,10 @@ const path = require("path");
 import { createServer } from "http";
 import bodyParser from "body-parser";
 import multer from "multer";
+import socket from "service/socket";
 dotenv.config();
 const PORT = process.env.PORT || 8080;
 export default function run(app) {
-  const storage = multer.memoryStorage()
   const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
@@ -23,10 +23,10 @@ export default function run(app) {
     upload(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.log(err)
-       return res.status(500).send({ code: err.code })
+        return res.status(500).send({ code: err.code })
       } else if (err) {
         console.log(err)
-       return res.status(500).send({ code: '006' })
+        return res.status(500).send({ code: '006' })
         // An unknown error occurred when uploading.
       }
       next()
@@ -35,8 +35,8 @@ export default function run(app) {
 
   app.use("/public", express.static(path.join(__dirname, "../public")));
   const httpServer = createServer(app);
+  socket(httpServer)
   router(app);
   httpServer.listen(PORT, () => {
-    console.log("");
   });
 }
