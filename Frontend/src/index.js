@@ -11,7 +11,7 @@ import { store } from "./Redux/Store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <GoogleOAuthProvider clientId="156409993558-716kd0g7s83nht2hekpd3vvkmqbne265.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId= {process.env.REACT_APP_CLIENT_GOOGLE}>
       <Provider store={store}>
         <App />
       </Provider>

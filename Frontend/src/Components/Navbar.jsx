@@ -13,6 +13,7 @@ function Navbar() {
   const [isCardVisible, setCardVisible] = useState(false);
   const lang = useSelector((state) => state.lang);
   const cart = useSelector((state) => state.cart);
+  const [search, setSearch] = useState("");
   const handleCategoryHover = (category) => {
     setHoveredCategory(category);
   };
@@ -35,7 +36,6 @@ function Navbar() {
       }
     })().catch((err) => {});
   }, []);
-
   const sortCategoriesByParent = (categories) => {
     const sortedCategories = [];
     const categoryMap = {};
@@ -124,6 +124,10 @@ function Navbar() {
               <div className="relative w-full">
                 <input
                   type="search"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
                   className="block w-full border border-gray-300 rounded-md py-2 pl-10 pr-3 leading-5 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 focus:text-gray-900 sm:text-sm"
                   placeholder="Search"
                 />
@@ -141,6 +145,7 @@ function Navbar() {
                   </svg>
                 </div>
               </div>
+              {/* <div className="md:flex items-center space-x-10 relative h-40 w-40 bg-black top-20 z-10">con mẹ m</div> */}
             </form>
 
             <div className="flex">
