@@ -75,7 +75,8 @@ export default function AdminPannel() {
 
   const location = useLocation();
   const isLoginPage = location.pathname === "/admin/login";
-
+  let isLogging = localStorage.getItem("accessToken");
+  console.log("isLogging", isLogging);
   const drawer = (
     <Box
       sx={{
@@ -120,7 +121,7 @@ export default function AdminPannel() {
     <ThemeProvider theme={customTheme}>
       <Box sx={{ display: `${isLargeScreen ? "flex" : "block"}` }}>
         <CssBaseline />
-        <AdminNavbar handleSideBarViewInMobile={handleSideBarViewInMobile} />
+        {isLogging && <AdminNavbar handleSideBarViewInMobile={handleSideBarViewInMobile} />}
 
         {!isLoginPage && (
           <Drawer
@@ -152,6 +153,7 @@ export default function AdminPannel() {
             {drawer}
           </Drawer>
         )}
+
         <Box className="adminContainer" component="main" sx={{ flexGrow: 1 }}>
           <Toolbar />
           <Routes>

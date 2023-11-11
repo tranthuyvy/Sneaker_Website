@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Select, MenuItem } from "@mui/material";
+import { format } from "date-fns";
 
 function ApplyDiscount() {
     const navigate = useNavigate();
@@ -41,7 +42,8 @@ function ApplyDiscount() {
     const [select, setSelect] = useState([])
     const [listSelect, setListSelect] = useState([])
     const [listDiscountProduct, setListDiscountProduct] = useState([]);
-    const [listProduct, setListProduct] = useState([])
+    const [listProduct, setListProduct] = useState([]);
+    const [discountDetail, setDiscountDetail] = useState("");
     const lang = useSelector((state) => state);
     const errorMessages = lang === "vi" ? errorMessagesVi : errorMessagesEn;
 
@@ -51,6 +53,7 @@ function ApplyDiscount() {
     useEffect(() => {
         fetchApiDiscount(currentPage)
         fetchApi()
+        fetchApiDiscountDetail()
     }, [])
     const fetchApiDiscount = async (page) => {
         const res = await api.get(`/api/v1/discount/apply/get?id=${id_discount}&page=${page}&pageSize=${pageSize}`);
@@ -63,9 +66,16 @@ function ApplyDiscount() {
     }
     const fetchApi = async (value) => {
         const res = await api.get("/api/v1/product/get");
-        console.log(res);
         if (res && res.data && res.data.data) {
             setListProduct(res.data.data)
+        }
+    }
+    const fetchApiDiscountDetail = async () => {
+        const res = await api.get(`/api/v1/discount/get?id=${id_discount}`);
+
+        if (res && res.data && res.data.data) {
+            console.log("Của discount: ", res);
+            setDiscountDetail(res.data.data)
         }
     }
     const filterProduct = (value) => {
@@ -110,18 +120,17 @@ function ApplyDiscount() {
                 fetchApiDiscount(currentPage)
                 setListSelect([])
                 // navigate("/admin/products");
-            } catch (error) {
-                if (error.response && error.response.status === 500) {
-                    toast.error(errorMessages[error.response.data.code], {
+            } catch (e) {
+                if (e && e.response && e.response.data && e.response.data.code) {
+                    toast.error(errorMessages[e.response.data.code], {
                         autoClose: 1000,
                     });
-                } else {
-                    //     const accountErrorCode = "103";
-                    //     toast.error(errorMessages[accountErrorCode], {
-                    //         autoClose: 1000,
-                    //     });
                 }
             }
+        } else {
+            toast.error(errorMessages["009"], {
+                autoClose: 1000,
+            });
         }
     }
     const handlePaginationChange = (event, page) => {
@@ -154,11 +163,27 @@ function ApplyDiscount() {
     }
     return (
         <React.Fragment>
+            <div style={{
+                // border: "1px solid white", 
+                display: "flex", justifyContent: "space-between"
+            }}>
+                <div style={{ flex: 7 }}></div>
+                <div style={{ border: "1px solid white", flex: 3, padding: "10px" }}>
+                    <div>Code: {discountDetail.id}</div>
+                    <div>Value: {discountDetail.value}</div>
+                    <div>Type: {discountDetail.type == 1 ? "$" : "%"}</div>
+                    <div>Start date:  {discountDetail.start_date &&
+                        format(new Date(discountDetail.start_date), "dd/MM/yyyy")}</div>
+                    <div>Expiration Date:   {discountDetail.expiration_date &&
+                        format(new Date(discountDetail.expiration_date), "dd/MM/yyyy")}</div>
+                </div>
+            </div>
             <div style={{ fontSize: "1.2rem", fontWeight: "bold", fontStyle: "italic" }} className="my-3">
                 {/* Tìm và chọn sản phẩm để khuyến mãi: */}
                 Find and select products for promotion:
             </div>
             <form className="hidden md:block flex-grow max-w-sm">
+
                 <div className="relative w-full">
                     <input
                         type="search"
@@ -184,6 +209,7 @@ function ApplyDiscount() {
                     </div>
 
                 </div>
+
                 <div style={{ height: "20px" }} >
                     <ul className="list-group overflow-y-auto" style={{ height: "200px", position: "relative", zIndex: 3 }}>
                         {result.map((item, index) => (
@@ -205,6 +231,7 @@ function ApplyDiscount() {
                     </ul>
                 </div>
             </form >
+
             {console.log(listSelect)}
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", border: "2px solid white", marginTop: "200px", }

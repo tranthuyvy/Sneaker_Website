@@ -87,5 +87,10 @@
     "219": "Email does not exist in the system",
     "220": "The code is still valid. Please check your email",
     "221": "The code is expired",
-    "222": "The code is invalid"
+    "222": "The code is invalid",
+    "223": "Promotion value must be greater than 0 and less than or equal to 100",
+    "224": "Image format is incorrect",
+    "225": "No batch name has been entered",
+    "226": "Haven't selected a supplier yet",
+    "227": "Promotion has been applied to the product"
 }

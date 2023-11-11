@@ -123,6 +123,7 @@ function OrderItem({ order }) {
             </div>
             <div className="flex items-center mx-10">
               <div className="align-text-top">
+                <p>Id: 01</p>
                 <p className="flex text-2xl">
                   {
                     item.id_product_detail_product_detail.id_product_product
@@ -169,6 +170,7 @@ function OrderItem({ order }) {
                   ${item.quantity * item.price}
                 </span>
               </p>
+
             </div>
           </div>
         );
@@ -317,6 +319,18 @@ function OrderItem({ order }) {
           )}
         </div>
       </div>
+      <Button
+        variant="contained"
+        color="primary"
+        // onClick={handleShippedOrder}
+        style={{
+          color: "white",
+          fontWeight: "bold",
+          fontSize: "20px",
+        }}
+      >
+        CANCELLED ORDER
+      </Button>
     </div>
   );
 }

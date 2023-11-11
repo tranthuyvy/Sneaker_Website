@@ -17,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { useNavigate } from "react-router-dom";
-import axios from "../../../config/axios";
+import axios from "../../../config/api";
 import { format } from "date-fns";
 
 const AllDiscount = () => {
@@ -95,8 +95,8 @@ const AllDiscount = () => {
                 <TableCell style={{ textAlign: "center" }}>Code</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Value</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Type</TableCell>
+                <TableCell style={{ textAlign: "center" }}>Start Date</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Expiration Date</TableCell>
-                <TableCell style={{ textAlign: "center" }}>Create At</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Status</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Action</TableCell>
                 <TableCell style={{ textAlign: "center" }}>Apply</TableCell>
@@ -124,13 +124,13 @@ const AllDiscount = () => {
                   </TableCell>
 
                   <TableCell style={{ textAlign: "center" }}>
-                    {discount.expiration_date &&
-                      format(new Date(discount.expiration_date), "dd/MM/yyyy")}
+                    {discount.start_date &&
+                      format(new Date(discount.start_date), "dd/MM/yyyy")}
                   </TableCell>
 
                   <TableCell style={{ textAlign: "center" }}>
-                    {discount.create_at &&
-                      format(new Date(discount.create_at), "dd/MM/yyyy")}
+                    {discount.expiration_date &&
+                      format(new Date(discount.expiration_date), "dd/MM/yyyy")}
                   </TableCell>
 
                   <TableCell style={{ textAlign: "center" }}>

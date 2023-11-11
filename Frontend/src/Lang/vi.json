@@ -87,5 +87,10 @@
     "219": "Email không tồn tại trong hệ thống",
     "220": "Mã code còn hiệu lực. Vui lòng kiểm tra email",
     "221": "Mã code hết hiệu lực",
-    "222": "Mã code không hợp lệ"
+    "222": "Mã code không hợp lệ",
+    "223": "Giá trị khuyến mãi phải lớn hơn 0 và nhỏ hơn hoặc bằng 100",
+    "224": "Ảnh không đúng định dạng",
+    "225": "Chưa nhập tên lô",
+    "226": "Chưa chọn nhà cung cấp",
+    "227": "Sản phẩm đã được áp dụng khuyến mãi"
 }
