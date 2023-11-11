@@ -38,10 +38,10 @@ async function initData() {
 function convertObjectToArrayWithKeys(obj) {
     const result = [];
     for (const key in obj) {
-      result.push({ [key]: obj[key] });
+        result.push({ [key]: obj[key] });
     }
     return result;
-  }
+}
 async function search(query) {
     const response = await client.search({
         index: "search-product",
@@ -55,7 +55,39 @@ async function search(query) {
             },
         },
     });
-    return response.hits.hits.map(item=>{
+    return response.hits.hits.map(item => {
+        return item._source
+    })
+}
+async function filter(minPrice = 0, maxPrice = 999, size = 0) {
+    const option = [
+        {
+            "match": {
+                "product.product_details.size": size == 0 ? {
+                    "lte": 99
+                } : size
+            }
+        },
+        {
+            "range": {
+                "product_price": {
+                    "gte": price_min,
+                    "lte": price_max
+                }
+            }
+        }
+    ]
+    const response = await client.search({
+        index: "search-product",
+        body: {
+            query: {
+                "bool": {
+                    "must": option
+                }
+            },
+        },
+    });
+    return response.hits.hits.map(item => {
         return item._source
     })
 }
@@ -78,4 +110,4 @@ async function deleteData(id = 0) {
         console.error('Lỗi khi xóa dữ liệu:', error);
     }
 }
-export { deleteData, initData, search }
+export { deleteData, initData, search, filter }
