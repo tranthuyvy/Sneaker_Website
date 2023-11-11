@@ -319,18 +319,6 @@ function OrderItem({ order }) {
           )}
         </div>
       </div>
-      <Button
-        variant="contained"
-        color="primary"
-        // onClick={handleShippedOrder}
-        style={{
-          color: "white",
-          fontWeight: "bold",
-          fontSize: "20px",
-        }}
-      >
-        CANCELLED ORDER
-      </Button>
     </div>
   );
 }
