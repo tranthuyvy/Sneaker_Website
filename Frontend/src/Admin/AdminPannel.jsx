@@ -158,8 +158,6 @@ export default function AdminPannel() {
           <Toolbar />
           <Routes>
             <Route path="/dashboard" element={<Dashboard />}></Route>
-            {/* <Route path="/product/create" element={<CreateProductForm/>}></Route> */}
-            {/* <Route path="/product/update/:productId" element={<UpdateProductForm/>}></Route> */}
             {/* <Route path="/product/reviews/:productId" element={<ProductReview/>}></Route> */}
             <Route path="/products" element={<ProductsTable />}></Route>
             <Route path="/product/create" element={<CreateProduct />}></Route>
