@@ -5,14 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 const isImageFile = (file) => {
   const imageExtensions = ['jpg', 'jpeg', 'png', 'bmp']; // Các đuôi tệp ảnh phổ biến
   const fileExtension = file.originalname.split('.').pop().toLowerCase();
-
   return imageExtensions.includes(fileExtension);
 }
-
-
 export default function saveImg(req, res) {
   const filenames = [];
-
   for (const file of req.files) {
     if (isImageFile(file)) {
       const filename = uuidv4();

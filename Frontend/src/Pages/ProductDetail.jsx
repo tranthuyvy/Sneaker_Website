@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Lottie from "lottie-react";
 
 import axios from "../config/axios";
-import { getImage, setCart } from "../config/common";
+import { getImage, getPrice, setCart } from "../config/common";
 import ProductReviewCard from "../Components/ProductReviewCard";
 import AddToCart from "../Animation/AddToCart.json";
 import "../Styles/ProductDetail.css";
@@ -39,9 +39,7 @@ export default function ProductDetails(props) {
     function call() {
       getProduct()
         .then(() => {
-          setTimeout(() => {
-            setLoading(false);
-          }, 2000);
+          setLoading(false);
         })
         .catch((err) => {
           setTimeout(() => {
@@ -177,7 +175,7 @@ export default function ProductDetails(props) {
                 <h2 className="sr-only">Product information</h2>
                 <div className="flex space-x-5 items-center text-lg lg:text-xl tracking-tight text-gray-900 mt-6">
                   <p className="font-semibold text-red-500">
-                    ${Number.parseInt(discountedPrice)}
+                    ${Number.parseInt(product?.product_price - getPrice(product))}
                   </p>
                   {product?.product_price !== 0 &&
                     product?.product_price !== discountedPrice && (
@@ -186,9 +184,9 @@ export default function ProductDetails(props) {
                       </p>
                     )}
 
-                  {discountPersent !== 0 && (
+                  {getPrice(product) !== 0 && (
                     <p className="text-green-600 font-semibold">
-                      {discountPersent}% Off
+                      {getPrice(product)} Off
                     </p>
                   )}
                 </div>

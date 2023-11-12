@@ -116,9 +116,7 @@ const Homepage = (props) => {
                       title: item.name,
                       price: item.product_price,
                       discountPersent: item.id_discount_discount?.value || 0,
-                      discountedPrice:
-                        item.product_price -
-                        (item.id_discount_discount?.value || 0),
+                      discount_products:item.discount_products,
                       status: 0,
                       imageUrl:
                         item.images.length > 0

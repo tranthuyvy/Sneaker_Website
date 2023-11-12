@@ -1,6 +1,5 @@
 import Model from "../config/sequelize";
 import { sequelize } from "../config/sequelize";
-
 const product = Model.product;
 import {
   generateProductDetailId,
@@ -245,6 +244,22 @@ class product_controller {
       {
         model: Model.review,
         as: "reviews"
+      },
+      {
+        model: Model.discount_product,
+        as: 'discount_products',
+        include: {
+          model: Model.discount,
+          as: 'id_discount_discount',
+          where: {
+            expiration_date: {
+              [Op.gt]: new Date(),
+            },
+            start_date: {
+              [Op.lt]: new Date(),
+            },
+          },
+        }
       }
     ]
 
@@ -271,8 +286,8 @@ class product_controller {
       }
     }
     //nếu bình thường thì lấy hết còn không thì lấy theo id
-    console.log("Check list product: ", data);
   };
+
 }
 
 

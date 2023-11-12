@@ -1,21 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../Styles/ProductCard.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
+import { getPrice } from "../config/common";
 const ProductCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [delay, setDelay] = useState(Math.random() * 1000);
-  const {
-    id,
-    title,
-    brand,
-    imageUrl,
-    price,
-    discountedPrice,
-    status,
-    discountPersent,
-  } = product;
+  const discountedPrice = getPrice(product);
+  const { id, title, brand, imageUrl, price, status, discountPersent } =
+    product;
   const navigate = useNavigate();
   const items = [
     ...imageUrl.map((item) => (
@@ -56,13 +49,15 @@ const ProductCard = ({ product }) => {
             <p className="text-md text-red-600 font-semibold">Out of stock</p>
           ) : (
             <div className="flex space-x-2 items-center">
-              <p className="text-red-600 font-bold">${discountedPrice}</p>
-              {discountedPrice !== price && price !== 0 && (
+              <p className="text-red-600 font-bold">
+                ${price - discountedPrice}
+              </p>
+              {discountedPrice != 0 ? (
                 <p className="opacity-50 line-through">${price}</p>
-              )}
-              {discountPersent !== 0 && (
+              ) : null}
+              {discountedPrice !== 0 && (
                 <p className="text-green-600 font-semibold">
-                  {discountPersent}% off
+                  {discountedPrice} off
                 </p>
               )}
             </div>
