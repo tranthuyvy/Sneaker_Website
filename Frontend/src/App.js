@@ -13,13 +13,14 @@ import Modal from "react-modal";
 function App(props) {
   const lang = useSelector((state) => state.lang);
   const openModal = useSelector((state) => state.openModal);
+  const searchStr = useSelector(state=>state.searchStr)
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch({ type: "INIT_CART" });
     dispatch({ type: "INIT_AUTH" });
     dispatch({ type: "LANG_ENG" });
   }, []);
-
+  
   const customStyles = {
     content: {
       top: "50%",
@@ -34,20 +35,22 @@ function App(props) {
     },
   };
   return (
-    <div className="">
-      <ToastContainer autoClose={1000} />
-      <Modal
-        isOpen={openModal}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-        <ModalLogin></ModalLogin>
-      </Modal>
-      <Routes>
-        <Route path="/*" element={<Routers />} />
-        <Route path="/admin/*" element={<AdminPannel />} />
-      </Routes>
-    </div>
+
+      <div className="">
+        <ToastContainer autoClose={1000} />
+        <Modal
+          isOpen={openModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <ModalLogin></ModalLogin>
+        </Modal>
+        <Routes>
+          <Route path="/*" element={<Routers />} />
+          <Route path="/admin/*" element={<AdminPannel />} />
+        </Routes>
+      </div>
+
   );
 }
 export default App;

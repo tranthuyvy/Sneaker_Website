@@ -14,6 +14,7 @@ import review_router from "./review"
 import address_router from "./address";
 import auth from '../middleware/authenJWT'
 import user_router from "./user";
+import elastic_rotuer from "./elastic";
 export default function router(app) {
   app.use("/api/v1/auth", auth_router);
   app.use("/api/v1/user", auth.authenUser, user_router);
@@ -30,4 +31,5 @@ export default function router(app) {
   app.use("/api/v1/supplier", supplier_router)
   app.use("/api/v1/brand", brand_router)
   app.use("/api/v1/review", review_router)
+  app.use("/api/v1/elastic", elastic_rotuer)
 }

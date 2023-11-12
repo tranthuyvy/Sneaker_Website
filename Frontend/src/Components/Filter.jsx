@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -13,39 +13,44 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Pagination from "@mui/material/Pagination";
-
+import { useDispatch } from "react-redux";
 import { filters, singleFilter, sortOptions } from "./FilterData";
 
-const handleRadioFilterChange = (e, sectionId) => {
-  // const searchParams = new URLSearchParams(location.search);
-  // searchParams.set(sectionId, e.target.value);
-  // const query = searchParams.toString();
-  // navigate({ search: `?${query}` });
-};
-
-const handleFilter = (value, sectionId) => {
-  // const searchParams = new URLSearchParams(location.search);
-  // let filterValues = searchParams.getAll(sectionId);
-  // if (filterValues.length > 0 && filterValues[0].split(",").includes(value)) {
-  //   filterValues = filterValues[0]
-  //     .split(",")
-  //     .filter((item) => item !== value);
-  //   if (filterValues.length === 0) {
-  //     searchParams.delete(sectionId);
-  //   }
-  //   console.log("includes");
-  // } else {
-  //   // searchParams.delete(sectionId);
-  //   filterValues.push(value);
-  // }
-  // if (filterValues.length > 0)
-  //   searchParams.set(sectionId, filterValues.join(","));
-  // // history.push({ search: searchParams.toString() });
-  // const query = searchParams.toString();
-  // navigate({ search: `?${query}` });
-};
-
 function ProductFilter() {
+  const [listSize, setListSize] = useState([]);
+  const [price, setPrice] = useState({ minPrice: 0, maxPrice: 0 });
+  const dispatch = useDispatch();
+  function handleFilter(e, sectionId) {
+    if (e.target.name.localeCompare("size") == 0) {
+      if (e.target.checked) setListSize([...listSize, e.target.value]);
+      else setListSize([...listSize.filter((item) => item != e.target.value)]);
+      // setTimeout(() => {
+      //   dispatch({
+      //     type: "FILTER",
+      //     data: {
+      //       minPrice: price.minPrice,
+      //       maxPrice: price.maxPrice,
+      //       listSize: listSize,
+      //     },
+      //   });
+      // }, 500);
+    }
+  }
+  function handleRadioFilterChange(e, sectionId) {
+    const [minPrice, maxPrice] = e.target.value.split("-").map(Number);
+    setPrice({ minPrice, maxPrice });
+   
+  }
+  useEffect(() => {
+    dispatch({
+      type: "FILTER",
+      data: {
+        minPrice: price.minPrice,
+        maxPrice: price.maxPrice,
+        listSize: listSize,
+      },
+    });
+  }, [listSize.length, price.minPrice + price.maxPrice]);
   return (
     <form className="hidden lg:block rounded-md p-4 ml-2">
       <h2 className="py-3 font-semibold opacity-60 text-lg">Filters</h2>
@@ -65,7 +70,13 @@ function ProductFilter() {
                   </span>
                   <span className="ml-6 flex items-center">
                     {open ? (
-                      <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                      <MinusIcon
+                        className="h-5 w-5"
+                        aria-hidden="true"
+                        onClick={(e) => {
+                          setListSize([]);
+                        }}
+                      />
                     ) : (
                       <PlusIcon className="h-5 w-5" aria-hidden="true" />
                     )}
@@ -78,12 +89,12 @@ function ProductFilter() {
                     <div key={option.value} className="flex items-center">
                       <input
                         id={`filter-${section.id}-${optionIdx}`}
-                        name={`${section.id}[]`}
+                        name={`${section.id}`}
                         defaultValue={option.value}
                         type="checkbox"
                         defaultChecked={option.checked}
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        onChange={() => handleFilter(option.value, section.id)}
+                        onChange={(e) => handleFilter(e, section.id)}
                       />
                       <label
                         htmlFor={`filter-${section.id}-${optionIdx}`}
@@ -115,7 +126,13 @@ function ProductFilter() {
                   </span>
                   <span className="ml-6 flex items-center">
                     {open ? (
-                      <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                      <MinusIcon
+                        className="h-5 w-5"
+                        aria-hidden="true"
+                        onClick={(e) => {
+                          setPrice({ minPrice: 0, maxPrice: 0 });
+                        }}
+                      />
                     ) : (
                       <PlusIcon className="h-5 w-5" aria-hidden="true" />
                     )}
