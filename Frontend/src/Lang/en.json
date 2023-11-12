@@ -92,5 +92,8 @@
     "224": "Image format is incorrect",
     "225": "No batch name has been entered",
     "226": "Haven't selected a supplier yet",
-    "227": "Promotion has been applied to the product"
+    "227": "Promotion has been applied to the product",
+    "228": "Response failed",
+    "229": "The promotional value exceeds the product price",
+    "230": "Promotion expired"
 }

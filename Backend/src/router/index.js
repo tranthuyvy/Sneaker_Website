@@ -15,10 +15,11 @@ import address_router from "./address";
 import auth from '../middleware/authenJWT'
 import user_router from "./user";
 import elastic_rotuer from "./elastic";
+import refund_router from "./refund";
 export default function router(app) {
   app.use("/api/v1/auth", auth_router);
   app.use("/api/v1/user", auth.authenUser, user_router);
-  app.use("/api/v1/address", auth.authenUser,address_router);
+  app.use("/api/v1/address", auth.authenUser, address_router);
   app.use("/api/v1/admin", auth.authenAdmin, admin_router);
   app.use("/api/v1/product", product_router);
   app.use("/api/v1/staff", staff_router);
@@ -32,4 +33,5 @@ export default function router(app) {
   app.use("/api/v1/brand", brand_router)
   app.use("/api/v1/review", review_router)
   app.use("/api/v1/elastic", elastic_rotuer)
+  app.use("/api/v1/refund", refund_router)
 }

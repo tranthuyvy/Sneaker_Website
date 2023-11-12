@@ -72,50 +72,42 @@ class order_controller {
     let data = "";
     let startIndex = (page - 1) * pageSize;
     let endIndex = startIndex + pageSize;
+    let option = [
+      {
+        model: orderDetail,
+        as: "order_details",
+        include: {
+          model: productDetail,
+          as: "id_product_detail_product_detail",
+          include: {
+            model: Model.product,
+            as: "id_product_product",
+            include: {
+              model: Model.image,
+              as: "images",
+              attributes: ["link"],
+
+            },
+          },
+        },
+      }, {
+        model: Model.refund,
+        as: "refunds",
+        include: {
+          model: Model.refund_image,
+          as: "refund_images"
+        }
+
+      }
+    ]
     if (status) {
       data = await orderModel.findAll({
         where: { status },
-        include: [
-          {
-            model: orderDetail,
-            as: "order_details",
-            include: {
-              model: productDetail,
-              as: "id_product_detail_product_detail",
-              include: {
-                model: Model.product,
-                as: "id_product_product",
-                include: {
-                  model: Model.image,
-                  as: "images",
-                  attributes: ["link"],
-                },
-              },
-            },
-          },
-        ],
+        include: option,
       });
     } else {
       data = await orderModel.findAll({
-        include: [
-          {
-            model: orderDetail,
-            as: "order_details",
-            include: {
-              model: productDetail,
-              as: "id_product_detail_product_detail",
-              include: {
-                model: Model.product,
-                as: "id_product_product",
-                include: {
-                  model: Model.image,
-                  as: "images",
-                  attributes: ["link"],
-                },
-              },
-            },
-          },
-        ],
+        include: option,
       });
     }
     const paginatedProducts = data.slice(startIndex, endIndex);
