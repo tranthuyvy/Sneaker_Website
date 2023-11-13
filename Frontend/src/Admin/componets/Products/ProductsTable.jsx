@@ -88,7 +88,7 @@ const ProductsTable = () => {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={filterValue.category}
-                label="Category"
+                label="Category"jk
                 onChange={(e) => handleFilterChange(e, "category")}
               >
                 <MenuItem value={""}>All</MenuItem>
