@@ -108,10 +108,10 @@ const Chart = () => {
     },
     dataLabels: { enabled: false },
     colors: [
-      theme.palette.blue.main,
+      // theme.palette.blue.main,
       theme.palette.orange.main,
-      theme.palette.secondary.main,
-      theme.palette.success.main,
+      // theme.palette.secondary.main,
+      // theme.palette.success.main,
     ],
     states: {
       hover: {
