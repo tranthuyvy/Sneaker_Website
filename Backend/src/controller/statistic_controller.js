@@ -1,5 +1,5 @@
 import Model from '../config/sequelize';
-import { fn, col, Op } from 'sequelize';
+import { fn, col, Op, literal } from 'sequelize';
 class statistic_controller {
     async order(req, res) {
         let type = req.query.type || 'All';
@@ -24,7 +24,7 @@ class statistic_controller {
                 })
             }
             if (type.localeCompare('year') == 0) {
-                const START = new Date(0, 0, req.query.year);
+                const START = new req.query.start ? Date(0, 0, req.query.start) : Date();
                 const END = new Date()
                 const orders = await Model.order.findAll({
                     where: {
@@ -54,34 +54,36 @@ class statistic_controller {
     async product_batch(req, res) {
         let id = req.id_product || '0';
         try {
-            const option = {
+            const product = await Model.product_detail.findAll({
                 include: [{
-                    model: Model.product_detail,
-                    as: "id_product_detail_product_detail",
-                    // include: [{
-                    //     model: Model.product,
-                    //     as: "id_product_product",
-                    // }]
-                }],
-                group: [col('id_product_detail')]
-            }
-            // const product_batch = await Model.product_batch_item.findAll(option)
-            const product = await Model.product.findAll({
-                include: [{
-                    model: Model.product_detail,
-                    as: "product_details",
-                    include: [{
-                        model: Model.product_batch_item,
-                        as: "product_batch_items",
-                        attributes: ['id'],
+                    model: Model.product_batch_item,
+                    as: "product_batch_items",
+                },
+                {
+                    model: Model.order_detail,
+                    as: "order_details",
+                }, {
+                    model: Model.product,
+                    as: "id_product_product",
+                }
+                ],
+            })
 
-                    }]
-                }],
-            
+            const data = product.map(item => {
+                let batch = 0
+                item.dataValues.product_batch_items.forEach(element => {
+                    batch += element.dataValues.quantity
+                });
+                let order = 0
+                item.dataValues.order_details?.forEach(element => {
+                    order += element.dataValues.quantity
+                });
+
+                return { ...item.dataValues, batch, order }
             })
             return res.status(200).send({
                 code: '002',
-                data: product
+                data: data
             })
         } catch (error) {
             res.status(200).send({
@@ -89,6 +91,8 @@ class statistic_controller {
             })
             console.log(error)
         }
+    }
+    async product(req, res) {
 
     }
 }
