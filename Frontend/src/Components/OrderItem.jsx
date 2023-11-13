@@ -54,6 +54,11 @@ function OrderItem({ order }) {
     updateOrderStatus(order?.id, newStatus);
   };
 
+  const handleReturnOrder = () => {
+    const newStatus = 7;
+    updateOrderStatus(order?.id, newStatus);
+  };
+
   const handleCancelledOrder = () => {
     setIsModalOpen(true);
   };
@@ -186,6 +191,7 @@ function OrderItem({ order }) {
 
         <div className="col-start-5 col-span-3 flex mb-3 mt-2">
           {order?.status === 3 && (
+            <>
             <Button
               variant="contained"
               color="success"
@@ -200,6 +206,22 @@ function OrderItem({ order }) {
             >
               RECEIVED
             </Button>
+            <Button
+                variant="contained"
+                color="error"
+                onClick={handleReturnOrder}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  height: "50px",
+                  width: "150px",
+                  marginLeft:"20px"
+                }}
+              >
+                RETURN
+              </Button>
+            </>
           )}
         </div>
 
