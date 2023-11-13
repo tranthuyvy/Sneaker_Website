@@ -1,7 +1,7 @@
-const localStorageKey = 'cart'
+const localStorageKey = "cart";
 function getImage(product) {
   if (!isEmpty(product) && product.images?.length > 0)
-    return product.images[0].link
+    return product.images[0].link;
   return "https://w7.pngwing.com/pngs/296/367/png-transparent-shoe-sneakers-graphy-canvas-cartoon-shoes-miscellaneous-white-photography-thumbnail.png";
 }
 function isEmpty(obj) {
@@ -31,14 +31,18 @@ function checkValidPhone(phone) {
   return phone.match(regexPhoneNumber) ? true : false;
 }
 function getPrice(product) {
-  let listDiscount = product.discount_products || []
+  let listDiscount = product.discount_products || [];
   let max = 0;
   // 1 tiền 2 phần trăm
-  if (listDiscount.length == 0) return 0
+  if (listDiscount.length == 0) return 0;
   for (let i of listDiscount) {
-    if (i.type == 2) max = Math.max(i.id_discount_discount.value / 100 * product.product_price, max)
-    else max = Math.max(max,i.id_discount_discount.value)
+    if (i.type === 2)
+      max = Math.max(
+        (i.id_discount_discount.value / 100) * product.product_price,
+        max
+      );
+    else max = Math.max(max, i.id_discount_discount.value);
   }
-  return max
+  return max;
 }
-export { getImage, setCart, getCart, findQuantity,getPrice };
+export { getImage, setCart, getCart, findQuantity, getPrice };

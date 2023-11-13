@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
-import axios from "../../../config/axios";
+import api from "../../../config/api";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import errorMessagesEn from "../../../Lang/en.json";
@@ -25,7 +25,7 @@ const OrderDetail = () => {
 
   const fetchOrderData = async () => {
     try {
-      const response = await axios.get(`/api/v1/order/get/${id}`);
+      const response = await api.get(`/api/v1/order/get/${id}`);
       const orderData = response.data.data;
 
       setOrders(orderData);
@@ -35,19 +35,19 @@ const OrderDetail = () => {
       });
     }
   };
-  
+
   const updateOrderStatus = async (id, newStatus) => {
     try {
-      const response = await axios.put(`http://localhost:8081/api/v1/order/get/${id}/update-status/${newStatus}`);
-      
+      const response = await api.put(
+        `http://localhost:8081/api/v1/order/get/${id}/update-status/${newStatus}`
+      );
+
       if (response.status === 200) {
         fetchOrderData();
         toast.success(errorMessages["013"], {
           autoClose: 1000,
         });
-
       } else {
-
       }
     } catch (error) {
       toast.error(errorMessages["006"], {
@@ -55,11 +55,10 @@ const OrderDetail = () => {
       });
     }
   };
-  
+
   const handleConfirmOrder = () => {
     const newStatus = 2;
     updateOrderStatus(orders?.id, newStatus);
-    
   };
 
   const handleShippedOrder = () => {
@@ -67,11 +66,10 @@ const OrderDetail = () => {
     updateOrderStatus(orders?.id, newStatus);
   };
 
-  // const handleDeliveredOrder = () => {
-  //   const newStatus = 4;
-  //   updateOrderStatus(orders?.id, newStatus);
- 
-  // };
+  const handleConfirmReturnOrder = () => {
+    const newStatus = 8;
+    updateOrderStatus(orders?.id, newStatus);
+  };
 
   // const handleCancelledOrder = () => {
   //   const newStatus = 6;
@@ -87,6 +85,7 @@ const OrderDetail = () => {
     5: "FAILED",
     6: "CANCELLED",
     7: "RETURN",
+    8: "CONFIRM RETURN",
   };
 
   return (
@@ -98,18 +97,18 @@ const OrderDetail = () => {
         >
           <Grid item xs={12}>
             <OrderTraker
-                activeStep={
-                  orders?.status === 1
-                    ? 1
-                    : orders?.status === 2
-                    ? 2
-                    : orders?.status === 3
-                    ? 3
-                    : orders?.status === 4
-                    ? 4
-                    : 4
-                }
-              />
+              activeStep={
+                orders?.status === 1
+                  ? 1
+                  : orders?.status === 2
+                  ? 2
+                  : orders?.status === 3
+                  ? 3
+                  : orders?.status === 4
+                  ? 4
+                  : 4
+              }
+            />
           </Grid>
           {/* <Grid item justifyContent="center">
               {orders.status === "DELIVERED" && (
@@ -176,7 +175,7 @@ const OrderDetail = () => {
                 {" "}
                 <div className="flex items-center ">
                   <img
-                    className="w-[20rem] h-[20rem] object-cover object-top"
+                    className="w-[15rem] h-[15rem] object-cover object-top"
                     src={
                       item?.id_product_detail_product_detail?.id_product_product
                         ?.images[0].link
@@ -234,7 +233,11 @@ const OrderDetail = () => {
       </Grid>
 
       <div>
-        <Grid container justifyContent="flex-end" className="font-semibold text-2xl">
+        <Grid
+          container
+          justifyContent="flex-end"
+          className="font-semibold text-2xl"
+        >
           <Grid container>
             <Grid
               item
@@ -289,60 +292,6 @@ const OrderDetail = () => {
                 <span className="text-indigo-500">Free</span>
               </div>
             </Grid>
-
-            {/* <Grid
-              item
-              xs={8}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                padding: "10px",
-              }}
-            >
-              <div>
-                <span className="opacity-50">Voucher</span>
-              </div>
-            </Grid>
-            <Grid
-              item
-              xs={4}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                padding: "10px",
-              }}
-            >
-              <div>
-                <span>- 0$</span>
-              </div>
-            </Grid> */}
-
-            {/* <Grid
-              item
-              xs={8}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                padding: "10px",
-              }}
-            >
-              <div>
-                <span className="opacity-50">Discount</span>
-              </div>
-            </Grid>
-            <Grid
-              item
-              xs={4}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                padding: "10px",
-              }}
-            >
-              <div>
-                <span>- ${orders.total_discounted_price}</span>
-              </div>
-            </Grid> */}
 
             <Grid
               item
@@ -496,28 +445,67 @@ const OrderDetail = () => {
                 </Grid>
               </Grid>
             )}
-
-            {/* {orders.status === 3 && (
-              <Grid container justifyContent="flex-end" className="p-5">
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={handleDeliveredOrder}
-                    style={{
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "20px",
-                    }}
-                  >
-                    DELIVERED
-                  </Button>
-                </Grid>
-              </Grid>
-            )} */}
           </Grid>
         </Grid>
       </div>
+
+      <Grid container className="shadow-lg">
+        {orders?.status === 7 && (
+          <>
+            <Grid item xs={12}>
+              {orders?.refunds.length !== 0 && (
+                <div
+                  className={`h-48 flex px-36 text-xl item py-3 mb-4 rounded-lg shadow-md`}
+                >
+                  <div className="w-full">
+                    <p className="text-3xl font-semibold mt-1">REFUND</p>
+                    <div className="flex items-center pt-1">
+                      <p className="text-2xl font-semibold">Lý do</p>
+                      <div
+                        className="h-6 bg-slate-300 mx-3"
+                        style={{ width: "1px" }}
+                      ></div>
+                      <p className="text-2xl font-semibold">
+                        {orders?.refunds[0]?.content}
+                      </p>
+                      <div className="ml-10 flex">
+                        {orders?.refunds[0]?.refund_images.length !== 0 && (
+                          <div className="text-2xl font-normal flex space-x-3">
+                            {orders?.refunds[0]?.refund_images.map(
+                              (image, index) => (
+                                <img
+                                  key={index}
+                                  className="w-[9rem] h-[9rem] mr-2"
+                                  src={image.image}
+                                  alt={`Refund Image ${index + 1}`}
+                                />
+                              )
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Grid>
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={handleConfirmReturnOrder}
+              style={{
+                color: "red",
+                fontWeight: "bold",
+                fontSize: "20px",
+                marginLeft: "145px",
+                marginTop: "25px",
+              }}
+            >
+              CONFIRM RETURN
+            </Button>
+          </>
+        )}
+      </Grid>
     </div>
   );
 };

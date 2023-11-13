@@ -52,6 +52,18 @@ class order_controller {
               },
             ],
           },
+          {
+            model: Model.refund,
+            as: "refunds",
+            where: { id_order: id },
+            required: false,
+            include: [
+              {
+                model: Model.refund_image,
+                as: "refund_images",
+              },
+            ],
+          },
         ],
       });
       if (foundOrder) {
@@ -136,15 +148,15 @@ class order_controller {
       let totalPrice = 0,
         totalItem = 0,
         total_discounted_price = point || 0;
-      const listPrice = await getPrice(listDetail)
+      const listPrice = await getPrice(listDetail);
       listDetail = listDetail.map((item, index) => {
-        return { ...item, price: listPrice[index].price }
-      })
+        return { ...item, price: listPrice[index].price };
+      });
       for (let i = 0; i < listDetail.length; i++) {
         totalItem += listDetail[i].quantity;
         totalPrice += listDetail[i].quantity * listDetail[i].price;
       }
-      console.log(totalPrice - total_discounted_price)
+      console.log(totalPrice - total_discounted_price);
       let { flag, listProduct } = await checkInventory(listDetail);
       await sequelize.transaction(async (t) => {
         if (flag) {
@@ -213,9 +225,7 @@ class order_controller {
     }
   }
   async createV2(req, res) {
-
-
-    res.send(listPrice)
+    res.send(listPrice);
   }
   async checkInventory(req, res) {
     try {
@@ -321,16 +331,16 @@ class order_controller {
       });
       const foundOrder = id
         ? await orderModel.findOne({
-          where: { id, id_user: account.dataValues.id },
-          include: optiton,
-        })
+            where: { id, id_user: account.dataValues.id },
+            include: optiton,
+          })
         : await orderModel.findAll({
-          where: {
-            id_user: account.dataValues.id,
-            status: status ? { [Op.eq]: status } : { [Op.ne]: 20 },
-          },
-          include: optiton,
-        });
+            where: {
+              id_user: account.dataValues.id,
+              status: status ? { [Op.eq]: status } : { [Op.ne]: 20 },
+            },
+            include: optiton,
+          });
       if (foundOrder) {
         return res.status(200).send({ code: "002", data: foundOrder });
       } else {

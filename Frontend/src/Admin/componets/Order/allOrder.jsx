@@ -44,6 +44,7 @@ const AllOrder = () => {
     5: "FAILED",
     6: "CANCELLED",
     7: "RETURN",
+    8: "CONFIRM RETURN",
   };
 
   const fetchOrders = (page, status = selectedStatus || formData.status) => {

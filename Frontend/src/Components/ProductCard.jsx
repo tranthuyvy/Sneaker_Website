@@ -19,6 +19,8 @@ const ProductCard = ({ product }) => {
       />
     )),
   ];
+  console.log("price", price);
+  console.log("discount", discountedPrice);
 
   return (
     <Link
@@ -45,20 +47,26 @@ const ProductCard = ({ product }) => {
         <div>
           <p className="text-black-700 font-bold">{title}</p>
           <p className="text-xs opacity-50">{brand}</p>
-          {status === 1 ? (
+          {status === 2 ? (
             <p className="text-md text-red-600 font-semibold">Out of stock</p>
           ) : (
             <div className="flex space-x-2 items-center">
-              <p className="text-red-600 font-bold">
-                ${price - discountedPrice}
-              </p>
-              {discountedPrice != 0 ? (
-                <p className="opacity-50 line-through">${price}</p>
-              ) : null}
-              {discountedPrice !== 0 && (
-                <p className="text-green-600 font-semibold">
-                  {discountedPrice} off
-                </p>
+              {discountedPrice >= price ? (
+                <p className="text-red-600 font-bold">${price}</p>
+              ) : (
+                <>
+                  <p className="text-red-600 font-bold">
+                    ${price - discountedPrice}
+                  </p>
+                  {discountedPrice !== 0 && (
+                    <p className="opacity-50 line-through">${price}</p>
+                  )}
+                  {discountedPrice !== 0 && (
+                    <p className="text-green-600 font-semibold">
+                      - ${discountedPrice}
+                    </p>
+                  )}
+                </>
               )}
             </div>
           )}
