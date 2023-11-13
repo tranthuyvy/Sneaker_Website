@@ -24,7 +24,7 @@ async function initData() {
             as: "reviews"
         }
     ]
-    let data = await Model.product.findAll({ include: option });
+    let data = await Model.product.findAll({ where: { status: 1 }, include: option });
     data = data.map(item => {
         let newitem = {
             ...item.dataValues, branch: item.id_branch_branch.dataValues.name, category: item.id_category_category.name,
@@ -41,13 +41,7 @@ async function initData() {
         onDocument: (doc) => ({ index: { _index: 'search-product' } }),
     });
 }
-function convertObjectToArrayWithKeys(obj) {
-    const result = [];
-    for (const key in obj) {
-        result.push({ [key]: obj[key] });
-    }
-    return result;
-}
+
 async function search(query) {
     const response = await client.search({
         index: "search-product",
@@ -122,4 +116,8 @@ async function deleteData(id = 0) {
         console.error('Lỗi khi xóa dữ liệu:', error);
     }
 }
-export { deleteData, initData, search, filter }
+async function update() {
+    await deleteData()
+    await initData()
+}
+export { deleteData, initData, search, filter, update }

@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import Modal from "react-modal";
+import ModalReturnOrder from "../Admin/componets/auth/ModalReturnOrder";
 
 const statusLabels = {
   1: "PLACED",
@@ -28,7 +29,7 @@ function OrderItem({ order }) {
   const lang = useSelector((state) => state.lang);
   const listDetail = order.order_details || [];
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [modalIsOpen, setIsOpen] = useState(false);
   const updateOrderStatus = async (id, newStatus) => {
     try {
       const response = await axios.put(
@@ -53,6 +54,13 @@ function OrderItem({ order }) {
     const newStatus = 4;
     updateOrderStatus(order?.id, newStatus);
   };
+
+  const handleReturnOrder = () => {
+    // const newStatus = 7;
+    // updateOrderStatus(order?.id, newStatus);
+    setIsOpen(true);
+  };
+
 
   const handleCancelledOrder = () => {
     setIsModalOpen(true);
@@ -123,7 +131,6 @@ function OrderItem({ order }) {
             </div>
             <div className="flex items-center mx-10">
               <div className="align-text-top">
-                <p>Id: 01</p>
                 <p className="flex text-2xl">
                   {
                     item.id_product_detail_product_detail.id_product_product
@@ -186,20 +193,37 @@ function OrderItem({ order }) {
 
         <div className="col-start-5 col-span-3 flex mb-3 mt-2">
           {order?.status === 3 && (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleSuccessOrder}
-              style={{
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "18px",
-                height: "50px",
-                width: "150px",
-              }}
-            >
-              RECEIVED
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() => handleSuccessOrder()}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  height: "50px",
+                  width: "150px",
+                }}
+              >
+                RECEIVED
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleReturnOrder}
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  height: "50px",
+                  width: "150px",
+                  marginLeft: "20px"
+                }}
+              >
+                RETURN
+              </Button>
+            </>
           )}
         </div>
 
@@ -319,7 +343,9 @@ function OrderItem({ order }) {
           )}
         </div>
       </div>
+      <ModalReturnOrder modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} id_order={order && order.id} />
     </div>
+
   );
 }
 export default OrderItem;

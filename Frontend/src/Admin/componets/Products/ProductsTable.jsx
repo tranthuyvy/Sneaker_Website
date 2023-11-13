@@ -15,6 +15,7 @@ import {
   Pagination,
 } from "@mui/material";
 
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -28,10 +29,10 @@ import DisableProduct from "./DisableProduct";
 
 const ProductsTable = () => {
   const navigate = useNavigate();
-  //  
+  //
   const [open, setOpen] = useState(false);
-  const [idProductDelete, setIdProductDelete] = useState('')
-  const [nameProductDelete, setNameProductDelete] = useState('')
+  const [idProductDelete, setIdProductDelete] = useState("");
+  const [nameProductDelete, setNameProductDelete] = useState("");
   //
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,9 +65,9 @@ const ProductsTable = () => {
 
   const handleDeleteProduct = (productId, productName) => {
     console.log("delete product ", productId, productName);
-    setOpen(true)
-    setIdProductDelete(productId)
-    setNameProductDelete(productName)
+    setOpen(true);
+    setIdProductDelete(productId);
+    setNameProductDelete(productName);
   };
 
   return (
@@ -81,52 +82,7 @@ const ProductsTable = () => {
           }}
         /> */}
         <Grid container spacing={2}>
-          <Grid item xs={4}>
-            {/* <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Category</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={filterValue.category}
-                label="Category"
-                onChange={(e) => handleFilterChange(e, "category")}
-              >
-                <MenuItem value={""}>All</MenuItem>
-                <MenuItem value={"golf"}>Adidas Golf</MenuItem>
-                <MenuItem value={"gym"}>Adidas Gym</MenuItem>
-                <MenuItem value={"hiking"}>Adidas Hiking</MenuItem>
-                <MenuItem value={"running"}>Adidas Running</MenuItem>
-                <MenuItem value={"soccer"}>Adidas Soccer</MenuItem>
-                <MenuItem value={"chuck_70"}>Converse Chuck 70</MenuItem>
-                <MenuItem value={"classic_chuck"}>
-                  Converse Classic Chuck
-                </MenuItem>
-                <MenuItem value={"air_force_1"}>Nike Air Force 1</MenuItem>
-                <MenuItem value={"air_max"}>Nike Air Max</MenuItem>
-                <MenuItem value={"basketball"}>Nike Basketball</MenuItem>
-                <MenuItem value={"jordan"}>Nike Jordan</MenuItem>
-                <MenuItem value={"life_style"}>Nike Lifestyle</MenuItem>
-              </Select>
-            </FormControl> */}
-          </Grid>
-          {/* <Grid item xs={4}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Availability
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={filterValue.availability}
-                label="Availability"
-                onChange={(e) => handleFilterChange(e, "availability")}
-              >
-                <MenuItem value={"All"}>All</MenuItem>
-                <MenuItem value={"in_stock"}>Instock</MenuItem>
-                <MenuItem value={"out_of_stock"}>Out Of Stock</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid> */}
+          <Grid item xs={4}></Grid>
           <Grid item xs={4}>
             {/* <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
@@ -176,6 +132,7 @@ const ProductsTable = () => {
                 <TableCell sx={{ textAlign: "center" }}>Category</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>Reviews</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -197,28 +154,23 @@ const ProductsTable = () => {
                   </TableCell>
 
                   <TableCell>
-                    <Barcode
-                      width={"1px"}
-                      height={"60px"}
-                      value={product.id}
-                    />
+                    <Barcode width={"1px"} height={"60px"} value={product.id} />
                   </TableCell>
 
                   <TableCell>
                     {" "}
-                    {
-                      product && product.images && product.images.length > 0 && product.images.map((item, index) => {
+                    {product &&
+                      product.images &&
+                      product.images.length > 0 &&
+                      product.images.map((item, index) => {
                         return (
                           <Avatar
                             // alt={product.name}
                             src={item.link}
                             style={{ width: "50px", height: "50px" }}
                           />
-                        )
-
-                      })
-                    }
-                    {" "}
+                        );
+                      })}{" "}
                   </TableCell>
                   {console.log("Product: ", product)}
                   <TableCell
@@ -260,7 +212,9 @@ const ProductsTable = () => {
 
                     <Button
                       variant="text"
-                      onClick={() => handleDeleteProduct(product.id, product.name)}
+                      onClick={() =>
+                        handleDeleteProduct(product.id, product.name)
+                      }
                       color="secondary"
                     >
                       <DeleteIcon />
@@ -277,16 +231,24 @@ const ProductsTable = () => {
                       <VisibilityIcon />
                     </Button>
                   </TableCell>
-
+                  <TableCell sx={{ textAlign: "center" }}>
+                    <FiberManualRecordIcon
+                      style={{
+                        color: product.status === 2 ? "red" : "green",
+                      }}
+                    />
+                  </TableCell>
                 </TableRow>
-
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
-      <DisableProduct open={open} setOpen={setOpen}
-        id={idProductDelete} name={nameProductDelete}
+      <DisableProduct
+        open={open}
+        setOpen={setOpen}
+        id={idProductDelete}
+        name={nameProductDelete}
         fetchProducts={(page) => fetchProducts(page)}
         currentPage={currentPage}
       />
@@ -303,7 +265,6 @@ const ProductsTable = () => {
           />
         </div>
       </Card>
-
     </Box>
   );
 };
