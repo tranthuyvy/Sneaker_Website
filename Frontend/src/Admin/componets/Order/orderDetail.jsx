@@ -450,7 +450,7 @@ const OrderDetail = () => {
       </div>
 
       <Grid container className="shadow-lg">
-        {orders?.status === 7 && (
+        {orders?.status === 7 || orders?.status === 8 && (
           <>
             <Grid item xs={12}>
               {orders?.refunds.length !== 0 && (
@@ -489,6 +489,7 @@ const OrderDetail = () => {
                 </div>
               )}
             </Grid>
+            {orders?.status === 7 && (
             <Button
               variant="contained"
               color="warning"
@@ -503,6 +504,7 @@ const OrderDetail = () => {
             >
               CONFIRM RETURN
             </Button>
+            )}
           </>
         )}
       </Grid>
