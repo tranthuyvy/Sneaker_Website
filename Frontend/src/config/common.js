@@ -31,7 +31,7 @@ function checkValidPhone(phone) {
   return phone.match(regexPhoneNumber) ? true : false;
 }
 function getPrice(product) {
-  let listDiscount = product.discount_products || [];
+  let listDiscount = product?.discount_products || [];
   let max = 0;
   // 1 tiền 2 phần trăm
   if (listDiscount.length == 0) return 0;

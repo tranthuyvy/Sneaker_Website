@@ -7,6 +7,7 @@ import {
 } from '../service/common'
 import saveImg from 'service/saveImg';
 import auth from '../middleware/authenJWT'
+import { update } from "service/elastic";
 const branch = Model.branch;
 const productImage = Model.image;
 const staff = Model.staff
@@ -76,6 +77,7 @@ class product_controller {
         const img = image.length == 0 ? null : await productImage.bulkCreate(image);
         console.log("Check data product: ", dataProduct.dataValues);
         console.log("Thêm thành công");
+        update().then()
         return res.status(200).send({ code: "012" });
       } catch (e) {
         console.log(e);
@@ -178,6 +180,7 @@ class product_controller {
           }
           dataProduct.update_by = update_by;
           await dataProduct.save();
+          update().then()
           return res.status(200).send({ code: "013" });
         }
         else {
@@ -204,7 +207,7 @@ class product_controller {
           }
           await checkIdProduct.update({ status: 2, update_by });
           return res.status(200).send({ code: "013" });
-        }
+        } update().then()
         return res.status(200).send({ code: "014" });
 
       } catch (e) {
