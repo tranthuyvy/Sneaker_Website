@@ -120,17 +120,38 @@ class discount_controller {
 
   applyDiscount = async (req, res) => {
     let { listProduct } = req.body;
-    let id_discount = req.query.id;
+    let id_discount = req.query.id;//Từ thằng này lấy đc value
+    let type = 0;
+    let value = 0;
     try {
       if (listProduct.length > 0) {
+        let dataDiscount = await discount.findOne({ where: { id: id_discount } });
+        if (dataDiscount && dataDiscount.dataValues && dataDiscount.dataValues.id) {
+          let dataCurrent = new Date();
+          dataCurrent.setHours(dataCurrent.getHours() + 7);
+          console.log("dataCurrent: ", dataCurrent);
+          if (dataDiscount.expiration_date < dataCurrent) {
+            return res.status(500).send({ code: "230" })
+          }
+          value = dataDiscount.dataValues.value;
+          type = dataDiscount.dataValues.type;
+        }
+        console.log("hello:", dataDiscount);
         for (let i = 0; i < listProduct.length; i++) {
           let checkExist = await discount_product.findOne({
             where: { id_discount, id_product: listProduct[i].id },
           });
           console.log(checkExist);
+
           if (checkExist && checkExist.dataValues && checkExist.dataValues.id) {
             console.log("Sản phẩm đã có trong db");
             return res.status(500).send({ code: "227" })
+          }
+          // Nếu value lớn hơn tiền km thì thôi
+          if (type == 1) {
+            if (value > listProduct[i].product_price) {
+              return res.status(500).send({ code: "229" });
+            }
           }
         }
         for (let i = 0; i < listProduct.length; i++) {
