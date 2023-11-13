@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
-import axios from "../../../config/axios";
+import api from "../../../config/api";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import errorMessagesEn from "../../../Lang/en.json";
@@ -25,7 +25,7 @@ const OrderDetail = () => {
 
   const fetchOrderData = async () => {
     try {
-      const response = await axios.get(`/api/v1/order/get/${id}`);
+      const response = await api.get(`/api/v1/order/get/${id}`);
       const orderData = response.data.data;
 
       setOrders(orderData);
@@ -38,7 +38,7 @@ const OrderDetail = () => {
   
   const updateOrderStatus = async (id, newStatus) => {
     try {
-      const response = await axios.put(`http://localhost:8081/api/v1/order/get/${id}/update-status/${newStatus}`);
+      const response = await api.put(`http://localhost:8081/api/v1/order/get/${id}/update-status/${newStatus}`);
       
       if (response.status === 200) {
         fetchOrderData();

@@ -56,7 +56,7 @@ class order_controller {
             model: Model.refund,
             as: "refunds",
             where: { id_order: id },
-            // required: false,
+            required: false,
             include: [
               {
                 model: Model.refund_image,
