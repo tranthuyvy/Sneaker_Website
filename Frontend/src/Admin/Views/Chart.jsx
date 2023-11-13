@@ -30,7 +30,6 @@ const Chart = () => {
         const ordersArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
-
         ordersArray.sort(
           (a, b) => new Date(a.create_at) - new Date(b.create_at)
         );
@@ -178,7 +177,6 @@ const Chart = () => {
           }}
           series={[{ data: chartData.map((item) => item.y) }]}
         />
-
         <Button
           fullWidth
           variant="contained"

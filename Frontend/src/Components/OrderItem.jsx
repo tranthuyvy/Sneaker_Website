@@ -31,8 +31,7 @@ function OrderItem({ order }) {
 
   const updateOrderStatus = async (id, newStatus) => {
     try {
-      const response = await axios.put(
-        `http://localhost:8081/api/v1/order/get/${id}/update-status/${newStatus}`
+      const response = await axios.put(`/api/v1/order/get/${id}/update-status/${newStatus}`
       );
 
       if (response.status === 200) {
