@@ -450,7 +450,7 @@ const OrderDetail = () => {
       </div>
 
       <Grid container className="shadow-lg">
-        {orders?.status === 7 || orders?.status === 8 && (
+        {(orders?.status === 7 || orders?.status === 8) && (
           <>
             <Grid item xs={12}>
               {orders?.refunds.length !== 0 && (
