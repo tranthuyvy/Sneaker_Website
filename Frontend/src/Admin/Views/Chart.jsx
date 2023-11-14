@@ -19,65 +19,27 @@ const Chart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [orders, setOrders] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 100;
-
-  const fetchOrders = (page) => {
+  const fetchOrders = () => {
     api
-      .get(`api/v1/order/get?page=${page}&pageSize=${pageSize}`)
+      .get(`/api/v1/statistic/order?type=month&start=2021-11-5&end=2023-11-6`)
       .then((response) => {
         const ordersArray = Array.isArray(response.data.data)
           ? response.data.data
           : [];
-
-        ordersArray.sort(
-          (a, b) => new Date(a.create_at) - new Date(b.create_at)
-        );
-        setOrders(ordersArray);
+        setChartData([
+          ...ordersArray.map((item) => {
+            return { x: `${item.month}/${item.year}`, y: item.total };
+          }),
+        ]);
       })
       .catch((error) => {
         console.error("Error Call API", error);
       });
   };
-
   useEffect(() => {
-    fetchOrders(currentPage);
+    
+    fetchOrders();
   }, []);
-
-  useEffect(() => {
-    const totalsByDay = calculateTotalByDay(orders);
-    setChartData(totalsByDay);
-  }, [orders]);
-
-  const calculateTotalByDay = (orders) => {
-    const totalsByDay = {};
-
-    if (!orders || orders.length === 0) {
-      return [];
-    }
-
-    orders.forEach((order) => {
-      const createdAt = new Date(order?.create_at);
-      const formattedDate = `${createdAt.getDate()}/${
-        createdAt.getMonth() + 1
-      }/${createdAt.getFullYear()}`;
-
-      if (totalsByDay[formattedDate]) {
-        totalsByDay[formattedDate] += order?.total_price;
-      } else {
-        totalsByDay[formattedDate] = order?.total_price;
-      }
-    });
-
-    const chartData = Object.keys(totalsByDay).map((day) => ({
-      x: day,
-      y: totalsByDay[day],
-    }));
-
-    return chartData;
-  };
-
   const options = {
     chart: {
       parentHeightOffset: 0,
@@ -87,7 +49,7 @@ const Chart = () => {
       bar: {
         borderRadius: 2,
         distributed: true,
-        columnWidth: "40%",
+        columnWidth: "20%",
         endingShape: "rounded",
         startingShape: "rounded",
       },
@@ -134,7 +96,7 @@ const Chart = () => {
       labels: {
         offsetX: -17,
         formatter: (value) =>
-          `${value > 99 ? `${(value / 100).toFixed(0)}` : value}k`,
+          `${value > 99 ? `${(value / 1000).toFixed(0)}` : value}k`,
       },
     },
   };
@@ -165,7 +127,7 @@ const Chart = () => {
       >
         <ReactApexCharts
           type="bar"
-          height={274}
+          height={400}
           options={{
             ...options,
             xaxis: {
@@ -178,7 +140,6 @@ const Chart = () => {
           }}
           series={[{ data: chartData.map((item) => item.y) }]}
         />
-
         <Button
           fullWidth
           variant="contained"
@@ -190,6 +151,7 @@ const Chart = () => {
       </CardContent>
     </Card>
   );
+ 
 };
 
 export default Chart;

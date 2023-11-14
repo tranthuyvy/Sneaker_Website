@@ -10,12 +10,11 @@ import order_router from "./order";
 import discount_user_router from "./discount_user";
 import supplier_router from "./supplier";
 import brand_router from "./brand";
-import review_router from "./review"
+import review_router from "./review";
 import address_router from "./address";
-import auth from '../middleware/authenJWT'
+import auth from "../middleware/authenJWT";
 import user_router from "./user";
 import elastic_rotuer from "./elastic";
-import refund_router from "./refund";
 export default function router(app) {
   app.use("/api/v1/auth", auth_router);
   app.use("/api/v1/user", auth.authenUser, user_router);
@@ -24,14 +23,13 @@ export default function router(app) {
   app.use("/api/v1/product", product_router);
   app.use("/api/v1/staff", staff_router);
   app.use("/api/v1/product_detail", product_detail_router);
-  app.use("/api/v1/category", category_router)
-  app.use('/api/v1/discount', discount_router)
-  app.use("/api/v1/product-batch", product_batch_router)
-  app.use("/api/v1/order", order_router)
-  app.use("/api/v1/discount_user", discount_user_router)
-  app.use("/api/v1/supplier", supplier_router)
-  app.use("/api/v1/brand", brand_router)
-  app.use("/api/v1/review", review_router)
-  app.use("/api/v1/elastic", elastic_rotuer)
-  app.use("/api/v1/refund", refund_router)
+  app.use("/api/v1/category", category_router);
+  app.use("/api/v1/discount", discount_router);
+  app.use("/api/v1/product-batch", product_batch_router);
+  app.use("/api/v1/order", order_router);
+  app.use("/api/v1/discount_user", discount_user_router);
+  app.use("/api/v1/supplier", supplier_router);
+  app.use("/api/v1/brand", brand_router);
+  app.use("/api/v1/review", review_router);
+  app.use("/api/v1/elastic", elastic_rotuer);
 }
